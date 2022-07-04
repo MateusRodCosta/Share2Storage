@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Share to Storage</string>
+
+    <string name="how_to_use">Use from the share menu</string>
+
+    <string name="save_button">Save</string>
+    <string name="no_file_found">No file found</string>
+
+    <string name="file_name">File name</string>
+    <string name="file_type">File type</string>
+    <string name="file_size">File size</string>
+    <string name="unknown">Unknown</string>
+</resources>

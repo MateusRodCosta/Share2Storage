@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Compartilhar para Armazenamento</string>
+
+    <string name="how_to_use">Use a partir do menu de compartilhamento</string>
+
+    <string name="save_button">Salvar</string>
+    <string name="no_file_found">Nenhum arquivo</string>
+
+    <string name="file_name">Nome do arquivo</string>
+    <string name="file_type">Tipo do arquivo</string>
+    <string name="file_size">Tamanho do arquivo</string>
+    <string name="unknown">Desconhecido</string>
+</resources>
