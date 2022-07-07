@@ -20,7 +20,6 @@ package com.mateusrodcosta.apps.share2storage
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.text.format.Formatter
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -33,41 +32,45 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.Dp
+import com.mateusrodcosta.apps.share2storage.model.SampleUriDataProvider
+import com.mateusrodcosta.apps.share2storage.model.UriData
 import com.mateusrodcosta.apps.share2storage.utils.Share2StorageTheme
 
 class ShareActivity : ComponentActivity() {
 
-    private var srcUri: Uri? = null
     private var createFile: ActivityResultLauncher<String>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (intent != null) {
-            if (intent.action == Intent.ACTION_SEND) {
-                srcUri = intent.extras?.get(Intent.EXTRA_STREAM) as Uri?
-                Log.d("srcUri", srcUri.toString())
-                if (srcUri != null) {
-                    val source = srcUri as Uri
-                    val type = contentResolver.getType(source)
-                    createFile = registerForActivityResult(
-                        CreateDocument(type ?: "*/*"),
-                        fun(uri: Uri?) {
-                            if (uri == null) return
+        var uriData: UriData? = null
 
-                            saveFile(baseContext, uri, source)
-                        })
-                }
+        if (intent?.action == Intent.ACTION_SEND) {
+            val fileUri = intent.extras?.get(Intent.EXTRA_STREAM) as Uri?
+            Log.d("fileUri", fileUri.toString())
+
+            uriData = getUriData(contentResolver, fileUri)
+
+            if (uriData != null) {
+                createFile = registerForActivityResult(
+                    CreateDocument(uriData.type ?: "*/*"),
+                    fun(uri: Uri?) {
+                        if (uri == null || fileUri == null) return
+                        saveFile(baseContext, uri, fileUri)
+                    })
             }
         }
+
         setContent {
-            ShareScreen(srcUri = srcUri)
+            ShareScreen(uriData)
         }
     }
 
     @Composable
-    fun ShareScreen(srcUri: Uri?) {
+    @Preview
+    fun ShareScreen(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData?) {
         Share2StorageTheme {
             Scaffold(topBar = {
                 TopAppBar(
@@ -82,11 +85,10 @@ class ShareActivity : ComponentActivity() {
                         .fillMaxSize()
                         .padding(PaddingValues(Dp(16.0f)))
                 ) {
-                    if (srcUri != null) {
-                        val uriData = getUriData(contentResolver, srcUri)
+                    if (uriData != null) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Button(onClick = {
-                                createFile?.launch(uriData?.displayName ?: "")
+                                createFile?.launch(uriData.displayName ?: "")
                             }) {
                                 Text(
                                     stringResource(R.string.save_button)
@@ -94,16 +96,15 @@ class ShareActivity : ComponentActivity() {
                             }
                             FileInfoLine(
                                 label = stringResource(R.string.file_name),
-                                content = uriData?.displayName ?: stringResource(R.string.unknown)
+                                content = uriData.displayName ?: stringResource(R.string.unknown)
                             )
                             FileInfoLine(
                                 label = stringResource(R.string.file_type),
-                                content = contentResolver.getType(srcUri)
-                                    ?: stringResource(R.string.unknown)
+                                content = uriData.type ?: stringResource(R.string.unknown)
                             )
                             FileInfoLine(
                                 label = stringResource(R.string.file_size),
-                                content = if (uriData?.size != null) Formatter.formatShortFileSize(
+                                content = if (uriData.size != null) android.text.format.Formatter.formatShortFileSize(
                                     baseContext,
                                     uriData.size
                                 ) else stringResource(R.string.unknown)
@@ -116,15 +117,6 @@ class ShareActivity : ComponentActivity() {
                 }
             }
         }
-    }
-
-    @Preview
-    @Composable
-    fun FileInfoLinePreview() {
-        FileInfoLine(
-            label = stringResource(R.string.file_name),
-            content = "21. Setting Sail, Coming Home (End Theme).flac"
-        )
     }
 
     @Composable

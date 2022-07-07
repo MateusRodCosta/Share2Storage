@@ -24,24 +24,30 @@ import android.net.Uri
 import android.os.Build
 import android.provider.DocumentsContract
 import android.provider.OpenableColumns
-import android.webkit.MimeTypeMap
 import com.mateusrodcosta.apps.share2storage.model.UriData
 import java.io.*
 
-fun getUriData(contentResolver: ContentResolver, uri: Uri): UriData? {
-    contentResolver.query(uri, null, null, null, null)
-        ?.use { cursor ->
-            /*
-             * Get the column indexes of the data in the Cursor,
-             * move to the first row in the Cursor, get the data,
-             * and display it.
-             */
-            val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-            val sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
-            cursor.moveToFirst()
-            return UriData(cursor.getString(nameIndex), cursor.getLong(sizeIndex))
-        }
-    return null
+fun getUriData(contentResolver: ContentResolver, uri: Uri?): UriData? {
+    if (uri == null) return null
+    val type = contentResolver.getType(uri)
+    var displayName: String? = null
+    var size: Long? = null
+    val cursor = contentResolver.query(uri, null, null, null, null)
+    if (cursor != null) {
+        /*
+         * Get the column indexes of the data in the Cursor,
+         * move to the first row in the Cursor, get the data,
+         * and display it.
+         */
+        val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+        val sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
+        cursor.moveToFirst()
+        displayName = cursor.getString(nameIndex)
+        size = cursor.getLong(sizeIndex)
+
+        cursor.close()
+    }
+    return UriData(displayName, type, size)
 }
 
 private fun isVirtualFile(context: Context, uri: Uri): Boolean {
