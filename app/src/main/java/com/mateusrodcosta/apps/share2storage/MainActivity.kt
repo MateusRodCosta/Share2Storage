@@ -22,6 +22,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
@@ -55,8 +56,7 @@ class MainActivity : ComponentActivity() {
                         },
                     )
                 },
-
-                ) {
+            ) {
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
@@ -69,7 +69,10 @@ class MainActivity : ComponentActivity() {
                             contentDescription = stringResource(R.string.app_name),
                             modifier = Modifier.scale(2.0f)
                         )
-                        Text(stringResource(R.string.how_to_use))
+                        Text(
+                            stringResource(R.string.how_to_use),
+                            style = MaterialTheme.typography.subtitle1
+                        )
                     }
                 }
             }

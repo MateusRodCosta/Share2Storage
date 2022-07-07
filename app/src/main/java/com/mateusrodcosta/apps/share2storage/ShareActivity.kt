@@ -32,7 +32,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.mateusrodcosta.apps.share2storage.utils.Share2StorageTheme
@@ -110,7 +109,10 @@ class ShareActivity : ComponentActivity() {
                                 ) else stringResource(R.string.unknown)
                             )
                         }
-                    } else Text(stringResource(R.string.no_file_found))
+                    } else Text(
+                        stringResource(R.string.no_file_found),
+                        style = MaterialTheme.typography.subtitle1
+                    )
                 }
             }
         }
@@ -132,7 +134,7 @@ class ShareActivity : ComponentActivity() {
             horizontalAlignment = Alignment.Start
         ) {
             Text(label, style = MaterialTheme.typography.h6)
-            Text(content, softWrap = true)
+            Text(content, softWrap = true, style = MaterialTheme.typography.body1)
         }
     }
 
