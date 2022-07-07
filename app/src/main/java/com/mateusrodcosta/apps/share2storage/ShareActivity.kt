@@ -81,12 +81,14 @@ class ShareActivity : ComponentActivity() {
             }) {
                 Box(
                     contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(PaddingValues(Dp(16.0f)))
+                    modifier = Modifier.padding(PaddingValues(Dp(16.0f)))
                 ) {
                     if (uriData != null) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.SpaceEvenly
+                        ) {
                             Button(onClick = {
                                 createFile?.launch(uriData.displayName ?: "")
                             }) {
@@ -94,21 +96,7 @@ class ShareActivity : ComponentActivity() {
                                     stringResource(R.string.save_button)
                                 )
                             }
-                            FileInfoLine(
-                                label = stringResource(R.string.file_name),
-                                content = uriData.displayName ?: stringResource(R.string.unknown)
-                            )
-                            FileInfoLine(
-                                label = stringResource(R.string.file_type),
-                                content = uriData.type ?: stringResource(R.string.unknown)
-                            )
-                            FileInfoLine(
-                                label = stringResource(R.string.file_size),
-                                content = if (uriData.size != null) android.text.format.Formatter.formatFileSize(
-                                    baseContext,
-                                    uriData.size
-                                ) else stringResource(R.string.unknown)
-                            )
+                            FileInfo(uriData)
                         }
                     } else Text(
                         stringResource(R.string.no_file_found),
@@ -116,6 +104,29 @@ class ShareActivity : ComponentActivity() {
                     )
                 }
             }
+        }
+    }
+
+    @Composable
+    @Preview
+    fun FileInfo(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData) {
+        Column {
+            FileInfoLine(
+                label = stringResource(R.string.file_name),
+                content = uriData.displayName ?: stringResource(R.string.unknown)
+            )
+            FileInfoLine(
+                label = stringResource(R.string.file_type),
+                content = uriData.type ?: stringResource(R.string.unknown)
+            )
+            FileInfoLine(
+                label = stringResource(R.string.file_size),
+                // TODO: Find code to calculate file size for previews
+                content = if (uriData.size != null && baseContext != null) android.text.format.Formatter.formatFileSize(
+                    baseContext,
+                    uriData.size
+                ) else stringResource(R.string.unknown)
+            )
         }
     }
 

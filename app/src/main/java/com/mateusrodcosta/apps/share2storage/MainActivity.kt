@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.mateusrodcosta.apps.share2storage.utils.Share2StorageTheme
@@ -59,19 +60,23 @@ class MainActivity : ComponentActivity() {
             ) {
                 Box(
                     contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(PaddingValues(Dp(16.0f)))
+                    modifier = Modifier.padding(PaddingValues(Dp(16.0f)))
                 ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.SpaceEvenly
+                    ) {
                         Image(
-                            painter = painterResource(R.drawable.ic_launcher_foreground),
-                            contentDescription = stringResource(R.string.app_name),
-                            modifier = Modifier.scale(2.0f)
+                            painterResource(R.drawable.ic_launcher_foreground),
+                            stringResource(R.string.app_name),
+                            modifier = Modifier.scale(3.0f),
                         )
                         Text(
                             stringResource(R.string.how_to_use),
-                            style = MaterialTheme.typography.subtitle1
+                            style = MaterialTheme.typography.h6,
+                            softWrap = true,
+                            textAlign = TextAlign.Center
                         )
                     }
                 }
