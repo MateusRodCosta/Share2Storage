@@ -61,15 +61,15 @@ dependencies {
     // Material Design
     implementation 'androidx.compose.material:material:1.1.1'
     // Material design icons
-    implementation 'androidx.compose.material:material-icons-core:1.1.1'
-    implementation 'androidx.compose.material:material-icons-extended:1.1.1'
+    //implementation 'androidx.compose.material:material-icons-core:1.1.1'
+    //implementation 'androidx.compose.material:material-icons-extended:1.1.1'
     // Integration with activities
     implementation 'androidx.activity:activity-compose:1.5.0'
     // Integration with ViewModels
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.0'
+    //implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.0'
     // Integration with observables
-    implementation 'androidx.compose.runtime:runtime-livedata:1.1.1'
-    implementation 'androidx.compose.runtime:runtime-rxjava2:1.1.1'
+    //implementation 'androidx.compose.runtime:runtime-livedata:1.1.1'
+    //implementation 'androidx.compose.runtime:runtime-rxjava2:1.1.1'
 
     // UI Tests
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4:1.1.1'
