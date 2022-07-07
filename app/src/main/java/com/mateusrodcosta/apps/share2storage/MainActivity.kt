@@ -21,9 +21,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
@@ -34,6 +32,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import com.mateusrodcosta.apps.share2storage.utils.Share2StorageTheme
 
 class MainActivity : ComponentActivity() {
@@ -55,11 +54,14 @@ class MainActivity : ComponentActivity() {
                             Text(stringResource(R.string.app_name))
                         },
                     )
-                }
-            ) {
+                },
+
+                ) {
                 Box(
                     contentAlignment = Alignment.Center,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(PaddingValues(Dp(16.0f)))
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Image(

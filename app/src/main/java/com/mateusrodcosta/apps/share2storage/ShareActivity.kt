@@ -26,18 +26,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Button
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import com.mateusrodcosta.apps.share2storage.utils.Share2StorageTheme
 
 class ShareActivity : ComponentActivity() {
@@ -52,7 +49,7 @@ class ShareActivity : ComponentActivity() {
             if (intent.action == Intent.ACTION_SEND) {
                 srcUri = intent.extras?.get(Intent.EXTRA_STREAM) as Uri?
                 Log.d("srcUri", srcUri.toString())
-                if(srcUri != null) {
+                if (srcUri != null) {
                     val source = srcUri as Uri
                     val type = contentResolver.getType(source)
                     createFile = registerForActivityResult(
@@ -82,7 +79,9 @@ class ShareActivity : ComponentActivity() {
             }) {
                 Box(
                     contentAlignment = Alignment.Center,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(PaddingValues(Dp(16.0f)))
                 ) {
                     if (srcUri != null) {
                         val uriData = getUriData(contentResolver, srcUri)
@@ -94,25 +93,22 @@ class ShareActivity : ComponentActivity() {
                                     stringResource(R.string.save_button)
                                 )
                             }
-                            Row {
-                                Text(stringResource(R.string.file_name) + ": ")
-                                Text(uriData?.displayName ?: stringResource(R.string.unknown))
-                            }
-                            Row {
-                                Text(stringResource(R.string.file_type) + ": ")
-                                Text(
-                                    contentResolver.getType(srcUri) ?: stringResource(R.string.unknown)
-                                )
-                            }
-                            Row {
-                                Text(stringResource(R.string.file_size) + ": ")
-                                Text(
-                                    if (uriData?.size != null) Formatter.formatShortFileSize(
-                                        baseContext,
-                                        uriData.size
-                                    ) else stringResource(R.string.unknown)
-                                )
-                            }
+                            FileInfoLine(
+                                label = stringResource(R.string.file_name),
+                                content = uriData?.displayName ?: stringResource(R.string.unknown)
+                            )
+                            FileInfoLine(
+                                label = stringResource(R.string.file_type),
+                                content = contentResolver.getType(srcUri)
+                                    ?: stringResource(R.string.unknown)
+                            )
+                            FileInfoLine(
+                                label = stringResource(R.string.file_size),
+                                content = if (uriData?.size != null) Formatter.formatShortFileSize(
+                                    baseContext,
+                                    uriData.size
+                                ) else stringResource(R.string.unknown)
+                            )
                         }
                     } else Text(stringResource(R.string.no_file_found))
                 }
@@ -120,5 +116,24 @@ class ShareActivity : ComponentActivity() {
         }
     }
 
+    @Preview
+    @Composable
+    fun FileInfoLinePreview() {
+        FileInfoLine(
+            label = stringResource(R.string.file_name),
+            content = "21. Setting Sail, Coming Home (End Theme).flac"
+        )
+    }
+
+    @Composable
+    fun FileInfoLine(label: String, content: String) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(label, style = MaterialTheme.typography.h6)
+            Text(content, softWrap = true)
+        }
+    }
 
 }
