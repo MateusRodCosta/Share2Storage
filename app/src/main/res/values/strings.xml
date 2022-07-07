@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Share to Storage</string>
+    <string name="app_name">Save Locally</string>
 
     <string name="how_to_use">Use from the share menu</string>
 
