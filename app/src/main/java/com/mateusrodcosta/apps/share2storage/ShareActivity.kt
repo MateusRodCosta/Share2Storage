@@ -104,7 +104,7 @@ class ShareActivity : ComponentActivity() {
                             )
                             FileInfoLine(
                                 label = stringResource(R.string.file_size),
-                                content = if (uriData.size != null) android.text.format.Formatter.formatShortFileSize(
+                                content = if (uriData.size != null) android.text.format.Formatter.formatFileSize(
                                     baseContext,
                                     uriData.size
                                 ) else stringResource(R.string.unknown)
