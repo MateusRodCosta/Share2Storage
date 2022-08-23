@@ -21,11 +21,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.mateusrodcosta.apps.share2storage.utils.Share2StorageTheme
 
 class MainActivity : ComponentActivity() {
@@ -57,31 +56,81 @@ class MainActivity : ComponentActivity() {
                         },
                     )
                 },
-            ) {
+            ) { paddingValues ->
                 Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier.padding(PaddingValues(Dp(16.0f)))
+                    modifier = Modifier.padding(paddingValues)
                 ) {
                     Column(
                         modifier = Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        Image(
-                            painterResource(R.drawable.ic_launcher_foreground),
-                            stringResource(R.string.app_name),
-                            modifier = Modifier.scale(3.0f),
-                        )
-                        Text(
-                            stringResource(R.string.how_to_use),
-                            style = MaterialTheme.typography.h6,
-                            softWrap = true,
-                            textAlign = TextAlign.Center
-                        )
+                        Column(modifier = Modifier.padding(all = 16.dp)) {
+
+                            Image(
+                                painterResource(R.drawable.ic_launcher_foreground),
+                                stringResource(R.string.app_name),
+                                modifier = Modifier.scale(2.0f),
+                            )
+                            Text(
+                                stringResource(R.string.how_to_use),
+                                style = MaterialTheme.typography.h6,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                        Column() {
+                            BasicDivider()
+                            HowToUseRow(1, stringResource(id = R.string.how_to_use_step_1))
+                            BasicDivider()
+                            HowToUseRow(2, stringResource(id = R.string.how_to_use_step_2))
+                            BasicDivider()
+                            HowToUseRow(3, stringResource(id = R.string.how_to_use_step_3))
+                            BasicDivider()
+                            HowToUseRow(4, stringResource(id = R.string.how_to_use_step_4))
+                            BasicDivider()
+                        }
                     }
                 }
             }
         }
-
     }
+
+    @Composable
+    fun HowToUseRow(num: Int, string: String) {
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .clickable { }
+        ) {
+            Column() {
+                Row(
+                    modifier = Modifier
+                        .padding(PaddingValues(horizontal = 16.dp, vertical = 8.dp))
+                        .heightIn(min = 48.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        "$num.",
+                        style = MaterialTheme.typography.subtitle2,
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        string,
+                        style = MaterialTheme.typography.body1,
+                        softWrap = true,
+                    )
+                }
+                Divider(
+                    thickness = Dp.Hairline,
+                    startIndent = 16.dp
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun BasicDivider() {
+    Divider(
+        thickness = Dp.Hairline,
+        startIndent = 16.dp
+    )
 }
