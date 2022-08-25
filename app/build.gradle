@@ -66,6 +66,7 @@ dependencies {
 
     // Material design icons
     implementation 'androidx.compose.material:material-icons-core:1.2.1'
+    implementation 'androidx.compose.material:material-icons-extended:1.2.1'
 
     // Integration with activities
     implementation 'androidx.activity:activity-compose:1.5.1'

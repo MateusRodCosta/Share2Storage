@@ -25,15 +25,24 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AudioFile
+import androidx.compose.material.icons.outlined.Description
+import androidx.compose.material.icons.outlined.Image
+import androidx.compose.material.icons.outlined.VideoFile
+import androidx.compose.material.icons.rounded.Download
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.mateusrodcosta.apps.share2storage.model.SampleUriDataProvider
 import com.mateusrodcosta.apps.share2storage.model.UriData
 import com.mateusrodcosta.apps.share2storage.utils.Share2StorageTheme
@@ -72,16 +81,35 @@ class ShareActivity : ComponentActivity() {
     @Preview
     fun ShareScreen(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData?) {
         Share2StorageTheme {
-            Scaffold(topBar = {
-                TopAppBar(
-                    title = {
-                        Text(stringResource(R.string.app_name))
-                    },
-                )
-            }) {
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = {
+                            Text(stringResource(R.string.app_name))
+                        },
+                    )
+                },
+                floatingActionButton = {
+                    FloatingActionButton(
+                        onClick = {
+                            createFile?.launch(
+                                uriData?.displayName ?: ""
+                            )
+                        },
+                        content = {
+                            Image(
+                                imageVector = Icons.Rounded.Download,
+                                contentDescription = stringResource(
+                                    R.string.save_button
+                                )
+                            )
+                        }
+                    )
+                }
+            ) { paddingValues ->
                 Box(
                     contentAlignment = Alignment.Center,
-                    modifier = Modifier.padding(PaddingValues(Dp(16.0f)))
+                    modifier = Modifier.padding(paddingValues)
                 ) {
                     if (uriData != null) {
                         Column(
@@ -89,13 +117,7 @@ class ShareActivity : ComponentActivity() {
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.SpaceEvenly
                         ) {
-                            Button(onClick = {
-                                createFile?.launch(uriData.displayName ?: "")
-                            }) {
-                                Text(
-                                    stringResource(R.string.save_button)
-                                )
-                            }
+                            FilePreview(mimeType = uriData.type ?: "*/*")
                             FileInfo(uriData)
                         }
                     } else Text(
@@ -108,9 +130,8 @@ class ShareActivity : ComponentActivity() {
     }
 
     @Composable
-    @Preview
-    fun FileInfo(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData) {
-        Column {
+    fun FileInfo(uriData: UriData) {
+        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
             FileInfoLine(
                 label = stringResource(R.string.file_name),
                 content = uriData.displayName ?: stringResource(R.string.unknown)
@@ -141,4 +162,23 @@ class ShareActivity : ComponentActivity() {
         }
     }
 
+    @Composable
+    fun FilePreview(mimeType: String) {
+        val fileIcon = if (mimeType.startsWith("image/")) {
+            Icons.Outlined.Image
+        } else if (mimeType.startsWith("audio/")) {
+            Icons.Outlined.AudioFile
+        } else if (mimeType.startsWith("video/")) {
+            Icons.Outlined.VideoFile
+        } else {
+            Icons.Outlined.Description
+        }
+
+        Image(
+            modifier = Modifier.scale(4.0f),
+            imageVector = fileIcon,
+            contentDescription = stringResource(R.string.app_name),
+            contentScale = ContentScale.Fit
+        )
+    }
 }
