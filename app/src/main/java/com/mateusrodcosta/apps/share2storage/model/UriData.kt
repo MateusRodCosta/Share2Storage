@@ -15,7 +15,6 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 package com.mateusrodcosta.apps.share2storage.model
 
 data class UriData(val displayName: String?, val type: String?, val size: Long?)

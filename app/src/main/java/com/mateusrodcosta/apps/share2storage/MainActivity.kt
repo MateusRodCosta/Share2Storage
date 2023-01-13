@@ -100,7 +100,7 @@ class MainActivity : ComponentActivity() {
                             BasicDivider()
                             Spacer(modifier = Modifier.defaultMinSize(minHeight = (48 + 16).dp))
                             Box(
-                                modifier = Modifier.padding(start= 24.dp, end= 8.dp )
+                                modifier = Modifier.padding(start = 16.dp, end = 8.dp)
                             ) {
                                 Text(
                                     stringResource(id = R.string.how_to_use_about_title),
@@ -108,9 +108,17 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                             BasicDivider()
-                            AboutRow(stringResource(R.string.how_to_use_about ), url = "https://github.com/MateusRodCosta/", context = context  )
+                            AboutRow(
+                                stringResource(R.string.how_to_use_about),
+                                url = "https://github.com/MateusRodCosta/",
+                                context = context
+                            )
                             BasicDivider()
-                            AboutRow(stringResource(R.string.how_to_use_github ), url = "https://github.com/MateusRodCosta/Share2Storage", context = context  )
+                            AboutRow(
+                                stringResource(R.string.how_to_use_github),
+                                url = "https://github.com/MateusRodCosta/Share2Storage",
+                                context = context
+                            )
                             BasicDivider()
 
                         }
@@ -131,7 +139,7 @@ class MainActivity : ComponentActivity() {
                     .heightIn(min = 48.dp), verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    if(num == null) "   "  else  "$num.",
+                    if (num == null) "   " else "$num.",
                     style = MaterialTheme.typography.titleSmall,
                 )
                 Spacer(modifier = Modifier.width(8.dp))
@@ -174,6 +182,6 @@ fun AboutRow(string: String, url: String?, context: Context) {
 @Composable
 fun BasicDivider() {
     Divider(
-        modifier = Modifier.padding(horizontal = 16.dp),
-        thickness = Dp.Hairline)
+        modifier = Modifier.padding(horizontal = 16.dp), thickness = Dp.Hairline
+    )
 }

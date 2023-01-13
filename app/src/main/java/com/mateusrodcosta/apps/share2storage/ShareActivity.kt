@@ -65,8 +65,7 @@ class ShareActivity : ComponentActivity() {
             val fileUri = if (Build.VERSION.SDK_INT >= 33) {
                 intent.getParcelableExtra(Intent.EXTRA_STREAM, Uri::class.java)
             } else {
-                @Suppress("DEPRECATION")
-                intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
+                @Suppress("DEPRECATION") intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
             }
 
             Log.d("fileUri", fileUri.toString())
@@ -74,8 +73,7 @@ class ShareActivity : ComponentActivity() {
             uriData = getUriData(contentResolver, fileUri)
 
             if (uriData != null) {
-                createFile = registerForActivityResult(
-                    CreateDocument(uriData.type ?: "*/*"),
+                createFile = registerForActivityResult(CreateDocument(uriData.type ?: "*/*"),
                     fun(uri: Uri?) {
                         if (uri == null || fileUri == null) return
                         saveFile(baseContext, uri, fileUri)
@@ -93,39 +91,37 @@ class ShareActivity : ComponentActivity() {
     @Preview
     fun ShareScreen(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData?) {
         AppTheme {
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = {
-                            Text(stringResource(R.string.app_name))
-                        },
+            Scaffold(topBar = {
+                TopAppBar(
+                    title = {
+                        Text(stringResource(R.string.app_name))
+                    },
+                )
+            }, floatingActionButton = {
+                FloatingActionButton(onClick = {
+                    createFile?.launch(
+                        uriData?.displayName ?: ""
                     )
-                },
-                floatingActionButton = {
-                    FloatingActionButton(
-                        onClick = {
-                            createFile?.launch(
-                                uriData?.displayName ?: ""
-                            )
-                        },
-                        content = {
-                            Image(
-                                imageVector = Icons.Rounded.Download,
-                                contentDescription = stringResource(
-                                    R.string.save_button
-                                )
-                            )
-                        }
+                }, content = {
+                    Image(
+                        imageVector = Icons.Rounded.Download,
+                        contentDescription = stringResource(
+                            R.string.save_button
+                        )
                     )
-                }
-            ) { paddingValues ->
+                })
+            }) { paddingValues ->
                 Box(
                     contentAlignment = Alignment.Center,
-                    modifier = Modifier.fillMaxSize().padding(paddingValues)
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
                 ) {
                     if (uriData != null) {
                         Column(
-                            modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .verticalScroll(rememberScrollState()),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.SpaceEvenly
                         ) {
@@ -156,8 +152,7 @@ class ShareActivity : ComponentActivity() {
                 label = stringResource(R.string.file_size),
                 // TODO: Find code to calculate file size for previews
                 content = if (uriData.size != null && baseContext != null) android.text.format.Formatter.formatFileSize(
-                    baseContext,
-                    uriData.size
+                    baseContext, uriData.size
                 ) else stringResource(R.string.unknown)
             )
         }
@@ -166,8 +161,7 @@ class ShareActivity : ComponentActivity() {
     @Composable
     fun FileInfoLine(label: String, content: String) {
         Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.Start
+            modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start
         ) {
             Text(label, style = MaterialTheme.typography.titleLarge)
             Text(content, softWrap = true, style = MaterialTheme.typography.bodyLarge)
