@@ -3,13 +3,19 @@ plugins {
     id 'kotlin-android'
 }
 
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+
+def keystoreProperties = new Properties()
+
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     signingConfigs {
         release {
-            storeFile System.getenv("KSTOREFILE")
-            storePassword System.getenv("KSTOREPWD")
-            keyPassword System.getenv("KEYPWD")
-            keyAlias 'upload'
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
         }
     }
     compileSdk 33
@@ -18,8 +24,8 @@ android {
         applicationId "com.mateusrodcosta.apps.share2storage"
         minSdk 23
         targetSdk 32
-        versionCode 4
-        versionName "0.3"
+        versionCode 5
+        versionName "0.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -71,10 +77,10 @@ dependencies {
     implementation 'androidx.compose.material:material-icons-extended'
 
     // Integration with activities
-    implementation 'androidx.activity:activity-compose'
+    implementation 'androidx.activity:activity-compose:1.6.1'
 
     // UI Tests
-    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
+    androidTestImplementation 'androidx.compose.ui:ui-test-junit4:1.3.3'
 
     testImplementation 'junit:junit:4.13.2'
 }
