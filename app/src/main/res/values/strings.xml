@@ -8,6 +8,9 @@
     <string name="how_to_use_step_2">Select \"Save Locally\" on the share options</string>
     <string name="how_to_use_step_3">A screen with details about the file will open, press Save</string>
     <string name="how_to_use_step_4">The file picker will open, select where to save and the filename</string>
+    <string name="how_to_use_about_title">About</string>
+    <string name="how_to_use_about">Developed by Mateus Rodrigues Costa, licensed under AGPLv3+</string>
+    <string name="how_to_use_github">Source code available on Github at https://github.com/MateusRodCosta/Share2Storage</string>
 
     <string name="save_button">Save</string>
     <string name="no_file_found">No file found</string>

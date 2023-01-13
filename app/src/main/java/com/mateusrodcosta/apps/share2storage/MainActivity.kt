@@ -17,12 +17,17 @@
 
 package com.mateusrodcosta.apps.share2storage
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,7 +39,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.startActivity
 import com.mateusrodcosta.apps.share2storage.theme.AppTheme
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +55,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     @Preview
     fun MainScreen() {
+        val context = this
         AppTheme {
             Scaffold(
                 topBar = {
@@ -62,7 +70,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.padding(paddingValues)
                 ) {
                     Column(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState()),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Column(modifier = Modifier.padding(all = 16.dp)) {
@@ -80,14 +90,29 @@ class MainActivity : ComponentActivity() {
                         }
                         Column {
                             BasicDivider()
-                            HowToUseRow(1, stringResource(id = R.string.how_to_use_step_1))
+                            HowToUseRow(1, stringResource(R.string.how_to_use_step_1))
                             BasicDivider()
-                            HowToUseRow(2, stringResource(id = R.string.how_to_use_step_2))
+                            HowToUseRow(2, stringResource(R.string.how_to_use_step_2))
                             BasicDivider()
-                            HowToUseRow(3, stringResource(id = R.string.how_to_use_step_3))
+                            HowToUseRow(3, stringResource(R.string.how_to_use_step_3))
                             BasicDivider()
-                            HowToUseRow(4, stringResource(id = R.string.how_to_use_step_4))
+                            HowToUseRow(4, stringResource(R.string.how_to_use_step_4))
                             BasicDivider()
+                            Spacer(modifier = Modifier.defaultMinSize(minHeight = (48 + 16).dp))
+                            Box(
+                                modifier = Modifier.padding(start= 24.dp, end= 8.dp )
+                            ) {
+                                Text(
+                                    stringResource(id = R.string.how_to_use_about_title),
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                            }
+                            BasicDivider()
+                            AboutRow(stringResource(R.string.how_to_use_about ), url = "https://github.com/MateusRodCosta/", context = context  )
+                            BasicDivider()
+                            AboutRow(stringResource(R.string.how_to_use_github ), url = "https://github.com/MateusRodCosta/Share2Storage", context = context  )
+                            BasicDivider()
+
                         }
                     }
                 }
@@ -96,34 +121,59 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun HowToUseRow(num: Int, string: String) {
+    fun HowToUseRow(num: Int?, string: String) {
         Box(modifier = Modifier
             .fillMaxWidth()
             .clickable { }) {
-            Column {
-                Row(
-                    modifier = Modifier
-                        .padding(PaddingValues(horizontal = 16.dp, vertical = 8.dp))
-                        .heightIn(min = 48.dp), verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        "$num.",
-                        style = MaterialTheme.typography.titleSmall,
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        string,
-                        style = MaterialTheme.typography.bodyLarge,
-                        softWrap = true,
-                    )
-                }
-                Divider(thickness = Dp.Hairline)
+            Row(
+                modifier = Modifier
+                    .padding(PaddingValues(horizontal = 16.dp, vertical = 8.dp))
+                    .heightIn(min = 48.dp), verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    if(num == null) "   "  else  "$num.",
+                    style = MaterialTheme.typography.titleSmall,
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    string,
+                    style = MaterialTheme.typography.bodyLarge,
+                    softWrap = true,
+                )
             }
         }
     }
 }
 
+
+@Composable
+fun AboutRow(string: String, url: String?, context: Context) {
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .clickable {
+            if (url != null) {
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                startActivity(context, browserIntent, null)
+            }
+        }) {
+        Row(
+            modifier = Modifier
+                .padding(PaddingValues(horizontal = 16.dp, vertical = 8.dp))
+                .heightIn(min = 48.dp), verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                string,
+                style = MaterialTheme.typography.bodyLarge,
+                softWrap = true,
+            )
+        }
+    }
+}
+
+
 @Composable
 fun BasicDivider() {
-    Divider(thickness = Dp.Hairline)
+    Divider(
+        modifier = Modifier.padding(horizontal = 16.dp),
+        thickness = Dp.Hairline)
 }
