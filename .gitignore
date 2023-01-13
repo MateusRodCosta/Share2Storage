@@ -14,3 +14,7 @@
 .cxx
 local.properties
 app/release
+
+key.properties
+**/*.keystore
+**/*.jks
