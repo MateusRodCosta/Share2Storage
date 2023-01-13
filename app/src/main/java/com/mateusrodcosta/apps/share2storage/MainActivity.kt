@@ -1,18 +1,18 @@
 /*
- *     Copyright (C) 2022 Mateus Rodrigues Costa
+ *     Copyright (C) 2022 - 2023 Mateus Rodrigues Costa
  *
  *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
+ *     it under the terms of the GNU Affero General Public License as
+ *     published by the Free Software Foundation, either version 3 of the
+ *     License, or (at your option) any later version.
  *
  *     This program is distributed in the hope that it will be useful,
  *     but WITHOUT ANY WARRANTY; without even the implied warranty of
  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ *     GNU Affero General Public License for more details.
  *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <https://www.gnu.org/licenses/>
+ *     You should have received a copy of the GNU Affero General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package com.mateusrodcosta.apps.share2storage
@@ -23,7 +23,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,7 +34,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.mateusrodcosta.apps.share2storage.utils.Share2StorageTheme
+import com.mateusrodcosta.apps.share2storage.theme.AppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,10 +44,11 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     @Preview
     fun MainScreen() {
-        Share2StorageTheme {
+        AppTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
@@ -73,11 +74,11 @@ class MainActivity : ComponentActivity() {
                             )
                             Text(
                                 stringResource(R.string.how_to_use),
-                                style = MaterialTheme.typography.h6,
+                                style = MaterialTheme.typography.titleLarge,
                                 textAlign = TextAlign.Center
                             )
                         }
-                        Column() {
+                        Column {
                             BasicDivider()
                             HowToUseRow(1, stringResource(id = R.string.how_to_use_step_1))
                             BasicDivider()
@@ -98,30 +99,25 @@ class MainActivity : ComponentActivity() {
     fun HowToUseRow(num: Int, string: String) {
         Box(modifier = Modifier
             .fillMaxWidth()
-            .clickable { }
-        ) {
-            Column() {
+            .clickable { }) {
+            Column {
                 Row(
                     modifier = Modifier
                         .padding(PaddingValues(horizontal = 16.dp, vertical = 8.dp))
-                        .heightIn(min = 48.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                        .heightIn(min = 48.dp), verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         "$num.",
-                        style = MaterialTheme.typography.subtitle2,
+                        style = MaterialTheme.typography.titleSmall,
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         string,
-                        style = MaterialTheme.typography.body1,
+                        style = MaterialTheme.typography.bodyLarge,
                         softWrap = true,
                     )
                 }
-                Divider(
-                    thickness = Dp.Hairline,
-                    startIndent = 16.dp
-                )
+                Divider(thickness = Dp.Hairline)
             }
         }
     }
@@ -129,8 +125,5 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun BasicDivider() {
-    Divider(
-        thickness = Dp.Hairline,
-        startIndent = 16.dp
-    )
+    Divider(thickness = Dp.Hairline)
 }

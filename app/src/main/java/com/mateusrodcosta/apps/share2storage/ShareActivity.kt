@@ -1,24 +1,25 @@
 /*
- *     Copyright (C) 2022 Mateus Rodrigues Costa
+ *     Copyright (C) 2022 - 2023 Mateus Rodrigues Costa
  *
  *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
+ *     it under the terms of the GNU Affero General Public License as
+ *     published by the Free Software Foundation, either version 3 of the
+ *     License, or (at your option) any later version.
  *
  *     This program is distributed in the hope that it will be useful,
  *     but WITHOUT ANY WARRANTY; without even the implied warranty of
  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ *     GNU Affero General Public License for more details.
  *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <https://www.gnu.org/licenses/>
+ *     You should have received a copy of the GNU Affero General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package com.mateusrodcosta.apps.share2storage
 
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -27,17 +28,18 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AudioFile
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.VideoFile
 import androidx.compose.material.icons.rounded.Download
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,7 +47,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.mateusrodcosta.apps.share2storage.model.SampleUriDataProvider
 import com.mateusrodcosta.apps.share2storage.model.UriData
-import com.mateusrodcosta.apps.share2storage.utils.Share2StorageTheme
+import com.mateusrodcosta.apps.share2storage.theme.AppTheme
 
 class ShareActivity : ComponentActivity() {
 
@@ -57,7 +59,14 @@ class ShareActivity : ComponentActivity() {
         var uriData: UriData? = null
 
         if (intent?.action == Intent.ACTION_SEND) {
-            val fileUri = intent.extras?.get(Intent.EXTRA_STREAM) as Uri?
+
+            val fileUri = if (Build.VERSION.SDK_INT >= 33) {
+                intent.getParcelableExtra(Intent.EXTRA_STREAM, Uri::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
+            }
+
             Log.d("fileUri", fileUri.toString())
 
             uriData = getUriData(contentResolver, fileUri)
@@ -77,10 +86,11 @@ class ShareActivity : ComponentActivity() {
         }
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     @Preview
     fun ShareScreen(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData?) {
-        Share2StorageTheme {
+        AppTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
@@ -109,7 +119,7 @@ class ShareActivity : ComponentActivity() {
             ) { paddingValues ->
                 Box(
                     contentAlignment = Alignment.Center,
-                    modifier = Modifier.padding(paddingValues)
+                    modifier = Modifier.fillMaxSize().padding(paddingValues)
                 ) {
                     if (uriData != null) {
                         Column(
@@ -122,7 +132,7 @@ class ShareActivity : ComponentActivity() {
                         }
                     } else Text(
                         stringResource(R.string.no_file_found),
-                        style = MaterialTheme.typography.subtitle1
+                        style = MaterialTheme.typography.titleMedium
                     )
                 }
             }
@@ -157,8 +167,8 @@ class ShareActivity : ComponentActivity() {
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.Start
         ) {
-            Text(label, style = MaterialTheme.typography.h6)
-            Text(content, softWrap = true, style = MaterialTheme.typography.body1)
+            Text(label, style = MaterialTheme.typography.titleLarge)
+            Text(content, softWrap = true, style = MaterialTheme.typography.bodyLarge)
         }
     }
 
@@ -175,10 +185,11 @@ class ShareActivity : ComponentActivity() {
         }
 
         Image(
-            modifier = Modifier.scale(4.0f),
+            modifier = Modifier.scale(5.0f),
             imageVector = fileIcon,
             contentDescription = stringResource(R.string.app_name),
-            contentScale = ContentScale.Fit
+            contentScale = ContentScale.Fit,
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary)
         )
     }
 }
