@@ -19,8 +19,8 @@ android {
     compileSdk 33
     defaultConfig {
         applicationId "com.mateusrodcosta.apps.share2storage"
-        minSdk 23
-        targetSdk 32
+        minSdk 26
+        targetSdk 33
         versionCode 10
         versionName "0.4"
     }
