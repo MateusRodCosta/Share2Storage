@@ -50,6 +50,8 @@ import androidx.compose.ui.unit.dp
 import com.mateusrodcosta.apps.share2storage.model.SampleUriDataProvider
 import com.mateusrodcosta.apps.share2storage.model.UriData
 import com.mateusrodcosta.apps.share2storage.theme.AppTheme
+import com.mateusrodcosta.apps.share2storage.utils.getUriData
+import com.mateusrodcosta.apps.share2storage.utils.saveFile
 
 class ShareActivity : ComponentActivity() {
 
@@ -65,7 +67,7 @@ class ShareActivity : ComponentActivity() {
             val fileUri = if (Build.VERSION.SDK_INT >= 33) {
                 intent.getParcelableExtra(Intent.EXTRA_STREAM, Uri::class.java)
             } else {
-                @Suppress("DEPRECATION") intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
+                @Suppress("DEPRECATION") intent.getParcelableExtra(Intent.EXTRA_STREAM)
             }
 
             Log.d("fileUri", fileUri.toString())

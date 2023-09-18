@@ -15,13 +15,12 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage
+package com.mateusrodcosta.apps.share2storage.utils
 
 import android.content.ContentResolver
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
-import android.os.Build
 import android.provider.DocumentsContract
 import android.provider.OpenableColumns
 import com.mateusrodcosta.apps.share2storage.model.UriData
@@ -64,10 +63,8 @@ private fun isVirtualFile(context: Context, uri: Uri): Boolean {
         flags = cursor.getInt(0)
     }
     cursor.close()
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        flags and DocumentsContract.Document.FLAG_VIRTUAL_DOCUMENT != 0
-    }
-    return false
+
+    return flags and DocumentsContract.Document.FLAG_VIRTUAL_DOCUMENT != 0
 }
 
 @Throws(IOException::class)
@@ -78,7 +75,7 @@ private fun getInputStreamForVirtualFile(
     val resolver = context.contentResolver
     val filter = "*/*"
     val openableMimeTypes = resolver.getStreamTypes(uri, filter)
-    if (openableMimeTypes == null || openableMimeTypes.isEmpty()) {
+    if (openableMimeTypes.isNullOrEmpty()) {
         throw FileNotFoundException()
     }
     return resolver
