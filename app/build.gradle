@@ -16,13 +16,15 @@ kotlin {
 android {
     namespace 'com.mateusrodcosta.apps.share2storage'
 
-    compileSdk 33
+    compileSdk 34
     defaultConfig {
         applicationId "com.mateusrodcosta.apps.share2storage"
         minSdk 26
         targetSdk 33
         versionCode 10
         versionName "0.4"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
@@ -59,7 +61,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.8"
+        kotlinCompilerExtensionVersion = "1.5.3"
     }
 
 }
@@ -71,7 +73,9 @@ dependencies {
 
     implementation libs.bundles.compose
     debugImplementation libs.bundles.compose.debug
-    androidTestImplementation libs.bundles.compose.android.test
 
     implementation libs.androidx.activity.compose
+
+    testImplementation libs.bundles.testing
+    androidTestImplementation libs.bundles.ui.testing
 }

@@ -1,8 +1,11 @@
 [versions]
 androidGradlePlugin = "8.1.1"
-kotlinVersion = "1.8.22"
-androidxComposeBom = "2023.06.01"
+kotlinVersion = "1.9.10"
+androidxComposeBom = "2023.09.02"
 androidxActivityCompose = "1.7.2"
+junitVersion = "4.13.2"
+androidxTestRunnerVersion = "1.5.2"
+androidxTestRulesVersion = "1.5.0"
 
 [libraries]
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidxComposeBom" }
@@ -13,11 +16,15 @@ androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-te
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-compose-ui-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivityCompose" }
+junit-junit = { group = "junit", name = "junit", version.ref = "junitVersion" }
+androidx-test-runner = { group = "androidx.test", name="runner", version.ref = "androidxTestRunnerVersion" }
+androidx-test-rules = { group = "androidx.test", name="rules", version.ref = "androidxTestRulesVersion" }
 
 [bundles]
 compose = ["androidx.compose.material3", "androidx.compose.ui.tooling.preview", "androidx.compose.ui.material.icons.extended"]
 compose-debug = ["androidx.compose.ui.tooling", "androidx.compose.ui.test.manifest"]
-compose-android-test = ["androidx.compose.ui.test.junit4"]
+testing = ["junit.junit"]
+ui-testing = ["androidx.test.runner", "androidx.test.rules", "androidx.compose.ui.test.junit4"]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
