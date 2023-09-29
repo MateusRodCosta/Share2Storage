@@ -1,0 +1,2 @@
+- Minimum supported Android version is now 8.0 (Oreo)
+- Updated dependencies

@@ -1,0 +1,4 @@
+- Atualização das bibliotecas do Jetpack Compose
+- Ícone do app atualizado
+- Instruções de uso adicionadas à tela inicial
+- Melhorias para a tela de compartilhamento (prévias dos arquivos serão adicionadas em uma versão futura)

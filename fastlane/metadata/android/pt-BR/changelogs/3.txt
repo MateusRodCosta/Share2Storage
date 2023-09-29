@@ -1,0 +1,2 @@
+- Novo nome: Salvar Localmente.
+- Várias melhorias de interface e no código.

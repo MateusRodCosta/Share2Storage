@@ -1,0 +1,2 @@
+- New app name: Save Locally.
+- Several UI and code improvements.

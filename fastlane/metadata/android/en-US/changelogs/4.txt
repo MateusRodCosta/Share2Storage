@@ -1,0 +1,4 @@
+- Updated Jetpack Compose libraries
+- Updated app icon
+- Added usage instructions to main screen
+- Improvements to Share Screen (file previews coming in a future version)

@@ -1,0 +1,4 @@
+Updated Jetpack Compose libraries and added Material 3 support.
+
+Improvements to Main and Share activities such as scroling and about information.
+Reworked how the app gets the shared file data.
