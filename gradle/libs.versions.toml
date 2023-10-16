@@ -1,8 +1,8 @@
 [versions]
 androidGradlePlugin = "8.1.2"
 kotlinVersion = "1.9.10"
-androidxComposeBom = "2023.09.02"
-androidxActivityCompose = "1.7.2"
+androidxComposeBom = "2023.10.00"
+androidxActivityCompose = "1.8.0"
 junitVersion = "4.13.2"
 androidxTestRunnerVersion = "1.5.2"
 androidxTestRulesVersion = "1.5.0"
