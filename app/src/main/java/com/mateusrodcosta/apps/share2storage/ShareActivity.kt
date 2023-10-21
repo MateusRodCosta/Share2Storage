@@ -27,6 +27,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -50,6 +51,8 @@ import androidx.compose.ui.unit.dp
 import com.mateusrodcosta.apps.share2storage.model.SampleUriDataProvider
 import com.mateusrodcosta.apps.share2storage.model.UriData
 import com.mateusrodcosta.apps.share2storage.theme.AppTheme
+import com.mateusrodcosta.apps.share2storage.utils.AppBasicDivider
+import com.mateusrodcosta.apps.share2storage.utils.AppTopBar
 import com.mateusrodcosta.apps.share2storage.utils.getUriData
 import com.mateusrodcosta.apps.share2storage.utils.saveFile
 
@@ -64,7 +67,7 @@ class ShareActivity : ComponentActivity() {
 
         if (intent?.action == Intent.ACTION_SEND) {
 
-            val fileUri = if (Build.VERSION.SDK_INT >= 33) {
+            val fileUri: Uri? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 intent.getParcelableExtra(Intent.EXTRA_STREAM, Uri::class.java)
             } else {
                 @Suppress("DEPRECATION") intent.getParcelableExtra(Intent.EXTRA_STREAM)
@@ -83,36 +86,25 @@ class ShareActivity : ComponentActivity() {
             }
         }
 
-        setContent {
-            ShareScreen(uriData)
-        }
+        setContent { ShareScreen(uriData) }
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     @Preview
     fun ShareScreen(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData?) {
         AppTheme {
-            Scaffold(topBar = {
-                TopAppBar(
-                    title = {
-                        Text(stringResource(R.string.app_name))
-                    },
-                )
-            }, floatingActionButton = {
-                FloatingActionButton(onClick = {
-                    createFile?.launch(
-                        uriData?.displayName ?: ""
-                    )
-                }, content = {
-                    Image(
-                        imageVector = Icons.Rounded.Download,
-                        contentDescription = stringResource(
-                            R.string.save_button
+            Scaffold(
+                topBar = { AppTopBar(stringResource(R.string.app_name)) },
+                floatingActionButton = {
+                    FloatingActionButton(onClick = {
+                        createFile?.launch(uriData?.displayName ?: "")
+                    }, content = {
+                        Image(
+                            imageVector = Icons.Rounded.Download,
+                            contentDescription = stringResource(R.string.save_button)
                         )
-                    )
-                })
-            }) { paddingValues ->
+                    })
+                }) { paddingValues ->
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
@@ -141,15 +133,18 @@ class ShareActivity : ComponentActivity() {
 
     @Composable
     fun FileInfo(uriData: UriData) {
-        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+        Column {
+            AppBasicDivider()
             FileInfoLine(
                 label = stringResource(R.string.file_name),
                 content = uriData.displayName ?: stringResource(R.string.unknown)
             )
+            AppBasicDivider()
             FileInfoLine(
                 label = stringResource(R.string.file_type),
                 content = uriData.type ?: stringResource(R.string.unknown)
             )
+            AppBasicDivider()
             FileInfoLine(
                 label = stringResource(R.string.file_size),
                 // TODO: Find code to calculate file size for previews
@@ -157,16 +152,24 @@ class ShareActivity : ComponentActivity() {
                     baseContext, uriData.size
                 ) else stringResource(R.string.unknown)
             )
+            AppBasicDivider()
         }
     }
 
     @Composable
     fun FileInfoLine(label: String, content: String) {
-        Column(
-            modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start
-        ) {
-            Text(label, style = MaterialTheme.typography.titleLarge)
-            Text(content, softWrap = true, style = MaterialTheme.typography.bodyLarge)
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .clickable { }) {
+            Column(
+                modifier = Modifier
+                    .padding(PaddingValues(horizontal = 16.dp, vertical = 8.dp))
+                    .heightIn(min = 48.dp), horizontalAlignment = Alignment.Start
+            ) {
+                Text(label, style = MaterialTheme.typography.titleLarge)
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(content, softWrap = true, style = MaterialTheme.typography.bodyLarge)
+            }
         }
     }
 
