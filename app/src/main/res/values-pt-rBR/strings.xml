@@ -19,4 +19,7 @@
     <string name="file_type">Tipo do arquivo</string>
     <string name="file_size">Tamanho do arquivo</string>
     <string name="unknown">Desconhecido</string>
+
+    <string name="toast_saved_file_success">Arquivo salvo com sucesso!</string>
+    <string name="toast_saved_file_failure">Ocorreu um erro ao salvar o arquivo.</string>
 </resources>

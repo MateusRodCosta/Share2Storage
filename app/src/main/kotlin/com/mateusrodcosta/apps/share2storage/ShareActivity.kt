@@ -22,6 +22,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
@@ -81,7 +82,14 @@ class ShareActivity : ComponentActivity() {
                 createFile = registerForActivityResult(CreateDocument(uriData.type ?: "*/*"),
                     fun(uri: Uri?) {
                         if (uri == null || fileUri == null) return
-                        saveFile(baseContext, uri, fileUri)
+                        val isSuccess = saveFile(baseContext, uri, fileUri)
+                        Toast.makeText(
+                            baseContext, if (isSuccess) {
+                                R.string.toast_saved_file_success
+                            } else {
+                                R.string.toast_saved_file_failure
+                            }, Toast.LENGTH_LONG
+                        ).show()
                     })
             }
         }
