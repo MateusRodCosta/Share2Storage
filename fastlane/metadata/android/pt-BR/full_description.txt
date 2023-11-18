@@ -1,0 +1,5 @@
+Às vezes alguns apps decidem não disponibilizar uma opção de Salvar, geralmente isso se dá por não querer implementar a lógica de salvar o arquivo, no entanto eles geralmente disponibilizam a opção de Compartilhar, se aproveitando da função de compartilhamento do sistema.
+
+Nesses casos, o Salvar Localmente pode vir a calhar, permitindo salvar o arquivo em qualquer localmente por se registrar como uma das opções possíveis de compartilhamento e mostrando um seletor de arquivos para salvamento.
+
+Salvar Localmente é desenvolvido com Jetpack Compose e licenciado sob AGPLv3+. O código-fonte está disponível em <a href="https://github.com/MateusRodCosta/Share2Storage">https://github.com/MateusRodCosta/Share2Storage</a>.
