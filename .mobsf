@@ -1,0 +1,6 @@
+---
+
+- ignore-rules:
+  - android_prevent_screenshot
+  - android_root_detection
+  - android_safetynet
