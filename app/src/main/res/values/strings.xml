@@ -15,6 +15,7 @@
     <string name="save_button">Save</string>
     <string name="no_file_found">No file found</string>
 
+    <string name="file_details">File Details</string>
     <string name="file_name">File name</string>
     <string name="file_type">File type</string>
     <string name="file_size">File size</string>

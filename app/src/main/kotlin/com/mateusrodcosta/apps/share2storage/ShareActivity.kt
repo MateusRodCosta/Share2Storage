@@ -29,7 +29,16 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -38,7 +47,12 @@ import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.VideoFile
 import androidx.compose.material.icons.rounded.Download
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,7 +67,6 @@ import com.mateusrodcosta.apps.share2storage.model.SampleUriDataProvider
 import com.mateusrodcosta.apps.share2storage.model.UriData
 import com.mateusrodcosta.apps.share2storage.theme.AppTheme
 import com.mateusrodcosta.apps.share2storage.utils.AppBasicDivider
-import com.mateusrodcosta.apps.share2storage.utils.AppTopBar
 import com.mateusrodcosta.apps.share2storage.utils.getUriData
 import com.mateusrodcosta.apps.share2storage.utils.saveFile
 
@@ -97,12 +110,17 @@ class ShareActivity : ComponentActivity() {
         setContent { ShareScreen(uriData) }
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     @Preview
     fun ShareScreen(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData?) {
         AppTheme {
             Scaffold(
-                topBar = { AppTopBar(stringResource(R.string.app_name)) },
+                topBar = {
+                    TopAppBar(
+                        title = { Text(stringResource(R.string.file_details)) }
+                    )
+                },
                 floatingActionButton = {
                     FloatingActionButton(onClick = {
                         createFile?.launch(uriData?.displayName ?: "")

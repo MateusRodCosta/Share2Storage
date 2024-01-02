@@ -38,9 +38,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,7 +55,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
 import com.mateusrodcosta.apps.share2storage.theme.AppTheme
 import com.mateusrodcosta.apps.share2storage.utils.AppBasicDivider
-import com.mateusrodcosta.apps.share2storage.utils.AppTopBar
 
 
 class MainActivity : ComponentActivity() {
@@ -62,12 +63,20 @@ class MainActivity : ComponentActivity() {
         setContent { MainScreen() }
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     @Preview
     fun MainScreen() {
         val context = this
         AppTheme {
-            Scaffold(topBar = { AppTopBar(stringResource(R.string.app_name)) }) { paddingValues ->
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = { Text(stringResource(R.string.app_name)) }
+                    )
+                }
+            )
+            { paddingValues ->
                 Box(modifier = Modifier.padding(paddingValues)) {
                     Column(
                         modifier = Modifier
