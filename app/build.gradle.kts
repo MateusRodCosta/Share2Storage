@@ -35,6 +35,10 @@ android {
             keyPassword = keystoreProperties["keyPassword"] as String
             storeFile = file(keystoreProperties["storeFile"] as String)
             storePassword = keystoreProperties["storePassword"] as String
+
+            // Always enable v2 and v3 signing schemes, which will be used on modern Android OSes
+            enableV2Signing = true
+            enableV3Signing = true
         }
     }
 
