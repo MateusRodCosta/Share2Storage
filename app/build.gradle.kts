@@ -1,5 +1,3 @@
-@file:Suppress("UnstableApiUsage")
-
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -18,8 +16,8 @@ kotlin {
 
 android {
     namespace = "com.mateusrodcosta.apps.share2storage"
-
     compileSdk = 34
+
     defaultConfig {
         applicationId = "com.mateusrodcosta.apps.share2storage"
         minSdk = 26
@@ -64,18 +62,21 @@ android {
     }
 
     androidResources {
+        @Suppress("UnstableApiUsage")
         generateLocaleConfig = true
     }
     buildFeatures {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.4"
+        kotlinCompilerExtensionVersion = "1.5.7"
     }
 }
 
 dependencies {
-    val composeBom = platform(libs.androidx.compose.bom)
+    implementation(libs.androidx.ktx)
+
+    val composeBom = platform(libs.compose.bom)
     implementation(composeBom)
     androidTestImplementation(composeBom)
 
