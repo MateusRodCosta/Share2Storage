@@ -2,6 +2,7 @@
 androidGradlePlugin = "8.2.0"
 kotlin = "1.9.21"
 ktx = "1.12.0"
+preference-ktx = "1.2.1"
 composeBom = "2023.10.01"
 activityCompose = "1.8.2"
 junit = "4.13.2"
@@ -9,7 +10,8 @@ androidxTestRunner = "1.5.2"
 androidxTestRules = "1.5.0"
 
 [libraries]
-androidx-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
+androidx-preference-ktx = { group = "androidx.preference", name = "preference-ktx", version.ref = "preference-ktx" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
@@ -23,6 +25,7 @@ androidx-test-runner = { group = "androidx.test", name="runner", version.ref = "
 androidx-test-rules = { group = "androidx.test", name="rules", version.ref = "androidxTestRules" }
 
 [bundles]
+androidx-ktx = ["androidx.core.ktx", "androidx.preference.ktx"]
 compose = ["compose.material3", "compose.ui.tooling.preview", "compose.ui.material.icons.extended"]
 compose-debug = ["compose.ui.tooling", "compose.ui.test.manifest"]
 testing = ["junit.junit"]

@@ -63,19 +63,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.preference.PreferenceManager
 import com.mateusrodcosta.apps.share2storage.model.SampleUriDataProvider
 import com.mateusrodcosta.apps.share2storage.model.UriData
 import com.mateusrodcosta.apps.share2storage.theme.AppTheme
 import com.mateusrodcosta.apps.share2storage.utils.AppBasicDivider
 import com.mateusrodcosta.apps.share2storage.utils.getUriData
 import com.mateusrodcosta.apps.share2storage.utils.saveFile
+import com.mateusrodcosta.apps.share2storage.utils.spSkipFileDetailsKey
 
-class ShareActivity : ComponentActivity() {
+class DetailsActivity : ComponentActivity() {
 
     private var createFile: ActivityResultLauncher<String>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val skipFileDetails = sharedPreferences.getBoolean(spSkipFileDetailsKey, false)
 
         var uriData: UriData? = null
 
@@ -103,34 +108,33 @@ class ShareActivity : ComponentActivity() {
                                 R.string.toast_saved_file_failure
                             }, Toast.LENGTH_LONG
                         ).show()
+                        if (skipFileDetails) finish()
                     })
             }
         }
 
-        setContent { ShareScreen(uriData) }
+        setContent { DetailsScreen(uriData) }
+
+        if (skipFileDetails) createFile?.launch(uriData?.displayName ?: "")
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     @Preview
-    fun ShareScreen(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData?) {
+    fun DetailsScreen(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData?) {
         AppTheme {
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = { Text(stringResource(R.string.file_details)) }
+            Scaffold(topBar = {
+                TopAppBar(title = { Text(stringResource(R.string.file_details)) })
+            }, floatingActionButton = {
+                FloatingActionButton(onClick = {
+                    createFile?.launch(uriData?.displayName ?: "")
+                }, content = {
+                    Image(
+                        imageVector = Icons.Rounded.Download,
+                        contentDescription = stringResource(R.string.save_button)
                     )
-                },
-                floatingActionButton = {
-                    FloatingActionButton(onClick = {
-                        createFile?.launch(uriData?.displayName ?: "")
-                    }, content = {
-                        Image(
-                            imageVector = Icons.Rounded.Download,
-                            contentDescription = stringResource(R.string.save_button)
-                        )
-                    })
-                }) { paddingValues ->
+                })
+            }) { paddingValues ->
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier

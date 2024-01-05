@@ -12,6 +12,10 @@
     <string name="how_to_use_about">Developed by Mateus Rodrigues Costa, licensed under AGPLv3+</string>
     <string name="how_to_use_github">Source code available on Github at https://github.com/MateusRodCosta/Share2Storage</string>
 
+    <string name="settings">Settings</string>
+    <string name="settings_skip_file_details_page">Skip File Details page</string>
+    <string name="settings_skip_file_details_page_info">Open file picker as soon as file is received</string>
+
     <string name="save_button">Save</string>
     <string name="no_file_found">No file found</string>
 
@@ -23,4 +27,6 @@
 
     <string name="toast_saved_file_success">File saved successfully!</string>
     <string name="toast_saved_file_failure">An error occurred while saving the file.</string>
+
+    <string name="back_arrow">Back Arrow</string>
 </resources>

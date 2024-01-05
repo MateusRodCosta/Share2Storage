@@ -10,24 +10,35 @@
         <activity
             android:name=".MainActivity"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
         <activity
-            android:name=".ShareActivity"
-            android:exported="true" >
+            android:name=".SettingsActivity"
+            android:exported="true" />
+
+        <activity
+            android:name=".DetailsActivity"
+            android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="image/*" />
                 <data android:mimeType="audio/*" />
                 <data android:mimeType="video/*" />
                 <data android:mimeType="text/*" />
                 <data android:mimeType="application/*" />
             </intent-filter>
+
         </activity>
 
     </application>

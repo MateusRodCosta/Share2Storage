@@ -38,7 +38,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -69,14 +73,16 @@ class MainActivity : ComponentActivity() {
     fun MainScreen() {
         val context = this
         AppTheme {
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = { Text(stringResource(R.string.app_name)) }
-                    )
-                }
-            )
-            { paddingValues ->
+            Scaffold(topBar = {
+                TopAppBar(title = { Text(stringResource(R.string.app_name)) }, actions = {
+                    IconButton(onClick = {
+                        val i = Intent(context, SettingsActivity::class.java)
+                        startActivity(i)
+                    }) {
+                        Icon(Icons.Rounded.Settings, stringResource(id = R.string.settings))
+                    }
+                })
+            }) { paddingValues ->
                 Box(modifier = Modifier.padding(paddingValues)) {
                     Column(
                         modifier = Modifier

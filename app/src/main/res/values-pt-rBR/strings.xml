@@ -12,6 +12,10 @@
     <string name="how_to_use_about">Desenvolvido por Mateus Rodrigues Costa, licenciado sob AGPLv3+</string>
     <string name="how_to_use_github">Código-fonte disponível no Github em https://github.com/MateusRodCosta/Share2Storage</string>
 
+    <string name="settings">Settings</string>
+    <string name="settings_skip_file_details_page">Pular página de Detalhes do arquivo</string>
+    <string name="settings_skip_file_details_page_info">Abrir seletor de arquivos assim que receber arquivo</string>
+
     <string name="save_button">Salvar</string>
     <string name="no_file_found">Nenhum arquivo</string>
 
@@ -23,4 +27,6 @@
 
     <string name="toast_saved_file_success">Arquivo salvo com sucesso!</string>
     <string name="toast_saved_file_failure">Ocorreu um erro ao salvar o arquivo.</string>
+
+    <string name="back_arrow">Voltar</string>
 </resources>
