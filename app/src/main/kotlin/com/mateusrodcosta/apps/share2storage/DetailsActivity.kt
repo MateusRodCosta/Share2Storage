@@ -21,6 +21,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.text.format.Formatter
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -32,6 +33,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -52,6 +54,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -77,7 +84,9 @@ import com.mateusrodcosta.apps.share2storage.utils.saveFile
 class DetailsActivity : ComponentActivity() {
 
     private var createFile: ActivityResultLauncher<String>? = null
+    private var windowSizeClass: WindowSizeClass? = null
 
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -128,7 +137,10 @@ class DetailsActivity : ComponentActivity() {
             }
         }
 
-        setContent { DetailsScreen(uriData) }
+        setContent {
+            windowSizeClass = calculateWindowSizeClass(this)
+            DetailsScreen(uriData)
+        }
 
         if (skipFileDetails) createFile!!.launch(uriData?.displayName ?: "")
     }
@@ -137,6 +149,8 @@ class DetailsActivity : ComponentActivity() {
     @Composable
     @Preview
     fun DetailsScreen(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData?) {
+        val widthSizeClass = windowSizeClass?.widthSizeClass ?: WindowWidthSizeClass.Compact
+        val heightSizeClass = windowSizeClass?.heightSizeClass ?: WindowHeightSizeClass.Medium
         AppTheme {
             Scaffold(topBar = {
                 TopAppBar(title = { Text(stringResource(R.string.file_details)) })
@@ -156,20 +170,13 @@ class DetailsActivity : ComponentActivity() {
                         .fillMaxSize()
                         .padding(paddingValues)
                 ) {
+                    val showLandscapePhone = heightSizeClass == WindowHeightSizeClass.Compact
+                    val showLandscapeTablet = widthSizeClass == WindowWidthSizeClass.Expanded
                     if (uriData != null) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .verticalScroll(rememberScrollState()),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.SpaceEvenly
-                        ) {
-                            Box(modifier = Modifier.weight(1.0f)) {
-                                FilePreview(uriData)
-                            }
-                            Box(modifier = Modifier.weight(1.0f)) {
-                                FileInfo(uriData)
-                            }
+                        if (showLandscapePhone || showLandscapeTablet) {
+                            FileDetailsLandscape(uriData)
+                        } else {
+                            FileDetailsPortrait(uriData)
                         }
                     } else Text(
                         stringResource(R.string.no_file_found),
@@ -181,8 +188,42 @@ class DetailsActivity : ComponentActivity() {
     }
 
     @Composable
+    fun FileDetailsPortrait(uriData: UriData) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Box(modifier = Modifier.weight(1.0f)) {
+                FilePreview(uriData)
+            }
+            Box(modifier = Modifier.weight(1.0f)) {
+                FileInfo(uriData)
+            }
+        }
+    }
+
+    @Composable
+    fun FileDetailsLandscape(uriData: UriData) {
+        Row(
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            Box(modifier = Modifier.weight(1.0f)) {
+                FilePreview(uriData)
+            }
+            Box(modifier = Modifier.weight(1.0f)) {
+                FileInfo(uriData)
+            }
+        }
+    }
+
+    @Composable
     fun FileInfo(uriData: UriData) {
-        Column {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+        ) {
             AppBasicDivider()
             FileInfoLine(
                 label = stringResource(R.string.file_name),
@@ -197,7 +238,7 @@ class DetailsActivity : ComponentActivity() {
             FileInfoLine(
                 label = stringResource(R.string.file_size),
                 // TODO: Find code to calculate file size for previews
-                content = if (uriData.size != null && baseContext != null) android.text.format.Formatter.formatFileSize(
+                content = if (uriData.size != null && baseContext != null) Formatter.formatFileSize(
                     baseContext, uriData.size
                 ) else stringResource(R.string.unknown)
             )
@@ -235,7 +276,11 @@ class DetailsActivity : ComponentActivity() {
             Icons.Outlined.Description
         }
 
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
             if (uriData.previewImage != null) {
                 Image(
                     modifier = Modifier.align(Alignment.Center),
