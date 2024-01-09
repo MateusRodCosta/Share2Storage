@@ -25,19 +25,14 @@ import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
 
 class CreateDocumentWithInitialUri(
-    mimeType: String,
-    private val initialUri: Uri?
+    mimeType: String, private val initialUri: Uri?
 ) : CreateDocument(mimeType) {
 
     override fun createIntent(context: Context, input: String): Intent {
-        Log.d("CreateDocumentWithInitialUri] initialUri", initialUri.toString())
-        val i = super.createIntent(context, input).also { i ->
+        return super.createIntent(context, input).also { i ->
+            Log.d("CreateDocumentWithInitialUri] initialUri", initialUri.toString())
             if (initialUri != null) i.putExtra(EXTRA_INITIAL_URI, initialUri)
         }
-
-        Log.d("intent", i.toString())
-        Log.d("intent extras", i.extras.toString())
-        return i;
     }
 
 }
