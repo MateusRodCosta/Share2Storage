@@ -17,9 +17,7 @@
 
 package com.mateusrodcosta.apps.share2storage
 
-import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -51,15 +49,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat.startActivity
 import com.mateusrodcosta.apps.share2storage.theme.AppTheme
 import com.mateusrodcosta.apps.share2storage.utils.AppBasicDivider
-
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -122,14 +119,29 @@ class MainActivity : ComponentActivity() {
                             AppBasicDivider()
                             AboutRow(
                                 stringResource(R.string.how_to_use_about),
-                                url = "https://github.com/MateusRodCosta/",
-                                context = context
+                                url = stringResource(R.string.github_profile_url)
                             )
                             AppBasicDivider()
                             AboutRow(
-                                stringResource(R.string.how_to_use_github),
-                                url = "https://github.com/MateusRodCosta/Share2Storage",
-                                context = context
+                                String.format(
+                                    stringResource(R.string.how_to_use_github), stringResource(
+
+                                        R.string.source_code_url
+                                    )
+                                ), url = stringResource(R.string.source_code_url)
+                            )
+                            AppBasicDivider()
+                            AboutRow(
+                                stringResource(R.string.how_to_use_app_icon_credits), url = null
+                            )
+                            AppBasicDivider()
+                            AboutRow(
+                                String.format(
+                                    stringResource(R.string.how_to_use_app_donation),
+                                    stringResource(
+                                        R.string.donation_url
+                                    )
+                                ), url = stringResource(R.string.donation_url)
                             )
                             AppBasicDivider()
                         }
@@ -164,13 +176,13 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun AboutRow(string: String, url: String?, context: Context) {
+    fun AboutRow(string: String, url: String?) {
+        val localUriHandler = LocalUriHandler.current
         Box(modifier = Modifier
             .fillMaxWidth()
             .clickable {
                 if (url != null) {
-                    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                    startActivity(context, browserIntent, null)
+                    localUriHandler.openUri(url)
                 }
             }) {
             Row(
