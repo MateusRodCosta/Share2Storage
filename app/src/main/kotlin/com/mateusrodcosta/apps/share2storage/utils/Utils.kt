@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2022 - 2023 Mateus Rodrigues Costa
+ *     Copyright (C) 2022 - 2024 Mateus Rodrigues Costa
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as
@@ -27,6 +27,7 @@ import com.mateusrodcosta.apps.share2storage.model.UriData
 import java.io.*
 
 const val spSkipFileDetailsKey: String = "skip_file_details"
+const val spDefaultSaveLocationKey: String = "default_save_location"
 
 fun getUriData(contentResolver: ContentResolver, uri: Uri?): UriData? {
     if (uri == null) return null

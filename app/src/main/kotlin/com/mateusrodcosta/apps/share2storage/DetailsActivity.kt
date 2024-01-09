@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2022 - 2023 Mateus Rodrigues Costa
+ *     Copyright (C) 2022 - 2024 Mateus Rodrigues Costa
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as
@@ -26,7 +26,6 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -63,13 +62,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.documentfile.provider.DocumentFile
 import androidx.preference.PreferenceManager
 import com.mateusrodcosta.apps.share2storage.model.SampleUriDataProvider
 import com.mateusrodcosta.apps.share2storage.model.UriData
 import com.mateusrodcosta.apps.share2storage.theme.AppTheme
 import com.mateusrodcosta.apps.share2storage.utils.AppBasicDivider
+import com.mateusrodcosta.apps.share2storage.utils.CreateDocumentWithInitialUri
 import com.mateusrodcosta.apps.share2storage.utils.getUriData
 import com.mateusrodcosta.apps.share2storage.utils.saveFile
+import com.mateusrodcosta.apps.share2storage.utils.spDefaultSaveLocationKey
 import com.mateusrodcosta.apps.share2storage.utils.spSkipFileDetailsKey
 
 class DetailsActivity : ComponentActivity() {
@@ -81,6 +83,16 @@ class DetailsActivity : ComponentActivity() {
 
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         val skipFileDetails = sharedPreferences.getBoolean(spSkipFileDetailsKey, false)
+        val defaultSaveLocationRaw = sharedPreferences.getString(spDefaultSaveLocationKey, null)
+        Log.d("details] defaultSaveLocationRaw", defaultSaveLocationRaw.toString())
+        val defaultSaveLocation = if (defaultSaveLocationRaw != null) {
+            val parsedUri = Uri.parse(defaultSaveLocationRaw)
+            val file = DocumentFile.fromTreeUri(this, parsedUri)
+            file?.uri
+        } else {
+            null
+        }
+        Log.d("details] defaultSaveLocation", defaultSaveLocation.toString())
 
         var uriData: UriData? = null
 
@@ -97,25 +109,26 @@ class DetailsActivity : ComponentActivity() {
             uriData = getUriData(contentResolver, fileUri)
 
             if (uriData != null) {
-                createFile = registerForActivityResult(CreateDocument(uriData.type ?: "*/*"),
-                    fun(uri: Uri?) {
-                        if (uri == null || fileUri == null) return
-                        val isSuccess = saveFile(baseContext, uri, fileUri)
-                        Toast.makeText(
-                            baseContext, if (isSuccess) {
-                                R.string.toast_saved_file_success
-                            } else {
-                                R.string.toast_saved_file_failure
-                            }, Toast.LENGTH_LONG
-                        ).show()
-                        if (skipFileDetails) finish()
-                    })
+                createFile = registerForActivityResult(
+                    CreateDocumentWithInitialUri(uriData.type ?: "*/*", defaultSaveLocation)
+                ) { uri ->
+                    if (uri == null || fileUri == null) return@registerForActivityResult
+                    val isSuccess = saveFile(baseContext, uri, fileUri)
+                    Toast.makeText(
+                        baseContext, if (isSuccess) {
+                            R.string.toast_saved_file_success
+                        } else {
+                            R.string.toast_saved_file_failure
+                        }, Toast.LENGTH_LONG
+                    ).show()
+                    if (skipFileDetails) finish()
+                }
             }
         }
 
         setContent { DetailsScreen(uriData) }
 
-        if (skipFileDetails) createFile?.launch(uriData?.displayName ?: "")
+        if (skipFileDetails) createFile!!.launch(uriData?.displayName ?: "")
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -127,7 +140,7 @@ class DetailsActivity : ComponentActivity() {
                 TopAppBar(title = { Text(stringResource(R.string.file_details)) })
             }, floatingActionButton = {
                 FloatingActionButton(onClick = {
-                    createFile?.launch(uriData?.displayName ?: "")
+                    createFile!!.launch(uriData?.displayName ?: "")
                 }, content = {
                     Image(
                         imageVector = Icons.Rounded.Download,
