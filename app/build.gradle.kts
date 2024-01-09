@@ -86,9 +86,7 @@ dependencies {
 
     implementation(libs.bundles.compose)
     debugImplementation(libs.bundles.compose.debug)
-
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.compose.material3.window.size.classes)
+    implementation(libs.bundles.androidx.compose.integration)
 
     testImplementation(libs.bundles.testing)
     androidTestImplementation(libs.bundles.ui.testing)
