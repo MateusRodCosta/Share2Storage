@@ -164,8 +164,12 @@ class DetailsActivity : ComponentActivity() {
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.SpaceEvenly
                         ) {
-                            FilePreview(uriData)
-                            FileInfo(uriData)
+                            Box(modifier = Modifier.weight(1.0f)) {
+                                FilePreview(uriData)
+                            }
+                            Box(modifier = Modifier.weight(1.0f)) {
+                                FileInfo(uriData)
+                            }
                         }
                     } else Text(
                         stringResource(R.string.no_file_found),
@@ -231,21 +235,25 @@ class DetailsActivity : ComponentActivity() {
             Icons.Outlined.Description
         }
 
-        if (uriData.previewImage != null) {
-            Image(
-                bitmap = uriData.previewImage.asImageBitmap(),
-                contentDescription = stringResource(R.string.app_name),
-                contentScale = ContentScale.Fit,
-            )
-        } else {
-            Image(
-
-                modifier = Modifier.scale(5.0f),
-                imageVector = fallbackFileIcon,
-                contentDescription = stringResource(R.string.app_name),
-                contentScale = ContentScale.Fit,
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary)
-            )
+        Box(modifier = Modifier.fillMaxSize()) {
+            if (uriData.previewImage != null) {
+                Image(
+                    modifier = Modifier.align(Alignment.Center),
+                    bitmap = uriData.previewImage.asImageBitmap(),
+                    contentDescription = stringResource(R.string.app_name),
+                    contentScale = ContentScale.Fit,
+                )
+            } else {
+                Image(
+                    modifier = Modifier
+                        .scale(5.0f)
+                        .align(Alignment.Center),
+                    imageVector = fallbackFileIcon,
+                    contentDescription = stringResource(R.string.app_name),
+                    contentScale = ContentScale.Fit,
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary)
+                )
+            }
         }
     }
 }
