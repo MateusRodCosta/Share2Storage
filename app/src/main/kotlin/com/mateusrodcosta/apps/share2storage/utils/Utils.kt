@@ -28,10 +28,6 @@ import android.provider.OpenableColumns
 import com.mateusrodcosta.apps.share2storage.model.UriData
 import java.io.*
 
-
-const val spSkipFileDetailsKey: String = "skip_file_details"
-const val spDefaultSaveLocationKey: String = "default_save_location"
-
 fun getUriData(contentResolver: ContentResolver, uri: Uri?): UriData? {
     if (uri == null) return null
     val type = contentResolver.getType(uri)

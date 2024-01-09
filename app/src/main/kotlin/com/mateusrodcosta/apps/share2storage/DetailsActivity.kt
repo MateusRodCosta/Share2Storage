@@ -70,10 +70,9 @@ import com.mateusrodcosta.apps.share2storage.model.UriData
 import com.mateusrodcosta.apps.share2storage.theme.AppTheme
 import com.mateusrodcosta.apps.share2storage.utils.AppBasicDivider
 import com.mateusrodcosta.apps.share2storage.utils.CreateDocumentWithInitialUri
+import com.mateusrodcosta.apps.share2storage.utils.SharedPreferenceKeys
 import com.mateusrodcosta.apps.share2storage.utils.getUriData
 import com.mateusrodcosta.apps.share2storage.utils.saveFile
-import com.mateusrodcosta.apps.share2storage.utils.spDefaultSaveLocationKey
-import com.mateusrodcosta.apps.share2storage.utils.spSkipFileDetailsKey
 
 class DetailsActivity : ComponentActivity() {
 
@@ -83,8 +82,10 @@ class DetailsActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val skipFileDetails = sharedPreferences.getBoolean(spSkipFileDetailsKey, false)
-        val defaultSaveLocationRaw = sharedPreferences.getString(spDefaultSaveLocationKey, null)
+        val skipFileDetails =
+            sharedPreferences.getBoolean(SharedPreferenceKeys.skipFileDetailsKey, false)
+        val defaultSaveLocationRaw =
+            sharedPreferences.getString(SharedPreferenceKeys.defaultSaveLocationKey, null)
         Log.d("details] defaultSaveLocationRaw", defaultSaveLocationRaw.toString())
         val defaultSaveLocation = if (defaultSaveLocationRaw != null) {
             val parsedUri = Uri.parse(defaultSaveLocationRaw)

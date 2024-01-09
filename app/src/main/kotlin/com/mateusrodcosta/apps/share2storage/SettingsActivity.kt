@@ -62,8 +62,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import com.mateusrodcosta.apps.share2storage.theme.AppTheme
-import com.mateusrodcosta.apps.share2storage.utils.spDefaultSaveLocationKey
-import com.mateusrodcosta.apps.share2storage.utils.spSkipFileDetailsKey
+import com.mateusrodcosta.apps.share2storage.utils.SharedPreferenceKeys
 
 
 class SettingsActivity : ComponentActivity() {
@@ -92,9 +91,11 @@ class SettingsActivity : ComponentActivity() {
 
     private fun initSharedPreferences() {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        spSkipFileDetails = sharedPreferences.getBoolean(spSkipFileDetailsKey, false)
+        spSkipFileDetails =
+            sharedPreferences.getBoolean(SharedPreferenceKeys.skipFileDetailsKey, false)
         Log.d("settings] initSharedPreferences] skipFileDetails", spSkipFileDetails.toString())
-        val spDefaultSaveLocationRaw = sharedPreferences.getString(spDefaultSaveLocationKey, null)
+        val spDefaultSaveLocationRaw =
+            sharedPreferences.getString(SharedPreferenceKeys.defaultSaveLocationKey, null)
         spDefaultSaveLocation = if (spDefaultSaveLocationRaw != null) {
             val uri = Uri.parse(spDefaultSaveLocationRaw)
 
@@ -116,7 +117,7 @@ class SettingsActivity : ComponentActivity() {
 
         val updateSkipFileDetails: (Boolean) -> Unit = { value ->
             sharedPreferences.edit(commit = true) {
-                putBoolean(spSkipFileDetailsKey, value)
+                putBoolean(SharedPreferenceKeys.skipFileDetailsKey, value)
             }
             skipFileDetails = value
         }
@@ -124,9 +125,9 @@ class SettingsActivity : ComponentActivity() {
         updateDefaultSaveLocation = { value ->
             sharedPreferences.edit(commit = true) {
                 if (value != null) {
-                    putString(spDefaultSaveLocationKey, value.toString())
+                    putString(SharedPreferenceKeys.defaultSaveLocationKey, value.toString())
                 } else {
-                    remove(spDefaultSaveLocationKey)
+                    remove(SharedPreferenceKeys.defaultSaveLocationKey)
                 }
             }
             if (spDefaultSaveLocation != null) {
