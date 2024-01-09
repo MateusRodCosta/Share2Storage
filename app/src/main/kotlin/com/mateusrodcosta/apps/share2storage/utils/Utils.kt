@@ -20,11 +20,14 @@ package com.mateusrodcosta.apps.share2storage.utils
 import android.content.ContentResolver
 import android.content.Context
 import android.database.Cursor
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.DocumentsContract
 import android.provider.OpenableColumns
 import com.mateusrodcosta.apps.share2storage.model.UriData
 import java.io.*
+
 
 const val spSkipFileDetailsKey: String = "skip_file_details"
 const val spDefaultSaveLocationKey: String = "default_save_location"
@@ -35,8 +38,7 @@ fun getUriData(contentResolver: ContentResolver, uri: Uri?): UriData? {
     var displayName: String? = null
     var size: Long? = null
     val cursor = contentResolver.query(uri, null, null, null, null)
-    if (cursor != null) {
-        /*
+    if (cursor != null) {/*
          * Get the column indexes of the data in the Cursor,
          * move to the first row in the Cursor, get the data,
          * and display it.
@@ -49,7 +51,17 @@ fun getUriData(contentResolver: ContentResolver, uri: Uri?): UriData? {
 
         cursor.close()
     }
-    return UriData(displayName, type, size)
+
+    var bitmap: Bitmap? = null
+
+    val fileDescriptor = contentResolver.openFileDescriptor(uri, "r")
+    if (fileDescriptor != null) {
+        val fd = fileDescriptor.fileDescriptor
+        bitmap = BitmapFactory.decodeFileDescriptor(fd)
+    }
+    fileDescriptor?.close()
+
+    return UriData(displayName, type, size, previewImage = bitmap)
 }
 
 private fun isVirtualFile(context: Context, uri: Uri): Boolean {
@@ -58,8 +70,7 @@ private fun isVirtualFile(context: Context, uri: Uri): Boolean {
         return false
     }
     val cursor: Cursor = context.contentResolver.query(
-        uri, arrayOf(DocumentsContract.Document.COLUMN_FLAGS),
-        null, null, null
+        uri, arrayOf(DocumentsContract.Document.COLUMN_FLAGS), null, null, null
     ) ?: return false
     var flags = 0
     if (cursor.moveToFirst()) {
@@ -81,8 +92,7 @@ private fun getInputStreamForVirtualFile(
     if (openableMimeTypes.isNullOrEmpty()) {
         throw FileNotFoundException()
     }
-    return resolver
-        .openTypedAssetFileDescriptor(uri, openableMimeTypes[0], null)
+    return resolver.openTypedAssetFileDescriptor(uri, openableMimeTypes[0], null)
         ?.createInputStream()
 }
 

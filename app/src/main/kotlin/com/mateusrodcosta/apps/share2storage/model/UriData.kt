@@ -17,4 +17,11 @@
 
 package com.mateusrodcosta.apps.share2storage.model
 
-data class UriData(val displayName: String?, val type: String?, val size: Long?)
+import android.graphics.Bitmap
+
+data class UriData(
+    val displayName: String?,
+    val type: String?,
+    val size: Long?,
+    val previewImage: Bitmap?
+)

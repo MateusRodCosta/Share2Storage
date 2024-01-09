@@ -57,6 +57,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -162,7 +163,7 @@ class DetailsActivity : ComponentActivity() {
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.SpaceEvenly
                         ) {
-                            FilePreview(mimeType = uriData.type ?: "*/*")
+                            FilePreview(uriData)
                             FileInfo(uriData)
                         }
                     } else Text(
@@ -217,8 +218,9 @@ class DetailsActivity : ComponentActivity() {
     }
 
     @Composable
-    fun FilePreview(mimeType: String) {
-        val fileIcon = if (mimeType.startsWith("image/")) {
+    fun FilePreview(uriData: UriData) {
+        val mimeType = uriData.type ?: "*/*"
+        val fallbackFileIcon = if (mimeType.startsWith("image/")) {
             Icons.Outlined.Image
         } else if (mimeType.startsWith("audio/")) {
             Icons.Outlined.AudioFile
@@ -228,12 +230,21 @@ class DetailsActivity : ComponentActivity() {
             Icons.Outlined.Description
         }
 
-        Image(
-            modifier = Modifier.scale(5.0f),
-            imageVector = fileIcon,
-            contentDescription = stringResource(R.string.app_name),
-            contentScale = ContentScale.Fit,
-            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary)
-        )
+        if (uriData.previewImage != null) {
+            Image(
+                bitmap = uriData.previewImage.asImageBitmap(),
+                contentDescription = stringResource(R.string.app_name),
+                contentScale = ContentScale.Fit,
+            )
+        } else {
+            Image(
+
+                modifier = Modifier.scale(5.0f),
+                imageVector = fallbackFileIcon,
+                contentDescription = stringResource(R.string.app_name),
+                contentScale = ContentScale.Fit,
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary)
+            )
+        }
     }
 }
