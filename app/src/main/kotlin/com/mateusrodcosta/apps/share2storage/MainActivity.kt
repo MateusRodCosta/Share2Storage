@@ -45,6 +45,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,7 +56,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.mateusrodcosta.apps.share2storage.theme.AppTheme
+import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 import com.mateusrodcosta.apps.share2storage.utils.AppBasicDivider
 
 class MainActivity : ComponentActivity() {
@@ -71,14 +72,23 @@ class MainActivity : ComponentActivity() {
         val context = this
         AppTheme {
             Scaffold(topBar = {
-                TopAppBar(title = { Text(stringResource(R.string.app_name)) }, actions = {
-                    IconButton(onClick = {
-                        val i = Intent(context, SettingsActivity::class.java)
-                        startActivity(i)
-                    }) {
-                        Icon(Icons.Rounded.Settings, stringResource(id = R.string.settings))
-                    }
-                })
+                TopAppBar(
+                    title = { Text(stringResource(R.string.app_name)) },
+                    actions = {
+                        IconButton(onClick = {
+                            val i = Intent(context, SettingsActivity::class.java)
+                            startActivity(i)
+                        }) {
+                            Icon(Icons.Rounded.Settings, stringResource(id = R.string.settings))
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                        navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
+                        actionIconContentColor = MaterialTheme.colorScheme.onPrimary,
+                    ),
+                )
             }) { paddingValues ->
                 Box(modifier = Modifier.padding(paddingValues)) {
                     Column(

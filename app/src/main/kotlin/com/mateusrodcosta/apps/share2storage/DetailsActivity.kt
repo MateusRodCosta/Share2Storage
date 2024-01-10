@@ -50,10 +50,12 @@ import androidx.compose.material.icons.outlined.VideoFile
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
@@ -74,7 +76,7 @@ import androidx.documentfile.provider.DocumentFile
 import androidx.preference.PreferenceManager
 import com.mateusrodcosta.apps.share2storage.model.SampleUriDataProvider
 import com.mateusrodcosta.apps.share2storage.model.UriData
-import com.mateusrodcosta.apps.share2storage.theme.AppTheme
+import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 import com.mateusrodcosta.apps.share2storage.utils.AppBasicDivider
 import com.mateusrodcosta.apps.share2storage.utils.CreateDocumentWithInitialUri
 import com.mateusrodcosta.apps.share2storage.utils.SharedPreferenceKeys
@@ -153,16 +155,33 @@ class DetailsActivity : ComponentActivity() {
         val heightSizeClass = windowSizeClass?.heightSizeClass ?: WindowHeightSizeClass.Medium
         AppTheme {
             Scaffold(topBar = {
-                TopAppBar(title = { Text(stringResource(R.string.file_details)) })
-            }, floatingActionButton = {
-                FloatingActionButton(onClick = {
-                    createFile!!.launch(uriData?.displayName ?: "")
-                }, content = {
-                    Image(
-                        imageVector = Icons.Rounded.Download,
-                        contentDescription = stringResource(R.string.save_button)
+                TopAppBar(
+                    title = { Text(stringResource(R.string.file_details)) },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                        navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
+                        actionIconContentColor = MaterialTheme.colorScheme.onPrimary,
+                    ),
+                )
+            }, floatingActionButton =
+
+            {
+                if (uriData != null) {
+                    FloatingActionButton(
+                        onClick = {
+                            createFile!!.launch(uriData.displayName ?: "")
+                        },
+                        content = {
+                            Icon(
+                                Icons.Rounded.Download,
+                                contentDescription = stringResource(R.string.save_button)
+                            )
+                        },
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        contentColor = MaterialTheme.colorScheme.onSecondary,
                     )
-                })
+                }
             }) { paddingValues ->
                 Box(
                     contentAlignment = Alignment.Center,
