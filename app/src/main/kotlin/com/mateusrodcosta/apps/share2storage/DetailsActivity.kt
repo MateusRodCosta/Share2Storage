@@ -40,6 +40,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -64,8 +65,6 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
@@ -308,14 +307,13 @@ class DetailsActivity : ComponentActivity() {
                     contentScale = ContentScale.Fit,
                 )
             } else {
-                Image(
+                Icon(
                     modifier = Modifier
-                        .scale(5.0f)
+                        .size(128.dp)
                         .align(Alignment.Center),
                     imageVector = fallbackFileIcon,
                     contentDescription = stringResource(R.string.app_name),
-                    contentScale = ContentScale.Fit,
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary)
+                    tint = MaterialTheme.colorScheme.tertiary
                 )
             }
         }
