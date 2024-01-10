@@ -28,9 +28,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -109,8 +109,8 @@ class MainActivity : ComponentActivity() {
                             AppBasicDivider()
                             HowToUseRow(4, stringResource(R.string.how_to_use_step_4))
                             AppBasicDivider()
-                            Spacer(modifier = Modifier.defaultMinSize(minHeight = (48 + 16).dp))
-                            Box(modifier = Modifier.padding(start = 16.dp, end = 8.dp)) {
+                            Spacer(modifier = Modifier.height(32.dp))
+                            Box(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
                                 Text(
                                     stringResource(id = R.string.how_to_use_about_title),
                                     style = MaterialTheme.typography.titleMedium
