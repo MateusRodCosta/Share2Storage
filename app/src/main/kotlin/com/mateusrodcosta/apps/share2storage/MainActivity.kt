@@ -103,7 +103,7 @@ class MainActivity : ComponentActivity() {
                             Image(
                                 painterResource(R.drawable.ic_launcher_foreground),
                                 stringResource(R.string.app_name),
-                                modifier = Modifier.scale(2.0f),
+                                modifier = Modifier.scale(1.8f),
                             )
                             Text(
                                 stringResource(R.string.how_to_use),
@@ -115,7 +115,13 @@ class MainActivity : ComponentActivity() {
                             AppBasicDivider()
                             HowToUseRow(1, stringResource(R.string.how_to_use_step_1))
                             AppBasicDivider()
-                            HowToUseRow(2, stringResource(R.string.how_to_use_step_2))
+                            HowToUseRow(
+                                2, String.format(
+                                    stringResource(R.string.how_to_use_step_2), stringResource(
+                                        R.string.app_name
+                                    )
+                                )
+                            )
                             AppBasicDivider()
                             HowToUseRow(3, stringResource(R.string.how_to_use_step_3))
                             AppBasicDivider()

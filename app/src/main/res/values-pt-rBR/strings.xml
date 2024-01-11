@@ -5,7 +5,7 @@
     <string name="how_to_use">Como usar</string>
 
     <string name="how_to_use_step_1">Compartilhe o arquivo a partir do botão "Compartilhar"</string>
-    <string name="how_to_use_step_2">Selecione \"Salvar Localmente\" nas opções de compartilhamento</string>
+    <string name="how_to_use_step_2">Selecione \"%s\" nas opções de compartilhamento</string>
     <string name="how_to_use_step_3">Uma tela com detalhes do arquivo será mostrada, toque em "Salvar"</string>
     <string name="how_to_use_step_4">O seletor de arquivos será exibido, selecione onde e com qual nome salvar</string>
     <string name="how_to_use_about_title">Sobre</string>
