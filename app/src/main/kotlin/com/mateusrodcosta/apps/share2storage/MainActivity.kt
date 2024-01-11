@@ -121,7 +121,7 @@ class MainActivity : ComponentActivity() {
                             AppBasicDivider()
                             HowToUseRow(4, stringResource(R.string.how_to_use_step_4))
                             AppBasicDivider()
-                            Spacer(modifier = Modifier.height(32.dp))
+                            Spacer(modifier = Modifier.height(24.dp))
                             Box(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
                                 Text(
                                     stringResource(id = R.string.how_to_use_about_title),
@@ -171,7 +171,7 @@ class MainActivity : ComponentActivity() {
             Row(
                 modifier = Modifier
                     .padding(PaddingValues(horizontal = 16.dp, vertical = 8.dp))
-                    .heightIn(min = 48.dp), verticalAlignment = Alignment.CenterVertically
+                    .heightIn(min = 32.dp), verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     if (num == null) "   " else "$num.",
@@ -200,7 +200,7 @@ class MainActivity : ComponentActivity() {
             Row(
                 modifier = Modifier
                     .padding(PaddingValues(horizontal = 16.dp, vertical = 8.dp))
-                    .heightIn(min = 48.dp), verticalAlignment = Alignment.CenterVertically
+                    .heightIn(min = 32.dp), verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     string,
