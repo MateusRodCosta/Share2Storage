@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2022 - 2023 Mateus Rodrigues Costa
+ *     Copyright (C) 2022 - 2024 Mateus Rodrigues Costa
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as
@@ -17,10 +17,16 @@
 
 package com.mateusrodcosta.apps.share2storage
 
+import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
+import android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION
 import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,6 +41,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -43,6 +50,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,8 +63,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
-import com.mateusrodcosta.apps.share2storage.theme.AppTheme
-import com.mateusrodcosta.apps.share2storage.utils.spSkipFileDetailsKey
+import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
+import com.mateusrodcosta.apps.share2storage.utils.SharedPreferenceKeys
 
 
 class SettingsActivity : ComponentActivity() {
@@ -64,8 +72,21 @@ class SettingsActivity : ComponentActivity() {
     private lateinit var sharedPreferences: SharedPreferences
 
     private var spSkipFileDetails: Boolean = false
+    private var spDefaultSaveLocation: Uri? = null
+
+    private var updateDefaultSaveLocation: ((Uri?) -> Unit)? = null
+
+    private val getSaveLocationDir =
+        registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+            if (uri == null) return@registerForActivityResult
+
+            Log.d("settings] getSaveLocationDir] uri", uri.toString())
+            Log.d("settings] getSaveLocationDir] uri.path", uri.path.toString())
+            updateDefaultSaveLocation?.let { it(uri) }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         initSharedPreferences()
         setContent { SettingsScreen() }
@@ -73,7 +94,21 @@ class SettingsActivity : ComponentActivity() {
 
     private fun initSharedPreferences() {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        spSkipFileDetails = sharedPreferences.getBoolean(spSkipFileDetailsKey, false)
+        spSkipFileDetails =
+            sharedPreferences.getBoolean(SharedPreferenceKeys.skipFileDetailsKey, false)
+        Log.d("settings] initSharedPreferences] skipFileDetails", spSkipFileDetails.toString())
+        val spDefaultSaveLocationRaw =
+            sharedPreferences.getString(SharedPreferenceKeys.defaultSaveLocationKey, null)
+        spDefaultSaveLocation = if (spDefaultSaveLocationRaw != null) {
+            val uri = Uri.parse(spDefaultSaveLocationRaw)
+
+            Log.d("settings] initSharedPreferences] uri", uri.toString())
+            Log.d("settings] initSharedPreferences] uri.path", uri.path.toString())
+
+            uri
+        } else {
+            null
+        }
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -81,25 +116,56 @@ class SettingsActivity : ComponentActivity() {
     @Preview
     fun SettingsScreen() {
         var skipFileDetails by remember { mutableStateOf(spSkipFileDetails) }
+        var defaultSaveLocation by remember { mutableStateOf(spDefaultSaveLocation) }
 
         val updateSkipFileDetails: (Boolean) -> Unit = { value ->
             sharedPreferences.edit(commit = true) {
-                putBoolean(spSkipFileDetailsKey, value)
+                putBoolean(SharedPreferenceKeys.skipFileDetailsKey, value)
             }
             skipFileDetails = value
         }
+
+        updateDefaultSaveLocation = { value ->
+            sharedPreferences.edit(commit = true) {
+                if (value != null) {
+                    putString(SharedPreferenceKeys.defaultSaveLocationKey, value.toString())
+                } else {
+                    remove(SharedPreferenceKeys.defaultSaveLocationKey)
+                }
+            }
+            if (spDefaultSaveLocation != null) {
+                val curDefaultSaveLocation = spDefaultSaveLocation!!
+                contentResolver.persistedUriPermissions.forEach {
+                    if (it.uri == curDefaultSaveLocation) contentResolver.releasePersistableUriPermission(
+                        curDefaultSaveLocation,
+                        FLAG_GRANT_READ_URI_PERMISSION or FLAG_GRANT_WRITE_URI_PERMISSION
+                    )
+                }
+            }
+            if (value != null) {
+                contentResolver.takePersistableUriPermission(
+                    value, FLAG_GRANT_READ_URI_PERMISSION or FLAG_GRANT_WRITE_URI_PERMISSION
+                )
+            }
+            defaultSaveLocation = value
+        }
+
         AppTheme {
             Scaffold(topBar = {
-                TopAppBar(
-                    title = { Text(stringResource(R.string.settings)) },
+                TopAppBar(title = { Text(stringResource(R.string.settings)) },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                        navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
+                        actionIconContentColor = MaterialTheme.colorScheme.onPrimary,
+                    ),
                     navigationIcon = {
                         IconButton(onClick = { finish() }) {
                             Icon(
                                 Icons.Filled.ArrowBack, stringResource(id = R.string.back_arrow)
                             )
                         }
-                    },
-                )
+                    })
             }) { paddingValues ->
                 Box(modifier = Modifier.padding(paddingValues)) {
                     Column(
@@ -114,9 +180,7 @@ class SettingsActivity : ComponentActivity() {
                                 .padding(PaddingValues(horizontal = 16.dp, vertical = 8.dp))
                                 .heightIn(min = 48.dp),
                                 verticalAlignment = Alignment.CenterVertically) {
-                                Column(
-                                    modifier = Modifier.weight(1.0f),
-                                ) {
+                                Column(modifier = Modifier.weight(1.0f)) {
                                     Text(
                                         stringResource(id = R.string.settings_skip_file_details_page),
                                         style = MaterialTheme.typography.titleLarge,
@@ -131,7 +195,28 @@ class SettingsActivity : ComponentActivity() {
                                     checked = skipFileDetails,
                                     onCheckedChange = updateSkipFileDetails
                                 )
-
+                            }
+                            Row(modifier = Modifier
+                                .clickable {
+                                    getSaveLocationDir.launch(null)
+                                }
+                                .padding(PaddingValues(horizontal = 16.dp, vertical = 8.dp))
+                                .heightIn(min = 48.dp),
+                                verticalAlignment = Alignment.CenterVertically) {
+                                Column(modifier = Modifier.weight(1.0f)) {
+                                    Text(
+                                        stringResource(id = R.string.settings_default_save_location),
+                                        style = MaterialTheme.typography.titleLarge,
+                                    )
+                                    Text(
+                                        defaultSaveLocation?.path
+                                            ?: stringResource(R.string.settings_default_save_location_last_used),
+                                        style = MaterialTheme.typography.bodyLarge
+                                    )
+                                }
+                                IconButton(onClick = { updateDefaultSaveLocation!!(null) }) {
+                                    Icon(Icons.Rounded.Clear, stringResource(R.string.clear_button))
+                                }
                             }
                         }
                     }

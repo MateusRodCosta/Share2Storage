@@ -1,0 +1,9 @@
+• Updated dependencies
+• Added Settings screen with two settings: "Skip File Details page" and "Default save location"
+• Added preview of image files
+• Added responsive layout for File Details screen
+• Added icon credits and link to donation page
+• Tweaked app theming (colors and TopAppBars)
+• Fix file type icons rendering
+• Added monochrome icon
+• Enabled edge-to-edge display

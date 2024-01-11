@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2022 - 2023 Mateus Rodrigues Costa
+ *     Copyright (C) 2022 - 2024 Mateus Rodrigues Costa
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as
@@ -17,12 +17,11 @@
 
 package com.mateusrodcosta.apps.share2storage
 
-import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -30,9 +29,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -47,22 +46,23 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat.startActivity
-import com.mateusrodcosta.apps.share2storage.theme.AppTheme
+import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 import com.mateusrodcosta.apps.share2storage.utils.AppBasicDivider
-
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent { MainScreen() }
     }
@@ -74,14 +74,23 @@ class MainActivity : ComponentActivity() {
         val context = this
         AppTheme {
             Scaffold(topBar = {
-                TopAppBar(title = { Text(stringResource(R.string.app_name)) }, actions = {
-                    IconButton(onClick = {
-                        val i = Intent(context, SettingsActivity::class.java)
-                        startActivity(i)
-                    }) {
-                        Icon(Icons.Rounded.Settings, stringResource(id = R.string.settings))
-                    }
-                })
+                TopAppBar(
+                    title = { Text(stringResource(R.string.app_name)) },
+                    actions = {
+                        IconButton(onClick = {
+                            val i = Intent(context, SettingsActivity::class.java)
+                            startActivity(i)
+                        }) {
+                            Icon(Icons.Rounded.Settings, stringResource(id = R.string.settings))
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                        navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
+                        actionIconContentColor = MaterialTheme.colorScheme.onPrimary,
+                    ),
+                )
             }) { paddingValues ->
                 Box(modifier = Modifier.padding(paddingValues)) {
                     Column(
@@ -94,7 +103,7 @@ class MainActivity : ComponentActivity() {
                             Image(
                                 painterResource(R.drawable.ic_launcher_foreground),
                                 stringResource(R.string.app_name),
-                                modifier = Modifier.scale(2.0f),
+                                modifier = Modifier.scale(1.8f),
                             )
                             Text(
                                 stringResource(R.string.how_to_use),
@@ -106,14 +115,20 @@ class MainActivity : ComponentActivity() {
                             AppBasicDivider()
                             HowToUseRow(1, stringResource(R.string.how_to_use_step_1))
                             AppBasicDivider()
-                            HowToUseRow(2, stringResource(R.string.how_to_use_step_2))
+                            HowToUseRow(
+                                2, String.format(
+                                    stringResource(R.string.how_to_use_step_2), stringResource(
+                                        R.string.app_name
+                                    )
+                                )
+                            )
                             AppBasicDivider()
                             HowToUseRow(3, stringResource(R.string.how_to_use_step_3))
                             AppBasicDivider()
                             HowToUseRow(4, stringResource(R.string.how_to_use_step_4))
                             AppBasicDivider()
-                            Spacer(modifier = Modifier.defaultMinSize(minHeight = (48 + 16).dp))
-                            Box(modifier = Modifier.padding(start = 16.dp, end = 8.dp)) {
+                            Spacer(modifier = Modifier.height(24.dp))
+                            Box(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
                                 Text(
                                     stringResource(id = R.string.how_to_use_about_title),
                                     style = MaterialTheme.typography.titleMedium
@@ -122,14 +137,29 @@ class MainActivity : ComponentActivity() {
                             AppBasicDivider()
                             AboutRow(
                                 stringResource(R.string.how_to_use_about),
-                                url = "https://github.com/MateusRodCosta/",
-                                context = context
+                                url = stringResource(R.string.github_profile_url)
                             )
                             AppBasicDivider()
                             AboutRow(
-                                stringResource(R.string.how_to_use_github),
-                                url = "https://github.com/MateusRodCosta/Share2Storage",
-                                context = context
+                                String.format(
+                                    stringResource(R.string.how_to_use_github), stringResource(
+
+                                        R.string.source_code_url
+                                    )
+                                ), url = stringResource(R.string.source_code_url)
+                            )
+                            AppBasicDivider()
+                            AboutRow(
+                                stringResource(R.string.how_to_use_app_icon_credits), url = null
+                            )
+                            AppBasicDivider()
+                            AboutRow(
+                                String.format(
+                                    stringResource(R.string.how_to_use_app_donation),
+                                    stringResource(
+                                        R.string.donation_url
+                                    )
+                                ), url = stringResource(R.string.donation_url)
                             )
                             AppBasicDivider()
                         }
@@ -147,7 +177,7 @@ class MainActivity : ComponentActivity() {
             Row(
                 modifier = Modifier
                     .padding(PaddingValues(horizontal = 16.dp, vertical = 8.dp))
-                    .heightIn(min = 48.dp), verticalAlignment = Alignment.CenterVertically
+                    .heightIn(min = 32.dp), verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     if (num == null) "   " else "$num.",
@@ -164,19 +194,19 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun AboutRow(string: String, url: String?, context: Context) {
+    fun AboutRow(string: String, url: String?) {
+        val localUriHandler = LocalUriHandler.current
         Box(modifier = Modifier
             .fillMaxWidth()
             .clickable {
                 if (url != null) {
-                    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                    startActivity(context, browserIntent, null)
+                    localUriHandler.openUri(url)
                 }
             }) {
             Row(
                 modifier = Modifier
                     .padding(PaddingValues(horizontal = 16.dp, vertical = 8.dp))
-                    .heightIn(min = 48.dp), verticalAlignment = Alignment.CenterVertically
+                    .heightIn(min = 32.dp), verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     string,

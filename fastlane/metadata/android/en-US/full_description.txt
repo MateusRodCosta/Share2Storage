@@ -1,5 +1,5 @@
-Sometimes some apps decide to not provide a Save option, this is usually due to not wanting to implement the logic for saving a file themselves, however they usually provide a Share functionality to take advantage of the system share system.
+Some apps decide to not provide a Save option, this is usually due to the devs not wanting to implement the logic for saving a file themselves, however they usually provide a Share functionality to take advantage of the built-in system share system.
 
-In these cases Save Locally might come in handy, allowing you to save the file to any place in your device by registering as one of the possible share options for files and showing a file picker for saving.
+In those cases Save Locally might come in handy, allowing you to save the file to any place in your device by registering as a share option on the share sheet, showing the file details and then allowing opening a file picker for saving.
 
-Save Locally is developed with Jetpack Compose and licensed under AGPLv3+. Source code is available at <a href="https://github.com/MateusRodCosta/Share2Storage">https://github.com/MateusRodCosta/Share2Storage</a>.
+Save Locally is FLOSS software (Free and Libre Open Source Software) developed with Jetpack Compose. Source code is available at <a href="https://github.com/MateusRodCosta/Share2Storage">https://github.com/MateusRodCosta/Share2Storage</a> licensed under AGPLv3+.

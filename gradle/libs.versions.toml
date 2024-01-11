@@ -1,9 +1,10 @@
 [versions]
-androidGradlePlugin = "8.2.0"
+androidGradlePlugin = "8.2.1"
 kotlin = "1.9.21"
 ktx = "1.12.0"
 preference-ktx = "1.2.1"
 composeBom = "2023.10.01"
+composeMaterial3WindowSizeClass = "1.1.2"
 activityCompose = "1.8.2"
 junit = "4.13.2"
 androidxTestRunner = "1.5.2"
@@ -14,11 +15,12 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-preference-ktx = { group = "androidx.preference", name = "preference-ktx", version.ref = "preference-ktx" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 compose-material3 = { group = "androidx.compose.material3", name = "material3" }
-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+compose-material3-window-size-classes = { group = "androidx.compose.material3", name = "material3-window-size-class", version.ref = "composeMaterial3WindowSizeClass" }
+compose-ui-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
-compose-ui-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 junit-junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-runner = { group = "androidx.test", name="runner", version.ref = "androidxTestRunner" }
@@ -26,8 +28,9 @@ androidx-test-rules = { group = "androidx.test", name="rules", version.ref = "an
 
 [bundles]
 androidx-ktx = ["androidx.core.ktx", "androidx.preference.ktx"]
-compose = ["compose.material3", "compose.ui.tooling.preview", "compose.ui.material.icons.extended"]
+compose = ["compose.material3", "compose.material3.window.size.classes", "compose.ui.tooling.preview", "compose.ui.material.icons.extended"]
 compose-debug = ["compose.ui.tooling", "compose.ui.test.manifest"]
+androidx-compose-integration = ["androidx.activity.compose"]
 testing = ["junit.junit"]
 ui-testing = ["androidx.test.runner", "androidx.test.rules", "compose.ui.test.junit4"]
 

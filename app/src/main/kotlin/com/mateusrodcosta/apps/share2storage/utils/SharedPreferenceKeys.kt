@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2022 - 2023 Mateus Rodrigues Costa
+ *     Copyright (C) 2022 - 2024 Mateus Rodrigues Costa
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as
@@ -15,13 +15,9 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage.model
+package com.mateusrodcosta.apps.share2storage.utils
 
-import android.graphics.Bitmap
-
-data class UriData(
-    val displayName: String?,
-    val type: String?,
-    val size: Long?,
-    val previewImage: Bitmap?
-)
+object SharedPreferenceKeys {
+    const val skipFileDetailsKey: String = "skip_file_details"
+    const val defaultSaveLocationKey: String = "default_save_location"
+}

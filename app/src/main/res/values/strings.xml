@@ -5,16 +5,21 @@
     <string name="how_to_use">How to Use</string>
 
     <string name="how_to_use_step_1">Share the file via the Share icon</string>
-    <string name="how_to_use_step_2">Select \"Save Locally\" on the share options</string>
+    <string name="how_to_use_step_2">Select \"%s\" on the share options</string>
     <string name="how_to_use_step_3">A screen with details about the file will open, press Save</string>
     <string name="how_to_use_step_4">The file picker will open, select where to save and the filename</string>
     <string name="how_to_use_about_title">About</string>
     <string name="how_to_use_about">Developed by Mateus Rodrigues Costa, licensed under AGPLv3+</string>
-    <string name="how_to_use_github">Source code available on Github at https://github.com/MateusRodCosta/Share2Storage</string>
+    <string name="how_to_use_github">Source code available on Github at %s</string>
+    <string name="how_to_use_app_icon_credits">App icon designed by @swyzera</string>
+    <string name="how_to_use_app_donation">Like the app? Consider donating! For more information, visit %s</string>
 
     <string name="settings">Settings</string>
     <string name="settings_skip_file_details_page">Skip File Details page</string>
     <string name="settings_skip_file_details_page_info">Open file picker as soon as file is received</string>
+    <string name="settings_default_save_location">Default save location</string>
+    <string name="settings_default_save_location_last_used">Last used folder</string>
+    <string name="clear_button">Clear</string>
 
     <string name="save_button">Save</string>
     <string name="no_file_found">No file found</string>

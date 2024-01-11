@@ -22,10 +22,10 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 class SampleUriDataProvider : PreviewParameterProvider<UriData?> {
     override val values = sequenceOf(
         UriData(
-            "21. Setting Sail, Coming Home (End Theme).flac", "audio/flac", 35280673
+            "21. Setting Sail, Coming Home (End Theme).flac", "audio/flac", 35280673, null
         ),
-        UriData("03. Lonely Rolling Star (Missing You).flac", "audio/flac", 41123343),
-        UriData(null, null, null),
+        UriData("03. Lonely Rolling Star (Missing You).flac", "audio/flac", 41123343, null),
+        UriData(null, null, null, null),
         null,
     )
 }
