@@ -72,7 +72,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.documentfile.provider.DocumentFile
 import androidx.preference.PreferenceManager
 import com.mateusrodcosta.apps.share2storage.model.SampleUriDataProvider
 import com.mateusrodcosta.apps.share2storage.model.UriData
@@ -99,13 +98,10 @@ class DetailsActivity : ComponentActivity() {
         val defaultSaveLocationRaw =
             sharedPreferences.getString(SharedPreferenceKeys.defaultSaveLocationKey, null)
         Log.d("details] defaultSaveLocationRaw", defaultSaveLocationRaw.toString())
-        val defaultSaveLocation = if (defaultSaveLocationRaw != null) {
-            val parsedUri = Uri.parse(defaultSaveLocationRaw)
-            val file = DocumentFile.fromTreeUri(this, parsedUri)
-            file?.uri
-        } else {
-            null
-        }
+        val defaultSaveLocation =
+            if (defaultSaveLocationRaw != null) Uri.parse(defaultSaveLocationRaw)
+            else null
+
         Log.d("details] defaultSaveLocation", defaultSaveLocation.toString())
 
         var uriData: UriData? = null

@@ -20,6 +20,7 @@ package com.mateusrodcosta.apps.share2storage.utils
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.provider.DocumentsContract
 import android.provider.DocumentsContract.EXTRA_INITIAL_URI
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
@@ -31,7 +32,12 @@ class CreateDocumentWithInitialUri(
     override fun createIntent(context: Context, input: String): Intent {
         return super.createIntent(context, input).also { i ->
             Log.d("CreateDocumentWithInitialUri] initialUri", initialUri.toString())
-            if (initialUri != null) i.putExtra(EXTRA_INITIAL_URI, initialUri)
+            if (initialUri != null)
+            {
+                val documentUri = DocumentsContract.buildDocumentUriUsingTree(initialUri, DocumentsContract.getTreeDocumentId(initialUri))
+                Log.d("CreateDocumentWithInitialUri] documentUri", documentUri.toString())
+                i.putExtra(EXTRA_INITIAL_URI, documentUri)
+            }
         }
     }
 
