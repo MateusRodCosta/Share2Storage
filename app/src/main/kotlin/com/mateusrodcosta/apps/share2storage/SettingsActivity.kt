@@ -136,15 +136,21 @@ class SettingsActivity : ComponentActivity() {
             if (spDefaultSaveLocation != null) {
                 val curDefaultSaveLocation = spDefaultSaveLocation!!
                 contentResolver.persistedUriPermissions.forEach {
-                    if (it.uri == curDefaultSaveLocation) contentResolver.releasePersistableUriPermission(
-                        curDefaultSaveLocation,
-                        FLAG_GRANT_READ_URI_PERMISSION or FLAG_GRANT_WRITE_URI_PERMISSION
-                    )
+                    if (it.uri == curDefaultSaveLocation) {
+                        val isRead = if (it.isReadPermission) FLAG_GRANT_READ_URI_PERMISSION
+                        else 0
+                        val isWrite = if (it.isWritePermission) FLAG_GRANT_WRITE_URI_PERMISSION
+                        else 0
+
+                        contentResolver.releasePersistableUriPermission(
+                            curDefaultSaveLocation, isRead or isWrite
+                        )
+                    }
                 }
             }
             if (value != null) {
                 contentResolver.takePersistableUriPermission(
-                    value, FLAG_GRANT_READ_URI_PERMISSION or FLAG_GRANT_WRITE_URI_PERMISSION
+                    value, FLAG_GRANT_WRITE_URI_PERMISSION
                 )
             }
             defaultSaveLocation = value
