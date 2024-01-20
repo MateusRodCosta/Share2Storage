@@ -50,7 +50,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -65,6 +64,7 @@ import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 import com.mateusrodcosta.apps.share2storage.utils.SharedPreferenceKeys
+import com.mateusrodcosta.apps.share2storage.utils.appTopAppBarColors
 
 
 class SettingsActivity : ComponentActivity() {
@@ -159,12 +159,7 @@ class SettingsActivity : ComponentActivity() {
         AppTheme {
             Scaffold(topBar = {
                 TopAppBar(title = { Text(stringResource(R.string.settings)) },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                        navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
-                        actionIconContentColor = MaterialTheme.colorScheme.onPrimary,
-                    ),
+                    colors = appTopAppBarColors(),
                     navigationIcon = {
                         IconButton(onClick = { finish() }) {
                             Icon(
