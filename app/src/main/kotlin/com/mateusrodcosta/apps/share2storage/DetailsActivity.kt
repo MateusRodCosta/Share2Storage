@@ -57,7 +57,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
@@ -72,7 +71,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.documentfile.provider.DocumentFile
 import androidx.preference.PreferenceManager
 import com.mateusrodcosta.apps.share2storage.model.SampleUriDataProvider
 import com.mateusrodcosta.apps.share2storage.model.UriData
@@ -80,6 +78,7 @@ import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 import com.mateusrodcosta.apps.share2storage.utils.AppBasicDivider
 import com.mateusrodcosta.apps.share2storage.utils.CreateDocumentWithInitialUri
 import com.mateusrodcosta.apps.share2storage.utils.SharedPreferenceKeys
+import com.mateusrodcosta.apps.share2storage.utils.appTopAppBarColors
 import com.mateusrodcosta.apps.share2storage.utils.getUriData
 import com.mateusrodcosta.apps.share2storage.utils.saveFile
 
@@ -99,13 +98,10 @@ class DetailsActivity : ComponentActivity() {
         val defaultSaveLocationRaw =
             sharedPreferences.getString(SharedPreferenceKeys.defaultSaveLocationKey, null)
         Log.d("details] defaultSaveLocationRaw", defaultSaveLocationRaw.toString())
-        val defaultSaveLocation = if (defaultSaveLocationRaw != null) {
-            val parsedUri = Uri.parse(defaultSaveLocationRaw)
-            val file = DocumentFile.fromTreeUri(this, parsedUri)
-            file?.uri
-        } else {
-            null
-        }
+        val defaultSaveLocation =
+            if (defaultSaveLocationRaw != null) Uri.parse(defaultSaveLocationRaw)
+            else null
+
         Log.d("details] defaultSaveLocation", defaultSaveLocation.toString())
 
         var uriData: UriData? = null
@@ -158,12 +154,7 @@ class DetailsActivity : ComponentActivity() {
             Scaffold(topBar = {
                 TopAppBar(
                     title = { Text(stringResource(R.string.file_details)) },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                        navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
-                        actionIconContentColor = MaterialTheme.colorScheme.onPrimary,
-                    ),
+                    colors = appTopAppBarColors(),
                 )
             }, floatingActionButton =
 

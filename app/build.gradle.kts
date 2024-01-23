@@ -2,8 +2,8 @@ import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.kotlinAndroid)
 }
 
 val keystorePropertiesFile = rootProject.file("key.properties")
@@ -23,8 +23,8 @@ android {
         minSdk = 26
         //noinspection OldTargetApi
         targetSdk = 33
-        versionCode = 14
-        versionName = "1.0.0"
+        versionCode = 15
+        versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -73,7 +73,12 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.7"
+        kotlinCompilerExtensionVersion = libs.versions.kotlinComposeCompiler.get()
+    }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
     }
 }
 
