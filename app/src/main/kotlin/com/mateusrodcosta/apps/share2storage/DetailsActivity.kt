@@ -83,15 +83,13 @@ class DetailsActivity : ComponentActivity() {
 
     private fun handleIntent() {
         if (intent?.action == Intent.ACTION_SEND) {
-
-            val fileUri: Uri? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                intent.getParcelableExtra(Intent.EXTRA_STREAM, Uri::class.java)
-            } else {
-                @Suppress("DEPRECATION") intent.getParcelableExtra(Intent.EXTRA_STREAM)
-            }
-
+            val fileUri: Uri? =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) intent.getParcelableExtra(
+                    Intent.EXTRA_STREAM,
+                    Uri::class.java
+                )
+                else @Suppress("DEPRECATION") intent.getParcelableExtra(Intent.EXTRA_STREAM)
             Log.d("fileUri", fileUri.toString())
-
             uriData = getUriData(contentResolver, fileUri)
 
             if (uriData != null) {

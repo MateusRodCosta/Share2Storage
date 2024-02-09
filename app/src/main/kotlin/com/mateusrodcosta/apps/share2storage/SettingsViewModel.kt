@@ -17,9 +17,12 @@
 
 package com.mateusrodcosta.apps.share2storage
 
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
+import android.util.Log
 import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 import androidx.preference.PreferenceManager
@@ -27,8 +30,10 @@ import com.mateusrodcosta.apps.share2storage.utils.SharedPreferenceKeys
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-
 class SettingsViewModel : ViewModel() {
+
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var contentResolver: ContentResolver
 
     private val _defaultSaveLocation = MutableStateFlow<Uri?>(null)
     val defaultSaveLocation: StateFlow<Uri?> = _defaultSaveLocation
@@ -36,36 +41,52 @@ class SettingsViewModel : ViewModel() {
     private val _skipFileDetails = MutableStateFlow(false)
     val skipFileDetails: StateFlow<Boolean> = _skipFileDetails
 
-    fun initDefaultSaveLocation(value: Uri?) {
-        _defaultSaveLocation.value = value
+    fun receiveContext(context: Context) {
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        contentResolver = context.contentResolver
     }
 
-    fun initSkipFileDetails(value: Boolean) {
-        _skipFileDetails.value = value
+    fun initPreferences() {
+        val spDefaultSaveLocationRaw =
+            sharedPreferences.getString(SharedPreferenceKeys.defaultSaveLocationKey, null)
+        val spDefaultSaveLocation = if (spDefaultSaveLocationRaw != null) try {
+            val uri = Uri.parse(spDefaultSaveLocationRaw)
+
+            Log.d("settings] initSharedPreferences] uri", uri.toString())
+            Log.d("settings] initSharedPreferences] uri.path", uri.path.toString())
+
+            uri
+        } catch (_: Exception) {
+            null
+        }
+        else null
+
+        val spSkipFileDetails =
+            sharedPreferences.getBoolean(SharedPreferenceKeys.skipFileDetailsKey, false)
+        Log.d("settings] initSharedPreferences] skipFileDetails", spSkipFileDetails.toString())
+
+        _defaultSaveLocation.value = spDefaultSaveLocation
+        _skipFileDetails.value = spSkipFileDetails
     }
 
-    fun updateDefaultSaveLocation(context: Context, value: Uri?) {
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-        val contentResolver = context.contentResolver
-
+    fun updateDefaultSaveLocation(value: Uri?) {
         val currentSaveLocationRaw =
             sharedPreferences.getString(SharedPreferenceKeys.defaultSaveLocationKey, null)
 
-        sharedPreferences?.edit(commit = true) {
-            if (value != null) {
-                putString(SharedPreferenceKeys.defaultSaveLocationKey, value.toString())
-            } else {
-                remove(SharedPreferenceKeys.defaultSaveLocationKey)
-            }
+        sharedPreferences.edit(commit = true) {
+            if (value != null) putString(
+                SharedPreferenceKeys.defaultSaveLocationKey, value.toString()
+            )
+            else remove(SharedPreferenceKeys.defaultSaveLocationKey)
+
         }
 
-        val currentSaveLocation: Uri? = if (currentSaveLocationRaw != null) {
-            try {
-                Uri.parse(currentSaveLocationRaw)
-            } catch (_: Exception) {
-                null
-            }
-        } else null
+        val currentSaveLocation: Uri? = if (currentSaveLocationRaw != null) try {
+            Uri.parse(currentSaveLocationRaw)
+        } catch (_: Exception) {
+            null
+        }
+        else null
 
         if (currentSaveLocation != null) {
             contentResolver.persistedUriPermissions.forEach {
@@ -82,21 +103,18 @@ class SettingsViewModel : ViewModel() {
             }
         }
 
-        if (value != null) {
-            contentResolver.takePersistableUriPermission(
-                value, Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-            )
-        }
+        if (value != null) contentResolver.takePersistableUriPermission(
+            value, Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+        )
 
         _defaultSaveLocation.value = value
     }
 
-    fun clearSaveDirectory(context: Context) {
-        updateDefaultSaveLocation(context, null)
+    fun clearSaveDirectory() {
+        updateDefaultSaveLocation(null)
     }
 
-    fun updateSkipFileDetails(context: Context, value: Boolean) {
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+    fun updateSkipFileDetails(value: Boolean) {
         sharedPreferences.edit(commit = true) {
             putBoolean(SharedPreferenceKeys.skipFileDetailsKey, value)
         }

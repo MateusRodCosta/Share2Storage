@@ -17,7 +17,6 @@
 
 package com.mateusrodcosta.apps.share2storage
 
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -26,7 +25,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.preference.PreferenceManager
 import com.mateusrodcosta.apps.share2storage.screens.SettingsScreen
-import com.mateusrodcosta.apps.share2storage.utils.SharedPreferenceKeys
 
 class SettingsActivity : ComponentActivity() {
 
@@ -39,48 +37,24 @@ class SettingsActivity : ComponentActivity() {
             Log.d("settings] getSaveLocationDir] uri", uri.toString())
             Log.d("settings] getSaveLocationDir] uri.path", uri.path.toString())
 
-            settingsViewModel.updateDefaultSaveLocation(this, uri)
+            settingsViewModel.updateDefaultSaveLocation(uri)
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-
-        val spDefaultSaveLocationRaw =
-            sharedPreferences.getString(SharedPreferenceKeys.defaultSaveLocationKey, null)
-
-        val spDefaultSaveLocation = if (spDefaultSaveLocationRaw != null) {
-            try {
-                val uri = Uri.parse(spDefaultSaveLocationRaw)
-
-                Log.d("settings] initSharedPreferences] uri", uri.toString())
-                Log.d("settings] initSharedPreferences] uri.path", uri.path.toString())
-
-                uri
-            } catch (_: Exception) {
-                null
-            }
-        } else {
-            null
-        }
-
-        val spSkipFileDetails =
-            sharedPreferences.getBoolean(SharedPreferenceKeys.skipFileDetailsKey, false)
-        Log.d("settings] initSharedPreferences] skipFileDetails", spSkipFileDetails.toString())
-
-        settingsViewModel.initDefaultSaveLocation(spDefaultSaveLocation)
-        settingsViewModel.initSkipFileDetails(spSkipFileDetails)
+        settingsViewModel.receiveContext(applicationContext)
+        settingsViewModel.initPreferences()
 
         setContent {
             SettingsScreen(
                 spDefaultSaveLocation = settingsViewModel.defaultSaveLocation,
                 spSkipFileDetails = settingsViewModel.skipFileDetails,
                 launchFilePicker = { getSaveLocationDirIntent.launch(null) },
-                clearSaveDirectory = { settingsViewModel.clearSaveDirectory(this) },
+                clearSaveDirectory = { settingsViewModel.clearSaveDirectory() },
                 updateSkipFileDetails = { value: Boolean ->
-                    settingsViewModel.updateSkipFileDetails(this, value)
+                    settingsViewModel.updateSkipFileDetails(value)
                 },
                 activity = this
             )

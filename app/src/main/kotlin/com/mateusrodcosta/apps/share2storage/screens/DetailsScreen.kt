@@ -77,7 +77,6 @@ fun DetailsScreenPreview(@PreviewParameter(SampleUriDataProvider::class) uriData
     )
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsScreen(
@@ -116,11 +115,8 @@ fun DetailsScreen(
                 val showLandscapePhone = heightSizeClass == WindowHeightSizeClass.Compact
                 val showLandscapeTablet = widthSizeClass == WindowWidthSizeClass.Expanded
                 if (uriData != null) {
-                    if (showLandscapePhone || showLandscapeTablet) {
-                        FileDetailsLandscape(uriData)
-                    } else {
-                        FileDetailsPortrait(uriData)
-                    }
+                    if (showLandscapePhone || showLandscapeTablet) FileDetailsLandscape(uriData)
+                    else FileDetailsPortrait(uriData)
                 } else Text(
                     stringResource(R.string.no_file_found),
                     style = MaterialTheme.typography.titleMedium
@@ -209,37 +205,30 @@ fun FileInfoLine(label: String, content: String) {
 @Composable
 fun FilePreview(uriData: UriData) {
     val mimeType = uriData.type ?: "*/*"
-    val fallbackFileIcon = if (mimeType.startsWith("image/")) {
-        Icons.Outlined.Image
-    } else if (mimeType.startsWith("audio/")) {
-        Icons.Outlined.AudioFile
-    } else if (mimeType.startsWith("video/")) {
-        Icons.Outlined.VideoFile
-    } else {
-        Icons.Outlined.Description
-    }
+    val fallbackFileIcon = if (mimeType.startsWith("image/")) Icons.Outlined.Image
+    else if (mimeType.startsWith("audio/")) Icons.Outlined.AudioFile
+    else if (mimeType.startsWith("video/")) Icons.Outlined.VideoFile
+    else Icons.Outlined.Description
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        if (uriData.previewImage != null) {
-            Image(
-                modifier = Modifier.align(Alignment.Center),
-                bitmap = uriData.previewImage.asImageBitmap(),
-                contentDescription = stringResource(R.string.app_name),
-                contentScale = ContentScale.Fit,
-            )
-        } else {
-            Icon(
-                modifier = Modifier
-                    .size(128.dp)
-                    .align(Alignment.Center),
-                imageVector = fallbackFileIcon,
-                contentDescription = stringResource(R.string.app_name),
-                tint = MaterialTheme.colorScheme.tertiary
-            )
-        }
+        if (uriData.previewImage != null) Image(
+            modifier = Modifier.align(Alignment.Center),
+            bitmap = uriData.previewImage.asImageBitmap(),
+            contentDescription = stringResource(R.string.app_name),
+            contentScale = ContentScale.Fit,
+        )
+        else Icon(
+            modifier = Modifier
+                .size(128.dp)
+                .align(Alignment.Center),
+            imageVector = fallbackFileIcon,
+            contentDescription = stringResource(R.string.app_name),
+            tint = MaterialTheme.colorScheme.tertiary
+        )
+
     }
 }

@@ -51,7 +51,6 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mateusrodcosta.apps.share2storage.R
@@ -148,8 +147,7 @@ fun MainScreen() {
                         AppBasicDivider()
                         AboutRow(
                             String.format(
-                                stringResource(R.string.how_to_use_app_donation),
-                                stringResource(
+                                stringResource(R.string.how_to_use_app_donation), stringResource(
                                     R.string.donation_url
                                 )
                             ), url = stringResource(R.string.donation_url)
@@ -192,9 +190,7 @@ fun AboutRow(string: String, url: String?) {
     Box(modifier = Modifier
         .fillMaxWidth()
         .clickable {
-            if (url != null) {
-                localUriHandler.openUri(url)
-            }
+            if (url != null) localUriHandler.openUri(url)
         }) {
         Row(
             modifier = Modifier
