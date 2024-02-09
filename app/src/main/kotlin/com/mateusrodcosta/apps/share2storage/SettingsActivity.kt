@@ -23,7 +23,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.preference.PreferenceManager
 import com.mateusrodcosta.apps.share2storage.screens.SettingsScreen
 
 class SettingsActivity : ComponentActivity() {
@@ -56,7 +55,7 @@ class SettingsActivity : ComponentActivity() {
                 updateSkipFileDetails = { value: Boolean ->
                     settingsViewModel.updateSkipFileDetails(value)
                 },
-                activity = this
+                closeActivity = { this.finish() }
             )
         }
     }

@@ -17,7 +17,6 @@
 
 package com.mateusrodcosta.apps.share2storage.screens
 
-import android.app.Activity
 import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -69,7 +68,7 @@ fun SettingsScreenPreview() {
         launchFilePicker = {},
         clearSaveDirectory = {},
         updateSkipFileDetails = { _ -> },
-        activity = null,
+        closeActivity = {},
     )
 }
 
@@ -81,7 +80,7 @@ fun SettingsScreen(
     launchFilePicker: (() -> Unit),
     clearSaveDirectory: (() -> Unit),
     updateSkipFileDetails: ((Boolean) -> Unit),
-    activity: Activity?,
+    closeActivity: () -> Unit,
 ) {
     val defaultSaveLocation by spDefaultSaveLocation.collectAsState()
     val skipFileDetails by spSkipFileDetails.collectAsState()
@@ -93,7 +92,7 @@ fun SettingsScreen(
             TopAppBar(title = { Text(stringResource(R.string.settings)) },
                 colors = appTopAppBarColors(),
                 navigationIcon = {
-                    IconButton(onClick = { activity?.finish() }) {
+                    IconButton(onClick = { closeActivity() }) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
                             stringResource(id = R.string.back_arrow)
