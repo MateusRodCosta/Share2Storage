@@ -52,6 +52,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
+import com.mateusrodcosta.apps.share2storage.utils.AppBasicDivider
 import com.mateusrodcosta.apps.share2storage.utils.appTopAppBarColors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -65,9 +66,9 @@ fun SettingsScreenPreview() {
     SettingsScreen(
         spDefaultSaveLocation = mockDefaultSaveLocation,
         spSkipFileDetails = mockSkipFileDetails,
-        launchFilePicker = null,
-        clearSaveDirectory = null,
-        updateSkipFileDetails = null,
+        launchFilePicker = {},
+        clearSaveDirectory = {},
+        updateSkipFileDetails = { _ -> },
         activity = null,
     )
 }
@@ -75,15 +76,17 @@ fun SettingsScreenPreview() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    spDefaultSaveLocation: StateFlow<Uri?>?,
-    spSkipFileDetails: StateFlow<Boolean>?,
-    launchFilePicker: (() -> Unit)?,
-    clearSaveDirectory: (() -> Unit)?,
-    updateSkipFileDetails: ((Boolean) -> Unit)?,
+    spDefaultSaveLocation: StateFlow<Uri?>,
+    spSkipFileDetails: StateFlow<Boolean>,
+    launchFilePicker: (() -> Unit),
+    clearSaveDirectory: (() -> Unit),
+    updateSkipFileDetails: ((Boolean) -> Unit),
     activity: Activity?,
 ) {
-    val defaultSaveLocation by spDefaultSaveLocation!!.collectAsState()
-    val skipFileDetails by spSkipFileDetails!!.collectAsState()
+    val defaultSaveLocation by spDefaultSaveLocation.collectAsState()
+    val skipFileDetails by spSkipFileDetails.collectAsState()
+
+    val settingsPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
 
     AppTheme {
         Scaffold(topBar = {
@@ -109,12 +112,16 @@ fun SettingsScreen(
                         SkipFileDetailsSetting(
                             updateSkipFileDetails = updateSkipFileDetails,
                             skipFileDetails = skipFileDetails,
+                            paddingValues = settingsPadding,
                         )
+                        AppBasicDivider()
                         DefaultSaveLocationSetting(
                             launchFilePicker = launchFilePicker,
                             clearSaveDirectory = clearSaveDirectory,
                             defaultSaveLocation = defaultSaveLocation,
+                            paddingValues = settingsPadding,
                         )
+                        AppBasicDivider()
                     }
                 }
             }
@@ -124,11 +131,13 @@ fun SettingsScreen(
 
 @Composable
 fun SkipFileDetailsSetting(
-    updateSkipFileDetails: ((Boolean) -> Unit)?, skipFileDetails: Boolean,
+    updateSkipFileDetails: ((Boolean) -> Unit),
+    skipFileDetails: Boolean,
+    paddingValues: PaddingValues,
 ) {
     Row(modifier = Modifier
-        .clickable { updateSkipFileDetails?.invoke(!skipFileDetails) }
-        .padding(PaddingValues(horizontal = 16.dp, vertical = 8.dp))
+        .clickable { updateSkipFileDetails(!skipFileDetails) }
+        .padding(paddingValues)
         .heightIn(min = 48.dp),
         verticalAlignment = Alignment.CenterVertically) {
         Column(modifier = Modifier.weight(1.0f)) {
@@ -143,22 +152,22 @@ fun SkipFileDetailsSetting(
         }
         Spacer(modifier = Modifier.width(8.dp))
         Switch(checked = skipFileDetails, onCheckedChange = { value ->
-            updateSkipFileDetails?.invoke(value)
+            updateSkipFileDetails(value)
         })
     }
 }
 
 @Composable
 fun DefaultSaveLocationSetting(
-    launchFilePicker: (() -> Unit)?, clearSaveDirectory: (() -> Unit)?,
+    launchFilePicker: (() -> Unit),
+    clearSaveDirectory: (() -> Unit),
     defaultSaveLocation: Uri?,
+    paddingValues: PaddingValues,
 ) {
-
     Row(modifier = Modifier
-        .clickable { launchFilePicker?.invoke() }
-        .padding(PaddingValues(horizontal = 16.dp, vertical = 8.dp))
-        .heightIn(min = 48.dp),
-        verticalAlignment = Alignment.CenterVertically) {
+        .clickable { launchFilePicker() }
+        .padding(paddingValues)
+        .heightIn(min = 48.dp), verticalAlignment = Alignment.CenterVertically) {
         Column(modifier = Modifier.weight(1.0f)) {
             Text(
                 stringResource(id = R.string.settings_default_save_location),
@@ -170,7 +179,7 @@ fun DefaultSaveLocationSetting(
                 style = MaterialTheme.typography.bodyLarge
             )
         }
-        IconButton(onClick = { clearSaveDirectory?.invoke() }) {
+        IconButton(onClick = { clearSaveDirectory() }) {
             Icon(Icons.Rounded.Clear, stringResource(R.string.clear_button))
         }
     }
