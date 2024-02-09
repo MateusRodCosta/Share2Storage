@@ -39,26 +39,49 @@ import com.mateusrodcosta.apps.share2storage.utils.saveFile
 
 class DetailsActivity : ComponentActivity() {
     private var createFile: ActivityResultLauncher<String>? = null
+    private var uriData: UriData? = null
+
+    private var skipFileDetails: Boolean? = null
+    private var defaultSaveLocation: Uri? = null
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
+        getPreferences()
+        handleIntent()
+        val launchFilePicker = {
+            createFile?.launch(uriData?.displayName ?: "")
+        }
+
+        setContent {
+            val windowSizeClass = calculateWindowSizeClass(this)
+            DetailsScreen(
+                uriData = uriData,
+                widthSizeClass = windowSizeClass.widthSizeClass,
+                heightSizeClass = windowSizeClass.heightSizeClass,
+                launchFilePicker = launchFilePicker,
+            )
+        }
+
+        if (skipFileDetails == true) launchFilePicker()
+    }
+
+    private fun getPreferences() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val skipFileDetails =
+        skipFileDetails =
             sharedPreferences.getBoolean(SharedPreferenceKeys.skipFileDetailsKey, false)
         val defaultSaveLocationRaw =
             sharedPreferences.getString(SharedPreferenceKeys.defaultSaveLocationKey, null)
         Log.d("details] defaultSaveLocationRaw", defaultSaveLocationRaw.toString())
-        val defaultSaveLocation =
-            if (defaultSaveLocationRaw != null) Uri.parse(defaultSaveLocationRaw)
-            else null
+        defaultSaveLocation = if (defaultSaveLocationRaw != null) Uri.parse(defaultSaveLocationRaw)
+        else null
 
         Log.d("details] defaultSaveLocation", defaultSaveLocation.toString())
+    }
 
-        var uriData: UriData? = null
-
+    private fun handleIntent() {
         if (intent?.action == Intent.ACTION_SEND) {
 
             val fileUri: Uri? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -73,7 +96,7 @@ class DetailsActivity : ComponentActivity() {
 
             if (uriData != null) {
                 createFile = registerForActivityResult(
-                    CreateDocumentWithInitialUri(uriData.type ?: "*/*", defaultSaveLocation)
+                    CreateDocumentWithInitialUri(uriData?.type ?: "*/*", defaultSaveLocation)
                 ) { uri ->
                     if (uri == null || fileUri == null) return@registerForActivityResult
                     val isSuccess = saveFile(baseContext, uri, fileUri)
@@ -84,16 +107,9 @@ class DetailsActivity : ComponentActivity() {
                             R.string.toast_saved_file_failure
                         }, Toast.LENGTH_LONG
                     ).show()
-                    if (skipFileDetails) finish()
+                    if (skipFileDetails == true) finish()
                 }
             }
         }
-
-        setContent {
-            val windowSizeClass = calculateWindowSizeClass(this)
-            DetailsScreen(uriData, windowSizeClass, createFile)
-        }
-
-        if (skipFileDetails) createFile!!.launch(uriData?.displayName ?: "")
     }
 }

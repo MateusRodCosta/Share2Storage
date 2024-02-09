@@ -18,7 +18,6 @@
 package com.mateusrodcosta.apps.share2storage.screens
 
 import android.text.format.Formatter
-import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -49,7 +48,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -71,7 +69,12 @@ import com.mateusrodcosta.apps.share2storage.utils.appTopAppBarColors
 @Preview(apiLevel = 33, showBackground = true)
 @Composable
 fun DetailsScreenPreview(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData?) {
-    DetailsScreen(uriData, null, null)
+    DetailsScreen(
+        uriData = uriData,
+        widthSizeClass = WindowWidthSizeClass.Compact,
+        heightSizeClass = WindowHeightSizeClass.Medium,
+        launchFilePicker = {},
+    )
 }
 
 
@@ -79,11 +82,10 @@ fun DetailsScreenPreview(@PreviewParameter(SampleUriDataProvider::class) uriData
 @Composable
 fun DetailsScreen(
     uriData: UriData?,
-    windowSizeClass: WindowSizeClass?,
-    createFile: ActivityResultLauncher<String>?
+    widthSizeClass: WindowWidthSizeClass,
+    heightSizeClass: WindowHeightSizeClass,
+    launchFilePicker: () -> Unit?,
 ) {
-    val widthSizeClass = windowSizeClass?.widthSizeClass ?: WindowWidthSizeClass.Compact
-    val heightSizeClass = windowSizeClass?.heightSizeClass ?: WindowHeightSizeClass.Medium
     AppTheme {
         Scaffold(topBar = {
             TopAppBar(
@@ -93,9 +95,7 @@ fun DetailsScreen(
         }, floatingActionButton = {
             if (uriData != null) {
                 FloatingActionButton(
-                    onClick = {
-                        createFile!!.launch(uriData.displayName ?: "")
-                    },
+                    onClick = { launchFilePicker() },
                     content = {
                         Icon(
                             Icons.Rounded.Download,
