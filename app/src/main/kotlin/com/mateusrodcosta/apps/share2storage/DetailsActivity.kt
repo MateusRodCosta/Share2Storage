@@ -38,7 +38,7 @@ import com.mateusrodcosta.apps.share2storage.utils.getUriData
 import com.mateusrodcosta.apps.share2storage.utils.saveFile
 
 class DetailsActivity : ComponentActivity() {
-    private var createFile: ActivityResultLauncher<String>? = null
+    private lateinit var createFile: ActivityResultLauncher<String>
     private var uriData: UriData? = null
 
     private var skipFileDetails: Boolean? = null
@@ -52,7 +52,7 @@ class DetailsActivity : ComponentActivity() {
         getPreferences()
         handleIntent()
         val launchFilePicker = {
-            createFile?.launch(uriData?.displayName ?: "")
+            createFile.launch(uriData?.displayName ?: "")
         }
 
         setContent {
@@ -82,7 +82,7 @@ class DetailsActivity : ComponentActivity() {
     }
 
     private fun handleIntent() {
-        if (intent?.action == Intent.ACTION_SEND) {
+        if (intent.action == Intent.ACTION_SEND) {
             val fileUri: Uri? =
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) intent.getParcelableExtra(
                     Intent.EXTRA_STREAM,
