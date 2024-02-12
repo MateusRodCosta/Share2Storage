@@ -7,6 +7,7 @@ preference-ktx = "1.2.1"
 composeBom = "2024.01.00"
 composeMaterial3WindowSizeClass = "1.1.2"
 activityCompose = "1.8.2"
+navigationCompose = "2.7.7"
 junit = "4.13.2"
 androidxTestRunner = "1.5.2"
 androidxTestRules = "1.5.0"
@@ -23,6 +24,7 @@ compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling
 compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 junit-junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-runner = { group = "androidx.test", name="runner", version.ref = "androidxTestRunner" }
 androidx-test-rules = { group = "androidx.test", name="rules", version.ref = "androidxTestRules" }
@@ -31,7 +33,7 @@ androidx-test-rules = { group = "androidx.test", name="rules", version.ref = "an
 androidx-ktx = ["androidx.core.ktx", "androidx.preference.ktx"]
 compose = ["compose.material3", "compose.material3.window.size.classes", "compose.ui.tooling.preview", "compose.ui.material.icons.extended"]
 compose-debug = ["compose.ui.tooling", "compose.ui.test.manifest"]
-androidx-compose-integration = ["androidx.activity.compose"]
+androidx-compose-integration = ["androidx.activity.compose", "androidx.navigation.compose"]
 testing = ["junit.junit"]
 ui-testing = ["androidx.test.runner", "androidx.test.rules", "compose.ui.test.junit4"]
 

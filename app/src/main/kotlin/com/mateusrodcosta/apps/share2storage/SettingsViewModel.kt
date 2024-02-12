@@ -23,6 +23,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.util.Log
+import androidx.activity.result.ActivityResultLauncher
 import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 import androidx.preference.PreferenceManager
@@ -34,12 +35,21 @@ class SettingsViewModel : ViewModel() {
 
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var contentResolver: ContentResolver
+    private lateinit var getSaveLocationDirIntent: ActivityResultLauncher<Uri?>
 
     private val _defaultSaveLocation = MutableStateFlow<Uri?>(null)
     val defaultSaveLocation: StateFlow<Uri?> = _defaultSaveLocation
 
     private val _skipFileDetails = MutableStateFlow(false)
     val skipFileDetails: StateFlow<Boolean> = _skipFileDetails
+
+    fun assignSaveLocationDirIntent(intent: ActivityResultLauncher<Uri?>) {
+        getSaveLocationDirIntent = intent
+    }
+
+    fun getSaveLocationDirIntent(): ActivityResultLauncher<Uri?> {
+        return getSaveLocationDirIntent
+    }
 
     fun receiveContext(context: Context) {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)

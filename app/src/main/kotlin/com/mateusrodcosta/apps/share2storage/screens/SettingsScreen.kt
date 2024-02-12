@@ -49,7 +49,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.mateusrodcosta.apps.share2storage.R
+import com.mateusrodcosta.apps.share2storage.SettingsViewModel
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 import com.mateusrodcosta.apps.share2storage.utils.AppBasicDivider
 import com.mateusrodcosta.apps.share2storage.utils.appTopAppBarColors
@@ -62,29 +64,40 @@ fun SettingsScreenPreview() {
     val mockDefaultSaveLocation = MutableStateFlow(null)
     val mockSkipFileDetails = MutableStateFlow(false)
 
-    SettingsScreen(
+    SettingsScreenContent(
+        navController = null,
         spDefaultSaveLocation = mockDefaultSaveLocation,
         spSkipFileDetails = mockSkipFileDetails,
         launchFilePicker = {},
         clearSaveDirectory = {},
-        updateSkipFileDetails = { _ -> },
-        closeActivity = {},
+        updateSkipFileDetails = {},
+    )
+}
+
+@Composable
+fun SettingsScreen(navController: NavController, settingsViewModel: SettingsViewModel) {
+    SettingsScreenContent(
+        navController = navController,
+        spDefaultSaveLocation = settingsViewModel.defaultSaveLocation,
+        spSkipFileDetails = settingsViewModel.skipFileDetails,
+        launchFilePicker = { settingsViewModel.getSaveLocationDirIntent().launch(null) },
+        clearSaveDirectory = { settingsViewModel.clearSaveDirectory() },
+        updateSkipFileDetails = { value: Boolean ->
+            settingsViewModel.updateSkipFileDetails(value)
+        },
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(
+fun SettingsScreenContent(
+    navController: NavController?,
     spDefaultSaveLocation: StateFlow<Uri?>,
     spSkipFileDetails: StateFlow<Boolean>,
-    launchFilePicker: (() -> Unit),
-    clearSaveDirectory: (() -> Unit),
-    updateSkipFileDetails: ((Boolean) -> Unit),
-    closeActivity: () -> Unit,
+    launchFilePicker: () -> Unit,
+    clearSaveDirectory: () -> Unit,
+    updateSkipFileDetails: (Boolean) -> Unit,
 ) {
-    val defaultSaveLocation by spDefaultSaveLocation.collectAsState()
-    val skipFileDetails by spSkipFileDetails.collectAsState()
-
     val settingsPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
 
     AppTheme {
@@ -92,7 +105,7 @@ fun SettingsScreen(
             TopAppBar(title = { Text(stringResource(R.string.settings)) },
                 colors = appTopAppBarColors(),
                 navigationIcon = {
-                    IconButton(onClick = { closeActivity() }) {
+                    IconButton(onClick = { navController?.navigateUp() }) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
                             stringResource(id = R.string.back_arrow)
@@ -110,14 +123,14 @@ fun SettingsScreen(
                     Column {
                         SkipFileDetailsSetting(
                             updateSkipFileDetails = updateSkipFileDetails,
-                            skipFileDetails = skipFileDetails,
+                            spSkipFileDetails = spSkipFileDetails,
                             paddingValues = settingsPadding,
                         )
                         AppBasicDivider()
                         DefaultSaveLocationSetting(
                             launchFilePicker = launchFilePicker,
                             clearSaveDirectory = clearSaveDirectory,
-                            defaultSaveLocation = defaultSaveLocation,
+                            spDefaultSaveLocation = spDefaultSaveLocation,
                             paddingValues = settingsPadding,
                         )
                         AppBasicDivider()
@@ -130,10 +143,12 @@ fun SettingsScreen(
 
 @Composable
 fun SkipFileDetailsSetting(
-    updateSkipFileDetails: ((Boolean) -> Unit),
-    skipFileDetails: Boolean,
+    updateSkipFileDetails: (Boolean) -> Unit,
+    spSkipFileDetails: StateFlow<Boolean>,
     paddingValues: PaddingValues,
 ) {
+    val skipFileDetails by spSkipFileDetails.collectAsState()
+
     Row(modifier = Modifier
         .clickable { updateSkipFileDetails(!skipFileDetails) }
         .padding(paddingValues)
@@ -158,11 +173,13 @@ fun SkipFileDetailsSetting(
 
 @Composable
 fun DefaultSaveLocationSetting(
-    launchFilePicker: (() -> Unit),
-    clearSaveDirectory: (() -> Unit),
-    defaultSaveLocation: Uri?,
+    launchFilePicker: () -> Unit,
+    clearSaveDirectory: () -> Unit,
+    spDefaultSaveLocation: StateFlow<Uri?>,
     paddingValues: PaddingValues,
 ) {
+    val defaultSaveLocation by spDefaultSaveLocation.collectAsState()
+
     Row(modifier = Modifier
         .clickable { launchFilePicker() }
         .padding(paddingValues)

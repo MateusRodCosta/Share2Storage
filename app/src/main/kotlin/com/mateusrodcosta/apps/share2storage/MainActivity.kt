@@ -18,16 +18,36 @@
 package com.mateusrodcosta.apps.share2storage
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.mateusrodcosta.apps.share2storage.screens.MainScreen
+import androidx.activity.result.contract.ActivityResultContracts
+import com.mateusrodcosta.apps.share2storage.screens.AppNavigation
 
 class MainActivity : ComponentActivity() {
+
+    private val settingsViewModel: SettingsViewModel = SettingsViewModel()
+
+    private val getSaveLocationDirIntent =
+        registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+            if (uri == null) return@registerForActivityResult
+
+            Log.d("settings] getSaveLocationDir] uri", uri.toString())
+            Log.d("settings] getSaveLocationDir] uri.path", uri.path.toString())
+
+            settingsViewModel.updateDefaultSaveLocation(uri)
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        setContent { MainScreen() }
+
+        settingsViewModel.receiveContext(applicationContext)
+        settingsViewModel.assignSaveLocationDirIntent(getSaveLocationDirIntent)
+        settingsViewModel.initPreferences()
+
+        setContent { AppNavigation(settingsViewModel) }
     }
 }
 

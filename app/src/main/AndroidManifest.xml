@@ -20,10 +20,6 @@
         </activity>
 
         <activity
-            android:name=".SettingsActivity"
-            android:exported="false" />
-
-        <activity
             android:name=".DetailsActivity"
             android:exported="true">
 

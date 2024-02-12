@@ -17,7 +17,6 @@
 
 package com.mateusrodcosta.apps.share2storage.screens
 
-import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -46,15 +45,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.mateusrodcosta.apps.share2storage.R
-import com.mateusrodcosta.apps.share2storage.SettingsActivity
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 import com.mateusrodcosta.apps.share2storage.utils.AppBasicDivider
 import com.mateusrodcosta.apps.share2storage.utils.appTopAppBarColors
@@ -62,22 +60,23 @@ import com.mateusrodcosta.apps.share2storage.utils.appTopAppBarColors
 @Preview(apiLevel = 33, showBackground = true)
 @Composable
 fun MainScreenPreview() {
-    MainScreen()
+    MainScreenContent(navController = null)
+}
+
+@Composable
+fun MainScreen(navController: NavController) {
+    MainScreenContent(navController = navController)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
-    val context = LocalContext.current
+fun MainScreenContent(navController: NavController?) {
     AppTheme {
         Scaffold(topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.app_name)) },
                 actions = {
-                    IconButton(onClick = {
-                        val intent = Intent(context, SettingsActivity::class.java)
-                        context.startActivity(intent)
-                    }) {
+                    IconButton(onClick = { navController?.navigate("settings") }) {
                         Icon(Icons.Rounded.Settings, stringResource(id = R.string.settings))
                     }
                 },
