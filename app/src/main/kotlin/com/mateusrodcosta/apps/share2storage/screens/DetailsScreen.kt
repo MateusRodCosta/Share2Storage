@@ -48,6 +48,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -69,21 +70,34 @@ import com.mateusrodcosta.apps.share2storage.utils.appTopAppBarColors
 @Preview(apiLevel = 33, showBackground = true)
 @Composable
 fun DetailsScreenPreview(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData?) {
-    DetailsScreen(
+    DetailsScreenContent(
         uriData = uriData,
         widthSizeClass = WindowWidthSizeClass.Compact,
         heightSizeClass = WindowHeightSizeClass.Medium,
-        launchFilePicker = {},
+    )
+}
+
+@Composable
+fun DetailsScreen(
+    uriData: UriData?,
+    windowSizeClass: WindowSizeClass,
+    launchFilePicker: () -> Unit?,
+) {
+    DetailsScreenContent(
+        uriData = uriData,
+        widthSizeClass = windowSizeClass.widthSizeClass,
+        heightSizeClass = windowSizeClass.heightSizeClass,
+        launchFilePicker = launchFilePicker
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailsScreen(
+fun DetailsScreenContent(
     uriData: UriData?,
     widthSizeClass: WindowWidthSizeClass,
     heightSizeClass: WindowHeightSizeClass,
-    launchFilePicker: () -> Unit?,
+    launchFilePicker: () -> Unit? = {},
 ) {
     AppTheme {
         Scaffold(topBar = {
@@ -229,6 +243,5 @@ fun FilePreview(uriData: UriData) {
             contentDescription = stringResource(R.string.app_name),
             tint = MaterialTheme.colorScheme.tertiary
         )
-
     }
 }

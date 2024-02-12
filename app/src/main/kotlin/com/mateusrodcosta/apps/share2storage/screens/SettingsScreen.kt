@@ -65,12 +65,8 @@ fun SettingsScreenPreview() {
     val mockSkipFileDetails = MutableStateFlow(false)
 
     SettingsScreenContent(
-        navController = null,
         spDefaultSaveLocation = mockDefaultSaveLocation,
         spSkipFileDetails = mockSkipFileDetails,
-        launchFilePicker = {},
-        clearSaveDirectory = {},
-        updateSkipFileDetails = {},
     )
 }
 
@@ -91,12 +87,12 @@ fun SettingsScreen(navController: NavController, settingsViewModel: SettingsView
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreenContent(
-    navController: NavController?,
+    navController: NavController? = null,
     spDefaultSaveLocation: StateFlow<Uri?>,
     spSkipFileDetails: StateFlow<Boolean>,
-    launchFilePicker: () -> Unit,
-    clearSaveDirectory: () -> Unit,
-    updateSkipFileDetails: (Boolean) -> Unit,
+    launchFilePicker: () -> Unit = {},
+    clearSaveDirectory: () -> Unit = {},
+    updateSkipFileDetails: (Boolean) -> Unit = {},
 ) {
     val settingsPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
 

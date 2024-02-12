@@ -60,7 +60,7 @@ import com.mateusrodcosta.apps.share2storage.utils.appTopAppBarColors
 @Preview(apiLevel = 33, showBackground = true)
 @Composable
 fun MainScreenPreview() {
-    MainScreenContent(navController = null)
+    MainScreenContent()
 }
 
 @Composable
@@ -70,7 +70,7 @@ fun MainScreen(navController: NavController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreenContent(navController: NavController?) {
+fun MainScreenContent(navController: NavController? = null) {
     AppTheme {
         Scaffold(topBar = {
             TopAppBar(

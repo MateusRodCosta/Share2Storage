@@ -59,8 +59,7 @@ class DetailsActivity : ComponentActivity() {
             val windowSizeClass = calculateWindowSizeClass(this)
             DetailsScreen(
                 uriData = uriData,
-                widthSizeClass = windowSizeClass.widthSizeClass,
-                heightSizeClass = windowSizeClass.heightSizeClass,
+                windowSizeClass = windowSizeClass,
                 launchFilePicker = launchFilePicker,
             )
         }
