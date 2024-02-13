@@ -19,6 +19,7 @@ package com.mateusrodcosta.apps.share2storage.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -41,6 +42,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,21 +60,33 @@ import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 import com.mateusrodcosta.apps.share2storage.utils.AppBasicDivider
 import com.mateusrodcosta.apps.share2storage.utils.appTopAppBarColors
+import com.mateusrodcosta.apps.share2storage.utils.shouldShowLandscape
 
 @Preview(apiLevel = 33, showBackground = true)
 @Composable
 fun MainScreenPreview() {
-    MainScreenContent()
+    MainScreenContent(
+        widthSizeClass = WindowWidthSizeClass.Compact,
+        heightSizeClass = WindowHeightSizeClass.Medium,
+    )
 }
 
 @Composable
-fun MainScreen(navController: NavController) {
-    MainScreenContent(navController = navController)
+fun MainScreen(navController: NavController, windowSizeClass: WindowSizeClass) {
+    MainScreenContent(
+        navController = navController,
+        widthSizeClass = windowSizeClass.widthSizeClass,
+        heightSizeClass = windowSizeClass.heightSizeClass,
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreenContent(navController: NavController? = null) {
+fun MainScreenContent(
+    navController: NavController? = null,
+    widthSizeClass: WindowWidthSizeClass,
+    heightSizeClass: WindowHeightSizeClass,
+) {
     AppTheme {
         Scaffold(topBar = {
             TopAppBar(
@@ -84,78 +100,117 @@ fun MainScreenContent(navController: NavController? = null) {
             )
         }) { paddingValues ->
             Box(modifier = Modifier.padding(paddingValues)) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState()),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Column(modifier = Modifier.padding(all = 16.dp)) {
-                        Image(
-                            painterResource(R.drawable.ic_launcher_foreground),
-                            stringResource(R.string.app_name),
-                            modifier = Modifier.scale(1.8f),
-                        )
-                        Text(
-                            stringResource(R.string.how_to_use),
-                            style = MaterialTheme.typography.titleLarge,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                    Column {
-                        AppBasicDivider()
-                        HowToUseRow(1, stringResource(R.string.how_to_use_step_1))
-                        AppBasicDivider()
-                        HowToUseRow(
-                            2, String.format(
-                                stringResource(R.string.how_to_use_step_2), stringResource(
-                                    R.string.app_name
-                                )
-                            )
-                        )
-                        AppBasicDivider()
-                        HowToUseRow(3, stringResource(R.string.how_to_use_step_3))
-                        AppBasicDivider()
-                        HowToUseRow(4, stringResource(R.string.how_to_use_step_4))
-                        AppBasicDivider()
-                        Spacer(modifier = Modifier.height(24.dp))
-                        Box(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
-                            Text(
-                                stringResource(id = R.string.how_to_use_about_title),
-                                style = MaterialTheme.typography.titleMedium
-                            )
-                        }
-                        AppBasicDivider()
-                        AboutRow(
-                            stringResource(R.string.how_to_use_about),
-                            url = stringResource(R.string.github_profile_url)
-                        )
-                        AppBasicDivider()
-                        AboutRow(
-                            String.format(
-                                stringResource(R.string.how_to_use_github), stringResource(
-
-                                    R.string.source_code_url
-                                )
-                            ), url = stringResource(R.string.source_code_url)
-                        )
-                        AppBasicDivider()
-                        AboutRow(
-                            stringResource(R.string.how_to_use_app_icon_credits), url = null
-                        )
-                        AppBasicDivider()
-                        AboutRow(
-                            String.format(
-                                stringResource(R.string.how_to_use_app_donation), stringResource(
-                                    R.string.donation_url
-                                )
-                            ), url = stringResource(R.string.donation_url)
-                        )
-                        AppBasicDivider()
-                    }
-                }
+                val showLandscape = shouldShowLandscape(widthSizeClass, heightSizeClass)
+                if (showLandscape) HowToUseLandscape()
+                else HowToUsePortrait()
             }
         }
+    }
+}
+
+@Composable
+fun HowToUseLandscape() {
+    Row {
+        Box(modifier = Modifier.weight(1.0f)) {
+            HowToUseHeader()
+        }
+        Box(modifier = Modifier.weight(3.0f)) {
+            HowToUseContent(isLandscape = true)
+        }
+    }
+}
+
+@Composable
+fun HowToUsePortrait() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        HowToUseHeader()
+        HowToUseContent()
+    }
+}
+
+@Composable
+fun HowToUseHeader() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(all = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Image(
+            painterResource(R.drawable.ic_launcher_foreground),
+            stringResource(R.string.app_name),
+            modifier = Modifier.scale(1.8f),
+        )
+        Text(
+            stringResource(R.string.how_to_use),
+            style = MaterialTheme.typography.titleLarge,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Composable
+fun HowToUseContent(isLandscape: Boolean = false) {
+    Column(
+        modifier = if (isLandscape) Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()) else Modifier.fillMaxSize()
+    ) {
+        AppBasicDivider()
+        HowToUseRow(1, stringResource(R.string.how_to_use_step_1))
+        AppBasicDivider()
+        HowToUseRow(
+            2, String.format(
+                stringResource(R.string.how_to_use_step_2), stringResource(
+                    R.string.app_name
+                )
+            )
+        )
+        AppBasicDivider()
+        HowToUseRow(3, stringResource(R.string.how_to_use_step_3))
+        AppBasicDivider()
+        HowToUseRow(4, stringResource(R.string.how_to_use_step_4))
+        AppBasicDivider()
+        Spacer(modifier = Modifier.height(24.dp))
+        Box(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
+            Text(
+                stringResource(id = R.string.how_to_use_about_title),
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
+        AppBasicDivider()
+        AboutRow(
+            stringResource(R.string.how_to_use_about),
+            url = stringResource(R.string.github_profile_url)
+        )
+        AppBasicDivider()
+        AboutRow(
+            String.format(
+                stringResource(R.string.how_to_use_github), stringResource(
+
+                    R.string.source_code_url
+                )
+            ), url = stringResource(R.string.source_code_url)
+        )
+        AppBasicDivider()
+        AboutRow(
+            stringResource(R.string.how_to_use_app_icon_credits), url = null
+        )
+        AppBasicDivider()
+        AboutRow(
+            String.format(
+                stringResource(R.string.how_to_use_app_donation), stringResource(
+                    R.string.donation_url
+                )
+            ), url = stringResource(R.string.donation_url)
+        )
+        AppBasicDivider()
     }
 }
 

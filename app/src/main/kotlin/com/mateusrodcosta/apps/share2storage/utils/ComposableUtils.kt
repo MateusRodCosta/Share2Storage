@@ -15,21 +15,16 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage.screens
+package com.mateusrodcosta.apps.share2storage.utils
 
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
-import androidx.compose.runtime.Composable
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.mateusrodcosta.apps.share2storage.SettingsViewModel
+import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 
-@Composable
-fun AppNavigation(settingsViewModel: SettingsViewModel, windowSizeClass: WindowSizeClass) {
-    val navController = rememberNavController()
-
-    NavHost(navController = navController, startDestination = "main") {
-        composable("main") { MainScreen(navController, windowSizeClass) }
-        composable("settings") { SettingsScreen(navController, settingsViewModel) }
-    }
+fun shouldShowLandscape(
+    widthSizeClass: WindowWidthSizeClass,
+    heightSizeClass: WindowHeightSizeClass,
+): Boolean {
+    val showLandscapePhone = heightSizeClass == WindowHeightSizeClass.Compact
+    val showLandscapeTablet = widthSizeClass == WindowWidthSizeClass.Expanded
+    return showLandscapePhone || showLandscapeTablet
 }

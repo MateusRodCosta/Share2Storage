@@ -23,6 +23,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import com.mateusrodcosta.apps.share2storage.screens.AppNavigation
 
 class MainActivity : ComponentActivity() {
@@ -39,6 +41,7 @@ class MainActivity : ComponentActivity() {
             settingsViewModel.updateDefaultSaveLocation(uri)
         }
 
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
@@ -47,7 +50,10 @@ class MainActivity : ComponentActivity() {
         settingsViewModel.assignSaveLocationDirIntent(getSaveLocationDirIntent)
         settingsViewModel.initPreferences()
 
-        setContent { AppNavigation(settingsViewModel) }
+        setContent {
+            val windowSizeClass = calculateWindowSizeClass(this)
+            AppNavigation(settingsViewModel, windowSizeClass)
+        }
     }
 }
 

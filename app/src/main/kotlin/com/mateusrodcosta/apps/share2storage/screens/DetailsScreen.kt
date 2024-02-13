@@ -66,6 +66,7 @@ import com.mateusrodcosta.apps.share2storage.model.UriData
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 import com.mateusrodcosta.apps.share2storage.utils.AppBasicDivider
 import com.mateusrodcosta.apps.share2storage.utils.appTopAppBarColors
+import com.mateusrodcosta.apps.share2storage.utils.shouldShowLandscape
 
 @Preview(apiLevel = 33, showBackground = true)
 @Composable
@@ -126,10 +127,9 @@ fun DetailsScreenContent(
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
-                val showLandscapePhone = heightSizeClass == WindowHeightSizeClass.Compact
-                val showLandscapeTablet = widthSizeClass == WindowWidthSizeClass.Expanded
+                val showLandscape = shouldShowLandscape(widthSizeClass, heightSizeClass)
                 if (uriData != null) {
-                    if (showLandscapePhone || showLandscapeTablet) FileDetailsLandscape(uriData)
+                    if (showLandscape) FileDetailsLandscape(uriData)
                     else FileDetailsPortrait(uriData)
                 } else Text(
                     stringResource(R.string.no_file_found),
@@ -175,7 +175,8 @@ fun FileInfo(uriData: UriData) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.Center
     ) {
         AppBasicDivider()
         FileInfoLine(
