@@ -21,10 +21,9 @@ android {
     defaultConfig {
         applicationId = "com.mateusrodcosta.apps.share2storage"
         minSdk = 26
-        //noinspection OldTargetApi
-        targetSdk = 33
-        versionCode = 15
-        versionName = "1.0.1"
+        targetSdk = 34
+        versionCode = 16
+        versionName = "1.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

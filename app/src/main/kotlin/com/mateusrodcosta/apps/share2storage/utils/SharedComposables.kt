@@ -18,8 +18,8 @@
 package com.mateusrodcosta.apps.share2storage.utils
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun AppBasicDivider() {
-    Divider(modifier = Modifier.padding(horizontal = 16.dp), thickness = Dp.Hairline)
+    HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), thickness = Dp.Hairline)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

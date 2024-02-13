@@ -1,0 +1,4 @@
+• Updated dependencies
+• Improvements to underlying screen structure and navigation logic
+• Support Android 14
+• Add landscape layout to Main screen
