@@ -29,7 +29,7 @@ import android.util.Log
 import com.mateusrodcosta.apps.share2storage.model.UriData
 import java.io.*
 
-fun getUriData(contentResolver: ContentResolver, uri: Uri?): UriData? {
+fun getUriData(contentResolver: ContentResolver, uri: Uri?, getPreview: Boolean): UriData? {
     if (uri == null) return null
     val type = contentResolver.getType(uri)
     var displayName: String? = null
@@ -50,16 +50,18 @@ fun getUriData(contentResolver: ContentResolver, uri: Uri?): UriData? {
     }
 
     var bitmap: Bitmap? = null
-    try {
-        val fileDescriptor = contentResolver.openFileDescriptor(uri, "r")
-        if (fileDescriptor != null) {
-            val fd = fileDescriptor.fileDescriptor
-            bitmap = BitmapFactory.decodeFileDescriptor(fd)
+    if (getPreview) {
+        try {
+            val fileDescriptor = contentResolver.openFileDescriptor(uri, "r")
+            if (fileDescriptor != null) {
+                val fd = fileDescriptor.fileDescriptor
+                bitmap = BitmapFactory.decodeFileDescriptor(fd)
+            }
+            fileDescriptor?.close()
+        } catch (e: Exception) {
+            Log.w("getUriData] bitmap", e.toString())
+            bitmap = null
         }
-        fileDescriptor?.close()
-    } catch (e: Exception) {
-        Log.w("getUriData] bitmap", e.toString())
-        bitmap = null
     }
 
     return UriData(displayName, type, size, previewImage = bitmap)

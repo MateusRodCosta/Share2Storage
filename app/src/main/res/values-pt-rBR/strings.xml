@@ -21,6 +21,9 @@
     <string name="settings_intercept_action_view_intents_info">Permite registrar como uma opção quando aplicativos tentam automaticamente abrir um visualizador de arquivos</string>
     <string name="settings_default_save_location">Local de salvamento padrão</string>
     <string name="settings_default_save_location_last_used">Última pasta usada</string>
+    <string name="settings_show_file_preview">Mostrar prévia do arquivo</string>
+    <string name="settings_show_file_preview_info">Mostrar pré-visualização para tipos de arquivo compatíveis. Atualmente apenas alguns tipos de arquivos de imagem são suportados.</string>
+
     <string name="clear_button">Limpar</string>
 
     <string name="save_button">Salvar</string>

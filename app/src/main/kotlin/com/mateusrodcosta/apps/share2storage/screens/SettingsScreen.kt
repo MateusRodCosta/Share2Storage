@@ -64,20 +64,24 @@ fun SettingsScreenPreview() {
     val mockDefaultSaveLocation = MutableStateFlow(null)
     val mockSkipFileDetails = MutableStateFlow(false)
     val mockInterceptActionViewIntents = MutableStateFlow(false)
+    val mockShowFilePreview = MutableStateFlow(true)
 
     SettingsScreenContent(
         spDefaultSaveLocation = mockDefaultSaveLocation,
         spSkipFileDetails = mockSkipFileDetails,
         spInterceptActionViewIntents = mockInterceptActionViewIntents,
+        spShowFilePreview = mockShowFilePreview
     )
 }
 
 @Composable
 fun SettingsScreen(navController: NavController, settingsViewModel: SettingsViewModel) {
-    SettingsScreenContent(navController = navController,
+    SettingsScreenContent(
+        navController = navController,
         spDefaultSaveLocation = settingsViewModel.defaultSaveLocation,
         spSkipFileDetails = settingsViewModel.skipFileDetails,
         spInterceptActionViewIntents = settingsViewModel.interceptActionViewIntents,
+        spShowFilePreview = settingsViewModel.showFilePreview,
         launchFilePicker = { settingsViewModel.getSaveLocationDirIntent().launch(null) },
         clearSaveDirectory = { settingsViewModel.clearSaveDirectory() },
         updateSkipFileDetails = { value: Boolean ->
@@ -85,7 +89,11 @@ fun SettingsScreen(navController: NavController, settingsViewModel: SettingsView
         },
         updateInterceptActionViewIntents = { value: Boolean ->
             settingsViewModel.updateInterceptActionViewIntents(value)
-        })
+        },
+        updateShowFilePreview = { value ->
+            settingsViewModel.updateShowFilePreview(value)
+        },
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -95,10 +103,12 @@ fun SettingsScreenContent(
     spDefaultSaveLocation: StateFlow<Uri?>,
     spSkipFileDetails: StateFlow<Boolean>,
     spInterceptActionViewIntents: StateFlow<Boolean>,
+    spShowFilePreview: StateFlow<Boolean>,
     launchFilePicker: () -> Unit = {},
     clearSaveDirectory: () -> Unit = {},
     updateSkipFileDetails: (Boolean) -> Unit = {},
     updateInterceptActionViewIntents: (Boolean) -> Unit = {},
+    updateShowFilePreview: (Boolean) -> Unit = {},
 ) {
     val settingsPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
 
@@ -110,7 +120,7 @@ fun SettingsScreenContent(
                     IconButton(onClick = { navController?.navigateUp() }) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
-                            stringResource(id = R.string.back_arrow)
+                            stringResource(R.string.back_arrow)
                         )
                     }
                 })
@@ -142,6 +152,12 @@ fun SettingsScreenContent(
                             paddingValues = settingsPadding,
                         )
                         AppBasicDivider()
+                        ShowFilePreviewSetting(
+                            updateShowFilePreview = updateShowFilePreview,
+                            spShowFilePreview = spShowFilePreview,
+                            paddingValues = settingsPadding,
+                        )
+                        AppBasicDivider()
                     }
                 }
             }
@@ -164,7 +180,7 @@ fun SkipFileDetailsSetting(
         verticalAlignment = Alignment.CenterVertically) {
         Column(modifier = Modifier.weight(1.0f)) {
             Text(
-                stringResource(id = R.string.settings_skip_file_details_page),
+                stringResource(R.string.settings_skip_file_details_page),
                 style = MaterialTheme.typography.titleLarge,
             )
             Text(
@@ -197,7 +213,7 @@ fun InterceptActionViewIntentsSetting(
         verticalAlignment = Alignment.CenterVertically) {
         Column(modifier = Modifier.weight(1.0f)) {
             Text(
-                stringResource(id = R.string.settings_intercept_action_view_intents),
+                stringResource(R.string.settings_intercept_action_view_intents),
                 style = MaterialTheme.typography.titleLarge,
             )
             Text(
@@ -227,7 +243,7 @@ fun DefaultSaveLocationSetting(
         .heightIn(min = 48.dp), verticalAlignment = Alignment.CenterVertically) {
         Column(modifier = Modifier.weight(1.0f)) {
             Text(
-                stringResource(id = R.string.settings_default_save_location),
+                stringResource(R.string.settings_default_save_location),
                 style = MaterialTheme.typography.titleLarge,
             )
             Text(
@@ -239,5 +255,35 @@ fun DefaultSaveLocationSetting(
         IconButton(onClick = { clearSaveDirectory() }) {
             Icon(Icons.Rounded.Clear, stringResource(R.string.clear_button))
         }
+    }
+}
+
+@Composable
+fun ShowFilePreviewSetting(
+    updateShowFilePreview: (Boolean) -> Unit,
+    spShowFilePreview: StateFlow<Boolean>,
+    paddingValues: PaddingValues,
+) {
+    val showFilePreview by spShowFilePreview.collectAsState()
+
+    Row(modifier = Modifier
+        .clickable { updateShowFilePreview(!showFilePreview) }
+        .padding(paddingValues)
+        .heightIn(min = 48.dp),
+        verticalAlignment = Alignment.CenterVertically) {
+        Column(modifier = Modifier.weight(1.0f)) {
+            Text(
+                stringResource(R.string.settings_show_file_preview),
+                style = MaterialTheme.typography.titleLarge,
+            )
+            Text(
+                stringResource(R.string.settings_show_file_preview_info),
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
+        Spacer(modifier = Modifier.width(8.dp))
+        Switch(checked = showFilePreview, onCheckedChange = { value ->
+            updateShowFilePreview(value)
+        })
     }
 }

@@ -21,6 +21,9 @@
     <string name="settings_intercept_action_view_intents_info">Allow registering as an option when apps try to automatically open a file viewer</string>
     <string name="settings_default_save_location">Default save location</string>
     <string name="settings_default_save_location_last_used">Last used folder</string>
+    <string name="settings_show_file_preview">Show file preview</string>
+    <string name="settings_show_file_preview_info">Show file previews for compatible file types. Currently only some image files are supported.</string>
+
     <string name="clear_button">Clear</string>
 
     <string name="save_button">Save</string>

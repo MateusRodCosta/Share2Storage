@@ -21,4 +21,5 @@ object SharedPreferenceKeys {
     const val SKIP_FILE_DETAILS_KEY: String = "skip_file_details"
     const val DEFAULT_SAVE_LOCATION_KEY: String = "default_save_location"
     const val INTERCEPT_ACTION_VIEW_INTENTS_KEY: String = "intercept_action_view_intents"
+    const val SHOW_FILE_PREVIEW_KEY: String = "show_file_preview"
 }

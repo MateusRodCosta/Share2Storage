@@ -50,6 +50,8 @@ class SettingsViewModel : ViewModel() {
     private val _skipFileDetails = MutableStateFlow(false)
     val skipFileDetails: StateFlow<Boolean> = _skipFileDetails
 
+    private val _showFilePreview = MutableStateFlow(true)
+    val showFilePreview: StateFlow<Boolean> = _showFilePreview
 
     private val _interceptActionViewIntents = MutableStateFlow(false)
     val interceptActionViewIntents: StateFlow<Boolean> = _interceptActionViewIntents
@@ -87,17 +89,26 @@ class SettingsViewModel : ViewModel() {
         val spSkipFileDetails =
             sharedPreferences.getBoolean(SharedPreferenceKeys.SKIP_FILE_DETAILS_KEY, false)
         Log.d("settings] initSharedPreferences] skipFileDetails", spSkipFileDetails.toString())
+
         val spInterceptActionViewIntents = sharedPreferences.getBoolean(
-            SharedPreferenceKeys.INTERCEPT_ACTION_VIEW_INTENTS_KEY, false
-        )
+            SharedPreferenceKeys.INTERCEPT_ACTION_VIEW_INTENTS_KEY, false)
         Log.d(
             "settings] initSharedPreferences] interceptActionViewIntents",
             spInterceptActionViewIntents.toString()
         )
 
+        val spShowFilePreview = sharedPreferences.getBoolean(
+            SharedPreferenceKeys.SHOW_FILE_PREVIEW_KEY, true
+        )
+        Log.d(
+            "settings] initSharedPreferences] showFilePreview",
+            spShowFilePreview.toString()
+        )
+
         _defaultSaveLocation.value = spDefaultSaveLocation
         _skipFileDetails.value = spSkipFileDetails
         _interceptActionViewIntents.value = spInterceptActionViewIntents
+        _showFilePreview.value = spShowFilePreview
     }
 
     fun updateDefaultSaveLocation(value: Uri?) {
@@ -173,6 +184,14 @@ class SettingsViewModel : ViewModel() {
             } catch (e: Exception) {
                 Log.e("settings] updateInterceptActionViewIntents", e.toString())
             }
+        }
+    }
+
+    fun updateShowFilePreview(value: Boolean) {
+        sharedPreferences.edit(commit = true) {
+            putBoolean(SharedPreferenceKeys.SHOW_FILE_PREVIEW_KEY, value)
+            Log.e("settings] updateShowFilePreview", value.toString())
+            _showFilePreview.value = value
         }
     }
 }
