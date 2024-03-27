@@ -64,9 +64,9 @@ import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.model.SampleUriDataProvider
 import com.mateusrodcosta.apps.share2storage.model.UriData
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
-import com.mateusrodcosta.apps.share2storage.utils.AppBasicDivider
-import com.mateusrodcosta.apps.share2storage.utils.appTopAppBarColors
-import com.mateusrodcosta.apps.share2storage.utils.shouldShowLandscape
+import com.mateusrodcosta.apps.share2storage.screens.shared.AppBasicDivider
+import com.mateusrodcosta.apps.share2storage.screens.shared.appTopAppBarColors
+import com.mateusrodcosta.apps.share2storage.screens.shared.shouldShowLandscape
 
 @Preview(apiLevel = 33, showBackground = true)
 @Composable

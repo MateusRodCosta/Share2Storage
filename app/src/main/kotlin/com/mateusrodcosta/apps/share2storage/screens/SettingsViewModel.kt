@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage
+package com.mateusrodcosta.apps.share2storage.screens
 
 import android.content.ComponentName
 import android.content.ContentResolver
@@ -91,7 +91,8 @@ class SettingsViewModel : ViewModel() {
         Log.d("settings] initSharedPreferences] skipFileDetails", spSkipFileDetails.toString())
 
         val spInterceptActionViewIntents = sharedPreferences.getBoolean(
-            SharedPreferenceKeys.INTERCEPT_ACTION_VIEW_INTENTS_KEY, false)
+            SharedPreferenceKeys.INTERCEPT_ACTION_VIEW_INTENTS_KEY, false
+        )
         Log.d(
             "settings] initSharedPreferences] interceptActionViewIntents",
             spInterceptActionViewIntents.toString()
@@ -101,8 +102,7 @@ class SettingsViewModel : ViewModel() {
             SharedPreferenceKeys.SHOW_FILE_PREVIEW_KEY, true
         )
         Log.d(
-            "settings] initSharedPreferences] showFilePreview",
-            spShowFilePreview.toString()
+            "settings] initSharedPreferences] showFilePreview", spShowFilePreview.toString()
         )
 
         _defaultSaveLocation.value = spDefaultSaveLocation

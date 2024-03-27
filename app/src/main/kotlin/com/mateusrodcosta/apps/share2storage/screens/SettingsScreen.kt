@@ -51,10 +51,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.mateusrodcosta.apps.share2storage.R
-import com.mateusrodcosta.apps.share2storage.SettingsViewModel
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
-import com.mateusrodcosta.apps.share2storage.utils.AppBasicDivider
-import com.mateusrodcosta.apps.share2storage.utils.appTopAppBarColors
+import com.mateusrodcosta.apps.share2storage.screens.shared.AppBasicDivider
+import com.mateusrodcosta.apps.share2storage.screens.shared.appTopAppBarColors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 

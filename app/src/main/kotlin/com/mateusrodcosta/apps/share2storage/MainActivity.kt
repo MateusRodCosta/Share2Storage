@@ -26,6 +26,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import com.mateusrodcosta.apps.share2storage.screens.AppNavigation
+import com.mateusrodcosta.apps.share2storage.screens.SettingsViewModel
 
 class MainActivity : ComponentActivity() {
 
