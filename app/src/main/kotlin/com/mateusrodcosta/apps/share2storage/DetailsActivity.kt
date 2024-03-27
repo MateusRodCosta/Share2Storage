@@ -81,31 +81,39 @@ class DetailsActivity : ComponentActivity() {
     }
 
     private fun handleIntent() {
+        var fileUri: Uri? = null
         if (intent.action == Intent.ACTION_SEND) {
-            val fileUri: Uri? =
+            fileUri =
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) intent.getParcelableExtra(
                     Intent.EXTRA_STREAM, Uri::class.java
                 )
                 else @Suppress("DEPRECATION") intent.getParcelableExtra(Intent.EXTRA_STREAM)
             Log.d("fileUri", fileUri.toString())
             uriData = getUriData(contentResolver, fileUri)
+        }
+        // ACTION_VIEW intents interceptor
+        if (intent.action == Intent.ACTION_VIEW) {
+            fileUri = intent.data
+            Log.d("fileUri", fileUri.toString())
+            uriData = getUriData(contentResolver, fileUri)
+        }
 
-            if (uriData != null) {
-                createFile = registerForActivityResult(
-                    CreateDocumentWithInitialUri(uriData?.type ?: "*/*", defaultSaveLocation)
-                ) { uri ->
-                    if (uri == null || fileUri == null) return@registerForActivityResult
-                    val isSuccess = saveFile(baseContext, uri, fileUri)
-                    Toast.makeText(
-                        baseContext, if (isSuccess) {
-                            R.string.toast_saved_file_success
-                        } else {
-                            R.string.toast_saved_file_failure
-                        }, Toast.LENGTH_LONG
-                    ).show()
-                    if (skipFileDetails == true) finish()
-                }
+        if (uriData != null) {
+            createFile = registerForActivityResult(
+                CreateDocumentWithInitialUri(uriData?.type ?: "*/*", defaultSaveLocation)
+            ) { uri ->
+                if (uri == null || fileUri == null) return@registerForActivityResult
+                val isSuccess = saveFile(baseContext, uri, fileUri)
+                Toast.makeText(
+                    baseContext, if (isSuccess) {
+                        R.string.toast_saved_file_success
+                    } else {
+                        R.string.toast_saved_file_failure
+                    }, Toast.LENGTH_LONG
+                ).show()
+                if (skipFileDetails == true) finish()
             }
+
         }
     }
 }
