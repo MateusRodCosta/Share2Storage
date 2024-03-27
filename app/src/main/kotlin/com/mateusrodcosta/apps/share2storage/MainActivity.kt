@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
-        settingsViewModel.receiveContext(applicationContext)
+        settingsViewModel.initializeWithContext(applicationContext)
         settingsViewModel.assignSaveLocationDirIntent(getSaveLocationDirIntent)
         settingsViewModel.initPreferences()
 

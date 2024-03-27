@@ -17,10 +17,15 @@
 
 package com.mateusrodcosta.apps.share2storage
 
+import android.content.ComponentName
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+import android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+import android.content.pm.PackageManager.DONT_KILL_APP
 import android.net.Uri
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
@@ -34,14 +39,20 @@ import kotlinx.coroutines.flow.StateFlow
 class SettingsViewModel : ViewModel() {
 
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var packageManager: PackageManager
     private lateinit var contentResolver: ContentResolver
     private lateinit var getSaveLocationDirIntent: ActivityResultLauncher<Uri?>
+    private lateinit var packageName: String
 
     private val _defaultSaveLocation = MutableStateFlow<Uri?>(null)
     val defaultSaveLocation: StateFlow<Uri?> = _defaultSaveLocation
 
     private val _skipFileDetails = MutableStateFlow(false)
     val skipFileDetails: StateFlow<Boolean> = _skipFileDetails
+
+
+    private val _interceptActionViewIntents = MutableStateFlow(false)
+    val interceptActionViewIntents: StateFlow<Boolean> = _interceptActionViewIntents
 
     fun assignSaveLocationDirIntent(intent: ActivityResultLauncher<Uri?>) {
         getSaveLocationDirIntent = intent
@@ -51,14 +62,16 @@ class SettingsViewModel : ViewModel() {
         return getSaveLocationDirIntent
     }
 
-    fun receiveContext(context: Context) {
+    fun initializeWithContext(context: Context) {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
         contentResolver = context.contentResolver
+        packageManager = context.packageManager
+        packageName = context.packageName
     }
 
     fun initPreferences() {
         val spDefaultSaveLocationRaw =
-            sharedPreferences.getString(SharedPreferenceKeys.defaultSaveLocationKey, null)
+            sharedPreferences.getString(SharedPreferenceKeys.DEFAULT_SAVE_LOCATION_KEY, null)
         val spDefaultSaveLocation = if (spDefaultSaveLocationRaw != null) try {
             val uri = Uri.parse(spDefaultSaveLocationRaw)
 
@@ -72,22 +85,30 @@ class SettingsViewModel : ViewModel() {
         else null
 
         val spSkipFileDetails =
-            sharedPreferences.getBoolean(SharedPreferenceKeys.skipFileDetailsKey, false)
+            sharedPreferences.getBoolean(SharedPreferenceKeys.SKIP_FILE_DETAILS_KEY, false)
         Log.d("settings] initSharedPreferences] skipFileDetails", spSkipFileDetails.toString())
+        val spInterceptActionViewIntents = sharedPreferences.getBoolean(
+            SharedPreferenceKeys.INTERCEPT_ACTION_VIEW_INTENTS_KEY, false
+        )
+        Log.d(
+            "settings] initSharedPreferences] interceptActionViewIntents",
+            spInterceptActionViewIntents.toString()
+        )
 
         _defaultSaveLocation.value = spDefaultSaveLocation
         _skipFileDetails.value = spSkipFileDetails
+        _interceptActionViewIntents.value = spInterceptActionViewIntents
     }
 
     fun updateDefaultSaveLocation(value: Uri?) {
         val currentSaveLocationRaw =
-            sharedPreferences.getString(SharedPreferenceKeys.defaultSaveLocationKey, null)
+            sharedPreferences.getString(SharedPreferenceKeys.DEFAULT_SAVE_LOCATION_KEY, null)
 
         sharedPreferences.edit(commit = true) {
             if (value != null) putString(
-                SharedPreferenceKeys.defaultSaveLocationKey, value.toString()
+                SharedPreferenceKeys.DEFAULT_SAVE_LOCATION_KEY, value.toString()
             )
-            else remove(SharedPreferenceKeys.defaultSaveLocationKey)
+            else remove(SharedPreferenceKeys.DEFAULT_SAVE_LOCATION_KEY)
 
         }
 
@@ -126,9 +147,32 @@ class SettingsViewModel : ViewModel() {
 
     fun updateSkipFileDetails(value: Boolean) {
         sharedPreferences.edit(commit = true) {
-            putBoolean(SharedPreferenceKeys.skipFileDetailsKey, value)
+            putBoolean(SharedPreferenceKeys.SKIP_FILE_DETAILS_KEY, value)
         }
 
         _skipFileDetails.value = value
+    }
+
+    fun updateInterceptActionViewIntents(value: Boolean) {
+        sharedPreferences.edit(commit = true) {
+            putBoolean(SharedPreferenceKeys.INTERCEPT_ACTION_VIEW_INTENTS_KEY, value)
+            Log.e("settings] updateInterceptActionViewIntents", value.toString())
+
+            try {
+                val component = ComponentName(
+                    packageName,
+                    "com.mateusrodcosta.apps.share2storage.DetailsActivityActionViewIntentInterceptor"
+                )
+                packageManager.setComponentEnabledSetting(
+                    component,
+                    if (value) COMPONENT_ENABLED_STATE_ENABLED else COMPONENT_ENABLED_STATE_DISABLED,
+                    DONT_KILL_APP
+                )
+
+                _interceptActionViewIntents.value = value
+            } catch (e: Exception) {
+                Log.e("settings] updateInterceptActionViewIntents", e.toString())
+            }
+        }
     }
 }

@@ -70,9 +70,9 @@ class DetailsActivity : ComponentActivity() {
     private fun getPreferences() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         skipFileDetails =
-            sharedPreferences.getBoolean(SharedPreferenceKeys.skipFileDetailsKey, false)
+            sharedPreferences.getBoolean(SharedPreferenceKeys.SKIP_FILE_DETAILS_KEY, false)
         val defaultSaveLocationRaw =
-            sharedPreferences.getString(SharedPreferenceKeys.defaultSaveLocationKey, null)
+            sharedPreferences.getString(SharedPreferenceKeys.DEFAULT_SAVE_LOCATION_KEY, null)
         Log.d("details] defaultSaveLocationRaw", defaultSaveLocationRaw.toString())
         defaultSaveLocation = if (defaultSaveLocationRaw != null) Uri.parse(defaultSaveLocationRaw)
         else null
@@ -84,8 +84,7 @@ class DetailsActivity : ComponentActivity() {
         if (intent.action == Intent.ACTION_SEND) {
             val fileUri: Uri? =
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) intent.getParcelableExtra(
-                    Intent.EXTRA_STREAM,
-                    Uri::class.java
+                    Intent.EXTRA_STREAM, Uri::class.java
                 )
                 else @Suppress("DEPRECATION") intent.getParcelableExtra(Intent.EXTRA_STREAM)
             Log.d("fileUri", fileUri.toString())

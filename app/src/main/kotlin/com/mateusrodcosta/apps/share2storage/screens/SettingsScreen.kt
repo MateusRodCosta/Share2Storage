@@ -63,25 +63,29 @@ import kotlinx.coroutines.flow.StateFlow
 fun SettingsScreenPreview() {
     val mockDefaultSaveLocation = MutableStateFlow(null)
     val mockSkipFileDetails = MutableStateFlow(false)
+    val mockInterceptActionViewIntents = MutableStateFlow(false)
 
     SettingsScreenContent(
         spDefaultSaveLocation = mockDefaultSaveLocation,
         spSkipFileDetails = mockSkipFileDetails,
+        spInterceptActionViewIntents = mockInterceptActionViewIntents,
     )
 }
 
 @Composable
 fun SettingsScreen(navController: NavController, settingsViewModel: SettingsViewModel) {
-    SettingsScreenContent(
-        navController = navController,
+    SettingsScreenContent(navController = navController,
         spDefaultSaveLocation = settingsViewModel.defaultSaveLocation,
         spSkipFileDetails = settingsViewModel.skipFileDetails,
+        spInterceptActionViewIntents = settingsViewModel.interceptActionViewIntents,
         launchFilePicker = { settingsViewModel.getSaveLocationDirIntent().launch(null) },
         clearSaveDirectory = { settingsViewModel.clearSaveDirectory() },
         updateSkipFileDetails = { value: Boolean ->
             settingsViewModel.updateSkipFileDetails(value)
         },
-    )
+        updateInterceptActionViewIntents = { value: Boolean ->
+            settingsViewModel.updateInterceptActionViewIntents(value)
+        })
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -90,9 +94,11 @@ fun SettingsScreenContent(
     navController: NavController? = null,
     spDefaultSaveLocation: StateFlow<Uri?>,
     spSkipFileDetails: StateFlow<Boolean>,
+    spInterceptActionViewIntents: StateFlow<Boolean>,
     launchFilePicker: () -> Unit = {},
     clearSaveDirectory: () -> Unit = {},
     updateSkipFileDetails: (Boolean) -> Unit = {},
+    updateInterceptActionViewIntents: (Boolean) -> Unit = {},
 ) {
     val settingsPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
 
@@ -120,6 +126,12 @@ fun SettingsScreenContent(
                         SkipFileDetailsSetting(
                             updateSkipFileDetails = updateSkipFileDetails,
                             spSkipFileDetails = spSkipFileDetails,
+                            paddingValues = settingsPadding,
+                        )
+                        AppBasicDivider()
+                        InterceptActionViewIntentsSetting(
+                            updateInterceptActionViewIntents = updateInterceptActionViewIntents,
+                            spInterceptActionViewIntents = spInterceptActionViewIntents,
                             paddingValues = settingsPadding,
                         )
                         AppBasicDivider()
@@ -163,6 +175,39 @@ fun SkipFileDetailsSetting(
         Spacer(modifier = Modifier.width(8.dp))
         Switch(checked = skipFileDetails, onCheckedChange = { value ->
             updateSkipFileDetails(value)
+        })
+    }
+}
+
+
+@Composable
+fun InterceptActionViewIntentsSetting(
+    updateInterceptActionViewIntents: (Boolean) -> Unit,
+    spInterceptActionViewIntents: StateFlow<Boolean>,
+    paddingValues: PaddingValues,
+) {
+
+    val interceptActionViewIntents by spInterceptActionViewIntents.collectAsState()
+
+
+    Row(modifier = Modifier
+        .clickable { updateInterceptActionViewIntents(!interceptActionViewIntents) }
+        .padding(paddingValues)
+        .heightIn(min = 48.dp),
+        verticalAlignment = Alignment.CenterVertically) {
+        Column(modifier = Modifier.weight(1.0f)) {
+            Text(
+                stringResource(id = R.string.settings_intercept_action_view_intents),
+                style = MaterialTheme.typography.titleLarge,
+            )
+            Text(
+                stringResource(R.string.settings_intercept_action_view_intents_info),
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
+        Spacer(modifier = Modifier.width(8.dp))
+        Switch(checked = interceptActionViewIntents, onCheckedChange = { value ->
+            updateInterceptActionViewIntents(value)
         })
     }
 }

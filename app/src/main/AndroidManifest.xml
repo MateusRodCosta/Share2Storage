@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
         android:allowBackup="true"
@@ -36,6 +37,26 @@
             </intent-filter>
 
         </activity>
+
+        <activity-alias
+            android:name=".DetailsActivityActionViewIntentInterceptor"
+            android:targetActivity=".DetailsActivity"
+            android:exported="true"
+            android:enabled="false">
+
+            <intent-filter tools:ignore="AppLinkUrlError">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="image/*" />
+                <data android:mimeType="audio/*" />
+                <data android:mimeType="video/*" />
+                <data android:mimeType="text/*" />
+                <data android:mimeType="application/*" />
+            </intent-filter>
+
+        </activity-alias>
 
     </application>
 

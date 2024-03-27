@@ -17,6 +17,8 @@
     <string name="settings">Configurações</string>
     <string name="settings_skip_file_details_page">Pular página de Detalhes do arquivo</string>
     <string name="settings_skip_file_details_page_info">Abrir seletor de arquivos assim que receber arquivo</string>
+    <string name="settings_intercept_action_view_intents">Intercepta intents do tipo ACTION_VIEW</string>
+    <string name="settings_intercept_action_view_intents_info">Permite registrar como uma opção quando aplicativos tentam automaticamente abrir um visualizador de arquivos</string>
     <string name="settings_default_save_location">Local de salvamento padrão</string>
     <string name="settings_default_save_location_last_used">Última pasta usada</string>
     <string name="clear_button">Limpar</string>
