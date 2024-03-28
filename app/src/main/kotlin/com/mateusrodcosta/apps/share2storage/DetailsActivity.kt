@@ -51,7 +51,7 @@ class DetailsActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         getPreferences()
-        handleIntent()
+        handleIntent(intent)
         val launchFilePicker = {
             createFile.launch(uriData?.displayName ?: "")
         }
@@ -65,7 +65,7 @@ class DetailsActivity : ComponentActivity() {
             )
         }
 
-        if (skipFileDetails == true) launchFilePicker()
+        if (skipFileDetails) launchFilePicker()
     }
 
     private fun getPreferences() {
@@ -87,9 +87,9 @@ class DetailsActivity : ComponentActivity() {
         Log.d("details] showFilePreview", showFilePreview.toString())
     }
 
-    private fun handleIntent() {
+    private fun handleIntent(intent: Intent?) {
         var fileUri: Uri? = null
-        if (intent.action == Intent.ACTION_SEND) {
+        if (intent?.action == Intent.ACTION_SEND) {
             fileUri =
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) intent.getParcelableExtra(
                     Intent.EXTRA_STREAM, Uri::class.java
@@ -98,7 +98,7 @@ class DetailsActivity : ComponentActivity() {
             Log.d("fileUri ACTION_SEND", fileUri.toString())
         }
         // ACTION_VIEW intents interceptor
-        if (intent.action == Intent.ACTION_VIEW) {
+        if (intent?.action == Intent.ACTION_VIEW) {
             fileUri = intent.data
             Log.d("fileUri ACTION_VIEW", fileUri.toString())
         }
