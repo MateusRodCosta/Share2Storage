@@ -49,11 +49,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -176,27 +181,24 @@ fun HowToUseContent(isLandscape: Boolean = false) {
         HowToUseRow(4, stringResource(R.string.how_to_use_step_4))
         AppBasicDivider()
         AppListHeader(title = stringResource(R.string.how_to_use_about_title))
-        AboutRow(
+        AboutRowWithURL(
+            stringResource(R.string.how_to_use_app_donation),
+            url = stringResource(R.string.donation_url),
+            "%s"
+        )
+        AboutRowWithURL(
             stringResource(R.string.how_to_use_about),
-            url = stringResource(R.string.github_profile_url)
+            url = stringResource(R.string.github_profile_url),
+            "Mateus Rodrigues Costa",
+            false
         )
         AboutRow(
-            String.format(
-                stringResource(R.string.how_to_use_github), stringResource(
-
-                    R.string.source_code_url
-                )
-            ), url = stringResource(R.string.source_code_url)
+            stringResource(R.string.how_to_use_app_icon_credits)
         )
-        AboutRow(
-            stringResource(R.string.how_to_use_app_icon_credits), url = null
-        )
-        AboutRow(
-            String.format(
-                stringResource(R.string.how_to_use_app_donation), stringResource(
-                    R.string.donation_url
-                )
-            ), url = stringResource(R.string.donation_url)
+        AboutRowWithURL(
+            stringResource(R.string.how_to_use_github),
+            url = stringResource(R.string.source_code_url),
+            "%s"
         )
     }
 }
@@ -218,11 +220,36 @@ fun HowToUseRow(num: Int?, string: String) {
 }
 
 @Composable
-fun AboutRow(string: String, url: String?) {
-    val localUriHandler = LocalUriHandler.current
-    GenericRow(onClick = { if (url != null) localUriHandler.openUri(url) }) {
+fun AboutRow(string: String) {
+    GenericRow {
         Text(
             string,
+            style = MaterialTheme.typography.bodyLarge,
+            softWrap = true,
+        )
+    }
+}
+
+
+@Composable
+fun AboutRowWithURL(
+    string: String, url: String, linkPlacement: String, replaceWithUrl: Boolean = true
+) {
+    val localUriHandler = LocalUriHandler.current
+    val stringPieces = string.split(linkPlacement)
+    GenericRow(onClick = { localUriHandler.openUri(url) }) {
+        Text(
+            buildAnnotatedString {
+                append(stringPieces[0])
+                withStyle(
+                    style = SpanStyle(
+                        color = Color.Blue, textDecoration = TextDecoration.Underline
+                    )
+                ) {
+                    if (replaceWithUrl) append(url) else append(linkPlacement)
+                }
+                if (stringPieces.size >= 2) append(stringPieces[1])
+            },
             style = MaterialTheme.typography.bodyLarge,
             softWrap = true,
         )

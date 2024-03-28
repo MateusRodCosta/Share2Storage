@@ -9,10 +9,10 @@
     <string name="how_to_use_step_3">A screen with details about the file will open, press Save</string>
     <string name="how_to_use_step_4">The file picker will open, select where to save and the filename</string>
     <string name="how_to_use_about_title">About</string>
-    <string name="how_to_use_about">Developed by Mateus Rodrigues Costa, licensed under AGPLv3+</string>
-    <string name="how_to_use_github">Source code available on Github at %s</string>
-    <string name="how_to_use_app_icon_credits">App icon designed by @swyzera</string>
     <string name="how_to_use_app_donation">Like the app? Consider donating! For more information, visit %s</string>
+    <string name="how_to_use_about">Developed by Mateus Rodrigues Costa</string>
+    <string name="how_to_use_app_icon_credits">App icon designed by @swyzera</string>
+    <string name="how_to_use_github">Source code available on Github at %s, licensed under AGPLv3+</string>
 
     <string name="settings">Settings</string>
 

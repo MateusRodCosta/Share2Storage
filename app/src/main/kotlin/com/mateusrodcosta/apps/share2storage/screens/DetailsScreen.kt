@@ -67,7 +67,7 @@ import com.mateusrodcosta.apps.share2storage.screens.shared.appTopAppBarColors
 import com.mateusrodcosta.apps.share2storage.screens.shared.shouldShowLandscape
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 
-@Preview(apiLevel = 33, showBackground = true)
+@Preview(apiLevel = 34, showBackground = true)
 @Composable
 fun DetailsScreenPreview(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData?) {
     DetailsScreenContent(
