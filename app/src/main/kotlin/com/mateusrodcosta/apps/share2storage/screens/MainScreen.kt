@@ -117,7 +117,7 @@ fun MainScreenContent(
 
 @Composable
 fun HowToUseLandscape() {
-    Row {
+    Row(verticalAlignment = Alignment.CenterVertically) {
         Box(modifier = Modifier.weight(1.0f)) {
             HowToUseHeader()
         }
@@ -165,9 +165,7 @@ fun HowToUseHeader() {
 @Composable
 fun HowToUseContent(isLandscape: Boolean = false) {
     Column(
-        modifier = if (isLandscape) Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()) else Modifier.fillMaxSize()
+        modifier = if (isLandscape) Modifier.verticalScroll(rememberScrollState()) else Modifier.fillMaxSize()
     ) {
         HowToUseRow(1, stringResource(R.string.how_to_use_step_1))
         HowToUseRow(

@@ -161,6 +161,8 @@ fun FileDetailsPortrait(uriData: UriData) {
 fun FileDetailsLandscape(uriData: UriData) {
     Row(
         modifier = Modifier.fillMaxSize(),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(modifier = Modifier.weight(1.0f)) {
             FilePreview(uriData)
