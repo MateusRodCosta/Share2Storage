@@ -15,18 +15,21 @@
     <string name="how_to_use_app_donation">Gostou do app? Considere doar! Para mais detalhes, acesse %s</string>
 
     <string name="settings">Configurações</string>
-    <string name="settings_skip_file_details_page">Pular página de Detalhes do arquivo</string>
-    <string name="settings_skip_file_details_page_info">Abrir seletor de arquivos assim que receber arquivo</string>
-    <string name="settings_intercept_action_view_intents">Intercepta intents do tipo ACTION_VIEW</string>
-    <string name="settings_intercept_action_view_intents_info">Permite registrar como uma opção quando aplicativos tentam automaticamente abrir um visualizador de arquivos</string>
+
+    <string name="settings_category_file_picker">Seletor de Arquivos</string>
     <string name="settings_default_save_location">Local de salvamento padrão</string>
     <string name="settings_default_save_location_last_used">Última pasta usada</string>
+
+    <string name="settings_category_file_details">Detalhes do arquivo</string>
+    <string name="settings_skip_file_details_page">Pular página de Detalhes do arquivo</string>
+    <string name="settings_skip_file_details_page_info">Abrir seletor de arquivos assim que receber arquivo</string>
     <string name="settings_show_file_preview">Mostrar prévia do arquivo</string>
     <string name="settings_show_file_preview_info">Mostrar pré-visualização para tipos de arquivo compatíveis. Atualmente apenas alguns tipos de arquivos de imagem são suportados.</string>
 
-    <string name="clear_button">Limpar</string>
+    <string name="settings_category_intents">Intents</string>
+    <string name="settings_intercept_action_view_intents">Intercepta intents do tipo ACTION_VIEW</string>
+    <string name="settings_intercept_action_view_intents_info">Permite registrar como uma opção quando aplicativos tentam automaticamente abrir um visualizador de arquivos</string>
 
-    <string name="save_button">Salvar</string>
     <string name="no_file_found">Nenhum arquivo</string>
 
     <string name="file_details">Detalhes do arquivo</string>
@@ -38,5 +41,7 @@
     <string name="toast_saved_file_success">Arquivo salvo com sucesso!</string>
     <string name="toast_saved_file_failure">Ocorreu um erro ao salvar o arquivo.</string>
 
+    <string name="clear_button">Limpar</string>
+    <string name="save_button">Salvar</string>
     <string name="back_arrow">Voltar</string>
 </resources>

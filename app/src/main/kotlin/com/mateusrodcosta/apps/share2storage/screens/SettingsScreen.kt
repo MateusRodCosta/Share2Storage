@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -51,13 +52,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.mateusrodcosta.apps.share2storage.R
-import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 import com.mateusrodcosta.apps.share2storage.screens.shared.AppBasicDivider
 import com.mateusrodcosta.apps.share2storage.screens.shared.appTopAppBarColors
+import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-@Preview(apiLevel = 33, showBackground = true)
+@Preview(apiLevel = 34, showBackground = true)
 @Composable
 fun SettingsScreenPreview() {
     val mockDefaultSaveLocation = MutableStateFlow(null)
@@ -69,7 +70,7 @@ fun SettingsScreenPreview() {
         spDefaultSaveLocation = mockDefaultSaveLocation,
         spSkipFileDetails = mockSkipFileDetails,
         spInterceptActionViewIntents = mockInterceptActionViewIntents,
-        spShowFilePreview = mockShowFilePreview
+        spShowFilePreview = mockShowFilePreview,
     )
 }
 
@@ -118,8 +119,7 @@ fun SettingsScreenContent(
                 navigationIcon = {
                     IconButton(onClick = { navController?.navigateUp() }) {
                         Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            stringResource(R.string.back_arrow)
+                            Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back_arrow)
                         )
                     }
                 })
@@ -132,18 +132,7 @@ fun SettingsScreenContent(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Column {
-                        SkipFileDetailsSetting(
-                            updateSkipFileDetails = updateSkipFileDetails,
-                            spSkipFileDetails = spSkipFileDetails,
-                            paddingValues = settingsPadding,
-                        )
-                        AppBasicDivider()
-                        InterceptActionViewIntentsSetting(
-                            updateInterceptActionViewIntents = updateInterceptActionViewIntents,
-                            spInterceptActionViewIntents = spInterceptActionViewIntents,
-                            paddingValues = settingsPadding,
-                        )
-                        AppBasicDivider()
+                        SettingsHeader(title = stringResource(R.string.settings_category_file_picker))
                         DefaultSaveLocationSetting(
                             launchFilePicker = launchFilePicker,
                             clearSaveDirectory = clearSaveDirectory,
@@ -151,15 +140,68 @@ fun SettingsScreenContent(
                             paddingValues = settingsPadding,
                         )
                         AppBasicDivider()
+                        SettingsHeader(stringResource(R.string.settings_category_file_details))
+                        SkipFileDetailsSetting(
+                            updateSkipFileDetails = updateSkipFileDetails,
+                            spSkipFileDetails = spSkipFileDetails,
+                            paddingValues = settingsPadding,
+                        )
                         ShowFilePreviewSetting(
                             updateShowFilePreview = updateShowFilePreview,
                             spShowFilePreview = spShowFilePreview,
                             paddingValues = settingsPadding,
                         )
                         AppBasicDivider()
+                        SettingsHeader(title = stringResource(R.string.settings_category_intents))
+                        InterceptActionViewIntentsSetting(
+                            updateInterceptActionViewIntents = updateInterceptActionViewIntents,
+                            spInterceptActionViewIntents = spInterceptActionViewIntents,
+                            paddingValues = settingsPadding,
+                        )
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun SettingsHeader(title: String) {
+    Text(
+        text = title,
+        modifier = Modifier
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .fillMaxWidth(),
+        style = MaterialTheme.typography.headlineSmall.copy(color = MaterialTheme.colorScheme.tertiary),
+    )
+}
+
+@Composable
+fun DefaultSaveLocationSetting(
+    launchFilePicker: () -> Unit,
+    clearSaveDirectory: () -> Unit,
+    spDefaultSaveLocation: StateFlow<Uri?>,
+    paddingValues: PaddingValues,
+) {
+    val defaultSaveLocation by spDefaultSaveLocation.collectAsState()
+
+    Row(modifier = Modifier
+        .clickable { launchFilePicker() }
+        .padding(paddingValues)
+        .heightIn(min = 48.dp), verticalAlignment = Alignment.CenterVertically) {
+        Column(modifier = Modifier.weight(1.0f)) {
+            Text(
+                stringResource(R.string.settings_default_save_location),
+                style = MaterialTheme.typography.titleLarge,
+            )
+            Text(
+                defaultSaveLocation?.path
+                    ?: stringResource(R.string.settings_default_save_location_last_used),
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
+        IconButton(onClick = { clearSaveDirectory() }) {
+            Icon(Icons.Rounded.Clear, stringResource(R.string.clear_button))
         }
     }
 }
@@ -196,68 +238,6 @@ fun SkipFileDetailsSetting(
 
 
 @Composable
-fun InterceptActionViewIntentsSetting(
-    updateInterceptActionViewIntents: (Boolean) -> Unit,
-    spInterceptActionViewIntents: StateFlow<Boolean>,
-    paddingValues: PaddingValues,
-) {
-
-    val interceptActionViewIntents by spInterceptActionViewIntents.collectAsState()
-
-
-    Row(modifier = Modifier
-        .clickable { updateInterceptActionViewIntents(!interceptActionViewIntents) }
-        .padding(paddingValues)
-        .heightIn(min = 48.dp),
-        verticalAlignment = Alignment.CenterVertically) {
-        Column(modifier = Modifier.weight(1.0f)) {
-            Text(
-                stringResource(R.string.settings_intercept_action_view_intents),
-                style = MaterialTheme.typography.titleLarge,
-            )
-            Text(
-                stringResource(R.string.settings_intercept_action_view_intents_info),
-                style = MaterialTheme.typography.bodyLarge
-            )
-        }
-        Spacer(modifier = Modifier.width(8.dp))
-        Switch(checked = interceptActionViewIntents, onCheckedChange = { value ->
-            updateInterceptActionViewIntents(value)
-        })
-    }
-}
-
-@Composable
-fun DefaultSaveLocationSetting(
-    launchFilePicker: () -> Unit,
-    clearSaveDirectory: () -> Unit,
-    spDefaultSaveLocation: StateFlow<Uri?>,
-    paddingValues: PaddingValues,
-) {
-    val defaultSaveLocation by spDefaultSaveLocation.collectAsState()
-
-    Row(modifier = Modifier
-        .clickable { launchFilePicker() }
-        .padding(paddingValues)
-        .heightIn(min = 48.dp), verticalAlignment = Alignment.CenterVertically) {
-        Column(modifier = Modifier.weight(1.0f)) {
-            Text(
-                stringResource(R.string.settings_default_save_location),
-                style = MaterialTheme.typography.titleLarge,
-            )
-            Text(
-                defaultSaveLocation?.path
-                    ?: stringResource(R.string.settings_default_save_location_last_used),
-                style = MaterialTheme.typography.bodyLarge
-            )
-        }
-        IconButton(onClick = { clearSaveDirectory() }) {
-            Icon(Icons.Rounded.Clear, stringResource(R.string.clear_button))
-        }
-    }
-}
-
-@Composable
 fun ShowFilePreviewSetting(
     updateShowFilePreview: (Boolean) -> Unit,
     spShowFilePreview: StateFlow<Boolean>,
@@ -283,6 +263,36 @@ fun ShowFilePreviewSetting(
         Spacer(modifier = Modifier.width(8.dp))
         Switch(checked = showFilePreview, onCheckedChange = { value ->
             updateShowFilePreview(value)
+        })
+    }
+}
+
+@Composable
+fun InterceptActionViewIntentsSetting(
+    updateInterceptActionViewIntents: (Boolean) -> Unit,
+    spInterceptActionViewIntents: StateFlow<Boolean>,
+    paddingValues: PaddingValues,
+) {
+    val interceptActionViewIntents by spInterceptActionViewIntents.collectAsState()
+
+    Row(modifier = Modifier
+        .clickable { updateInterceptActionViewIntents(!interceptActionViewIntents) }
+        .padding(paddingValues)
+        .heightIn(min = 48.dp),
+        verticalAlignment = Alignment.CenterVertically) {
+        Column(modifier = Modifier.weight(1.0f)) {
+            Text(
+                stringResource(R.string.settings_intercept_action_view_intents),
+                style = MaterialTheme.typography.titleLarge,
+            )
+            Text(
+                stringResource(R.string.settings_intercept_action_view_intents_info),
+                style = MaterialTheme.typography.bodyLarge,
+            )
+        }
+        Spacer(modifier = Modifier.width(8.dp))
+        Switch(checked = interceptActionViewIntents, onCheckedChange = { value ->
+            updateInterceptActionViewIntents(value)
         })
     }
 }
