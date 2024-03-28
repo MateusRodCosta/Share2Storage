@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.screens.shared.AppBasicDivider
+import com.mateusrodcosta.apps.share2storage.screens.shared.AppListHeader
 import com.mateusrodcosta.apps.share2storage.screens.shared.appTopAppBarColors
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -132,7 +133,7 @@ fun SettingsScreenContent(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Column {
-                        SettingsHeader(title = stringResource(R.string.settings_category_file_picker))
+                        AppListHeader(title = stringResource(R.string.settings_category_file_picker))
                         DefaultSaveLocationSetting(
                             launchFilePicker = launchFilePicker,
                             clearSaveDirectory = clearSaveDirectory,
@@ -140,7 +141,7 @@ fun SettingsScreenContent(
                             paddingValues = settingsPadding,
                         )
                         AppBasicDivider()
-                        SettingsHeader(stringResource(R.string.settings_category_file_details))
+                        AppListHeader(stringResource(R.string.settings_category_file_details))
                         SkipFileDetailsSetting(
                             updateSkipFileDetails = updateSkipFileDetails,
                             spSkipFileDetails = spSkipFileDetails,
@@ -152,7 +153,7 @@ fun SettingsScreenContent(
                             paddingValues = settingsPadding,
                         )
                         AppBasicDivider()
-                        SettingsHeader(title = stringResource(R.string.settings_category_intents))
+                        AppListHeader(title = stringResource(R.string.settings_category_intents))
                         InterceptActionViewIntentsSetting(
                             updateInterceptActionViewIntents = updateInterceptActionViewIntents,
                             spInterceptActionViewIntents = spInterceptActionViewIntents,
@@ -163,17 +164,6 @@ fun SettingsScreenContent(
             }
         }
     }
-}
-
-@Composable
-fun SettingsHeader(title: String) {
-    Text(
-        text = title,
-        modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-            .fillMaxWidth(),
-        style = MaterialTheme.typography.headlineSmall.copy(color = MaterialTheme.colorScheme.tertiary),
-    )
 }
 
 @Composable
