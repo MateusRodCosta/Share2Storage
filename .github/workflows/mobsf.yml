@@ -6,10 +6,9 @@
 name: MobSF
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  workflow_dispatch: {}
+  push: {}
+  pull_request: {}
   schedule:
     - cron: '28 12 * * 2'
 
