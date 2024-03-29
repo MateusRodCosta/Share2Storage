@@ -22,8 +22,8 @@ android {
         applicationId = "com.mateusrodcosta.apps.share2storage"
         minSdk = 26
         targetSdk = 34
-        versionCode = 16
-        versionName = "1.1.0"
+        versionCode = 17
+        versionName = "1.2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

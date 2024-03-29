@@ -41,8 +41,9 @@ class DetailsActivity : ComponentActivity() {
     private lateinit var createFile: ActivityResultLauncher<String>
     private var uriData: UriData? = null
 
-    private var skipFileDetails: Boolean? = null
+    private var skipFileDetails: Boolean = false
     private var defaultSaveLocation: Uri? = null
+    private var showFilePreview: Boolean = true
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +51,7 @@ class DetailsActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         getPreferences()
-        handleIntent()
+        handleIntent(intent)
         val launchFilePicker = {
             createFile.launch(uriData?.displayName ?: "")
         }
@@ -64,49 +65,62 @@ class DetailsActivity : ComponentActivity() {
             )
         }
 
-        if (skipFileDetails == true) launchFilePicker()
+        if (skipFileDetails) launchFilePicker()
     }
 
     private fun getPreferences() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+
         skipFileDetails =
-            sharedPreferences.getBoolean(SharedPreferenceKeys.skipFileDetailsKey, false)
+            sharedPreferences.getBoolean(SharedPreferenceKeys.SKIP_FILE_DETAILS_KEY, false)
+        Log.d("details] skipFileDetails", skipFileDetails.toString())
+
         val defaultSaveLocationRaw =
-            sharedPreferences.getString(SharedPreferenceKeys.defaultSaveLocationKey, null)
+            sharedPreferences.getString(SharedPreferenceKeys.DEFAULT_SAVE_LOCATION_KEY, null)
         Log.d("details] defaultSaveLocationRaw", defaultSaveLocationRaw.toString())
         defaultSaveLocation = if (defaultSaveLocationRaw != null) Uri.parse(defaultSaveLocationRaw)
         else null
-
         Log.d("details] defaultSaveLocation", defaultSaveLocation.toString())
+
+        showFilePreview =
+            sharedPreferences.getBoolean(SharedPreferenceKeys.SHOW_FILE_PREVIEW_KEY, true)
+        Log.d("details] showFilePreview", showFilePreview.toString())
     }
 
-    private fun handleIntent() {
-        if (intent.action == Intent.ACTION_SEND) {
-            val fileUri: Uri? =
+    private fun handleIntent(intent: Intent?) {
+        var fileUri: Uri? = null
+        if (intent?.action == Intent.ACTION_SEND) {
+            fileUri =
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) intent.getParcelableExtra(
-                    Intent.EXTRA_STREAM,
-                    Uri::class.java
+                    Intent.EXTRA_STREAM, Uri::class.java
                 )
                 else @Suppress("DEPRECATION") intent.getParcelableExtra(Intent.EXTRA_STREAM)
-            Log.d("fileUri", fileUri.toString())
-            uriData = getUriData(contentResolver, fileUri)
+            Log.d("fileUri ACTION_SEND", fileUri.toString())
+        }
+        // ACTION_VIEW intents interceptor
+        if (intent?.action == Intent.ACTION_VIEW) {
+            fileUri = intent.data
+            Log.d("fileUri ACTION_VIEW", fileUri.toString())
+        }
 
-            if (uriData != null) {
-                createFile = registerForActivityResult(
-                    CreateDocumentWithInitialUri(uriData?.type ?: "*/*", defaultSaveLocation)
-                ) { uri ->
-                    if (uri == null || fileUri == null) return@registerForActivityResult
-                    val isSuccess = saveFile(baseContext, uri, fileUri)
-                    Toast.makeText(
-                        baseContext, if (isSuccess) {
-                            R.string.toast_saved_file_success
-                        } else {
-                            R.string.toast_saved_file_failure
-                        }, Toast.LENGTH_LONG
-                    ).show()
-                    if (skipFileDetails == true) finish()
-                }
+        if (fileUri != null) uriData =
+            getUriData(contentResolver, fileUri, getPreview = showFilePreview)
+        if (uriData != null) {
+            createFile = registerForActivityResult(
+                CreateDocumentWithInitialUri(uriData?.type ?: "*/*", defaultSaveLocation)
+            ) { uri ->
+                if (uri == null || fileUri == null) return@registerForActivityResult
+                val isSuccess = saveFile(baseContext, uri, fileUri)
+                Toast.makeText(
+                    baseContext, if (isSuccess) {
+                        R.string.toast_saved_file_success
+                    } else {
+                        R.string.toast_saved_file_failure
+                    }, Toast.LENGTH_LONG
+                ).show()
+                if (skipFileDetails) finish()
             }
+
         }
     }
 }

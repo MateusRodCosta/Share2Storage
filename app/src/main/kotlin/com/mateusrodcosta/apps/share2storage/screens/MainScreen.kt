@@ -24,10 +24,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -49,20 +49,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.mateusrodcosta.apps.share2storage.R
+import com.mateusrodcosta.apps.share2storage.screens.shared.AppBasicDivider
+import com.mateusrodcosta.apps.share2storage.screens.shared.AppListHeader
+import com.mateusrodcosta.apps.share2storage.screens.shared.appTopAppBarColors
+import com.mateusrodcosta.apps.share2storage.screens.shared.shouldShowLandscape
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
-import com.mateusrodcosta.apps.share2storage.utils.AppBasicDivider
-import com.mateusrodcosta.apps.share2storage.utils.appTopAppBarColors
-import com.mateusrodcosta.apps.share2storage.utils.shouldShowLandscape
 
-@Preview(apiLevel = 33, showBackground = true)
+@Preview(apiLevel = 34, showBackground = true)
 @Composable
 fun MainScreenPreview() {
     MainScreenContent(
@@ -93,7 +100,7 @@ fun MainScreenContent(
                 title = { Text(stringResource(R.string.app_name)) },
                 actions = {
                     IconButton(onClick = { navController?.navigate("settings") }) {
-                        Icon(Icons.Rounded.Settings, stringResource(id = R.string.settings))
+                        Icon(Icons.Rounded.Settings, stringResource(R.string.settings))
                     }
                 },
                 colors = appTopAppBarColors(),
@@ -110,7 +117,7 @@ fun MainScreenContent(
 
 @Composable
 fun HowToUseLandscape() {
-    Row {
+    Row(verticalAlignment = Alignment.CenterVertically) {
         Box(modifier = Modifier.weight(1.0f)) {
             HowToUseHeader()
         }
@@ -149,7 +156,7 @@ fun HowToUseHeader() {
         )
         Text(
             stringResource(R.string.how_to_use),
-            style = MaterialTheme.typography.titleLarge,
+            style = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.tertiary),
             textAlign = TextAlign.Center
         )
     }
@@ -158,13 +165,9 @@ fun HowToUseHeader() {
 @Composable
 fun HowToUseContent(isLandscape: Boolean = false) {
     Column(
-        modifier = if (isLandscape) Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()) else Modifier.fillMaxSize()
+        modifier = if (isLandscape) Modifier.verticalScroll(rememberScrollState()) else Modifier.fillMaxSize()
     ) {
-        AppBasicDivider()
         HowToUseRow(1, stringResource(R.string.how_to_use_step_1))
-        AppBasicDivider()
         HowToUseRow(
             2, String.format(
                 stringResource(R.string.how_to_use_step_2), stringResource(
@@ -172,90 +175,96 @@ fun HowToUseContent(isLandscape: Boolean = false) {
                 )
             )
         )
-        AppBasicDivider()
         HowToUseRow(3, stringResource(R.string.how_to_use_step_3))
-        AppBasicDivider()
         HowToUseRow(4, stringResource(R.string.how_to_use_step_4))
         AppBasicDivider()
-        Spacer(modifier = Modifier.height(24.dp))
-        Box(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
-            Text(
-                stringResource(id = R.string.how_to_use_about_title),
-                style = MaterialTheme.typography.titleMedium
-            )
-        }
-        AppBasicDivider()
-        AboutRow(
+        AppListHeader(title = stringResource(R.string.how_to_use_about_title))
+        AboutRowWithURL(
+            stringResource(R.string.how_to_use_app_donation),
+            url = stringResource(R.string.donation_url),
+            "%s"
+        )
+        AboutRowWithURL(
             stringResource(R.string.how_to_use_about),
-            url = stringResource(R.string.github_profile_url)
+            url = stringResource(R.string.github_profile_url),
+            "Mateus Rodrigues Costa",
+            false
         )
-        AppBasicDivider()
         AboutRow(
-            String.format(
-                stringResource(R.string.how_to_use_github), stringResource(
-
-                    R.string.source_code_url
-                )
-            ), url = stringResource(R.string.source_code_url)
+            stringResource(R.string.how_to_use_app_icon_credits)
         )
-        AppBasicDivider()
-        AboutRow(
-            stringResource(R.string.how_to_use_app_icon_credits), url = null
+        AboutRowWithURL(
+            stringResource(R.string.how_to_use_github),
+            url = stringResource(R.string.source_code_url),
+            "%s"
         )
-        AppBasicDivider()
-        AboutRow(
-            String.format(
-                stringResource(R.string.how_to_use_app_donation), stringResource(
-                    R.string.donation_url
-                )
-            ), url = stringResource(R.string.donation_url)
-        )
-        AppBasicDivider()
     }
 }
 
 @Composable
 fun HowToUseRow(num: Int?, string: String) {
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .clickable { }) {
-        Row(
-            modifier = Modifier
-                .padding(PaddingValues(horizontal = 16.dp, vertical = 8.dp))
-                .heightIn(min = 32.dp), verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                if (num == null) "   " else "$num.",
-                style = MaterialTheme.typography.titleSmall,
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                string,
-                style = MaterialTheme.typography.bodyLarge,
-                softWrap = true,
-            )
-        }
+    GenericRow {
+        Text(
+            if (num == null) "   " else "$num.",
+            style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            string,
+            style = MaterialTheme.typography.bodyLarge,
+            softWrap = true,
+        )
     }
 }
 
 @Composable
-fun AboutRow(string: String, url: String?) {
+fun AboutRow(string: String) {
+    GenericRow {
+        Text(
+            string,
+            style = MaterialTheme.typography.bodyLarge,
+            softWrap = true,
+        )
+    }
+}
+
+
+@Composable
+fun AboutRowWithURL(
+    string: String, url: String, linkPlacement: String, replaceWithUrl: Boolean = true
+) {
     val localUriHandler = LocalUriHandler.current
+    val stringPieces = string.split(linkPlacement)
+    GenericRow(onClick = { localUriHandler.openUri(url) }) {
+        Text(
+            buildAnnotatedString {
+                append(stringPieces[0])
+                withStyle(
+                    style = SpanStyle(
+                        color = Color.Blue, textDecoration = TextDecoration.Underline
+                    )
+                ) {
+                    if (replaceWithUrl) append(url) else append(linkPlacement)
+                }
+                if (stringPieces.size >= 2) append(stringPieces[1])
+            },
+            style = MaterialTheme.typography.bodyLarge,
+            softWrap = true,
+        )
+    }
+}
+
+@Composable
+fun GenericRow(onClick: () -> Unit = {}, content: @Composable() (RowScope.() -> Unit)) {
     Box(modifier = Modifier
         .fillMaxWidth()
-        .clickable {
-            if (url != null) localUriHandler.openUri(url)
-        }) {
+        .clickable { onClick() }) {
         Row(
             modifier = Modifier
                 .padding(PaddingValues(horizontal = 16.dp, vertical = 8.dp))
-                .heightIn(min = 32.dp), verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                string,
-                style = MaterialTheme.typography.bodyLarge,
-                softWrap = true,
-            )
-        }
+                .heightIn(min = 32.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            content = content,
+        )
     }
 }

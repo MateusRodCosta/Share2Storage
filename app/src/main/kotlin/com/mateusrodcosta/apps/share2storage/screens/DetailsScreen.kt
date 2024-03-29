@@ -63,12 +63,11 @@ import androidx.compose.ui.unit.dp
 import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.model.SampleUriDataProvider
 import com.mateusrodcosta.apps.share2storage.model.UriData
+import com.mateusrodcosta.apps.share2storage.screens.shared.appTopAppBarColors
+import com.mateusrodcosta.apps.share2storage.screens.shared.shouldShowLandscape
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
-import com.mateusrodcosta.apps.share2storage.utils.AppBasicDivider
-import com.mateusrodcosta.apps.share2storage.utils.appTopAppBarColors
-import com.mateusrodcosta.apps.share2storage.utils.shouldShowLandscape
 
-@Preview(apiLevel = 33, showBackground = true)
+@Preview(apiLevel = 34, showBackground = true)
 @Composable
 fun DetailsScreenPreview(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData?) {
     DetailsScreenContent(
@@ -147,10 +146,12 @@ fun FileDetailsPortrait(uriData: UriData) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        Box(modifier = Modifier.weight(1.0f)) {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .weight(1.0f)) {
             FilePreview(uriData)
         }
-        Box(modifier = Modifier.weight(1.0f)) {
+        Box {
             FileInfo(uriData)
         }
     }
@@ -160,6 +161,8 @@ fun FileDetailsPortrait(uriData: UriData) {
 fun FileDetailsLandscape(uriData: UriData) {
     Row(
         modifier = Modifier.fillMaxSize(),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(modifier = Modifier.weight(1.0f)) {
             FilePreview(uriData)
@@ -173,22 +176,17 @@ fun FileDetailsLandscape(uriData: UriData) {
 @Composable
 fun FileInfo(uriData: UriData) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
+        modifier = Modifier.verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Center
     ) {
-        AppBasicDivider()
         FileInfoLine(
             label = stringResource(R.string.file_name),
             content = uriData.displayName ?: stringResource(R.string.unknown)
         )
-        AppBasicDivider()
         FileInfoLine(
             label = stringResource(R.string.file_type),
             content = uriData.type ?: stringResource(R.string.unknown)
         )
-        AppBasicDivider()
         FileInfoLine(
             label = stringResource(R.string.file_size),
             // TODO: Find code to calculate file size for previews
@@ -196,7 +194,6 @@ fun FileInfo(uriData: UriData) {
                 LocalContext.current, uriData.size
             ) else stringResource(R.string.unknown)
         )
-        AppBasicDivider()
     }
 }
 
@@ -210,7 +207,10 @@ fun FileInfoLine(label: String, content: String) {
                 .padding(PaddingValues(horizontal = 16.dp, vertical = 8.dp))
                 .heightIn(min = 48.dp), horizontalAlignment = Alignment.Start
         ) {
-            Text(label, style = MaterialTheme.typography.titleLarge)
+            Text(
+                label,
+                style = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.tertiary)
+            )
             Spacer(modifier = Modifier.height(8.dp))
             Text(content, softWrap = true, style = MaterialTheme.typography.bodyLarge)
         }

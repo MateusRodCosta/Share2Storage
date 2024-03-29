@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -51,22 +52,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.mateusrodcosta.apps.share2storage.R
-import com.mateusrodcosta.apps.share2storage.SettingsViewModel
+import com.mateusrodcosta.apps.share2storage.screens.shared.AppBasicDivider
+import com.mateusrodcosta.apps.share2storage.screens.shared.AppListHeader
+import com.mateusrodcosta.apps.share2storage.screens.shared.appTopAppBarColors
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
-import com.mateusrodcosta.apps.share2storage.utils.AppBasicDivider
-import com.mateusrodcosta.apps.share2storage.utils.appTopAppBarColors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-@Preview(apiLevel = 33, showBackground = true)
+@Preview(apiLevel = 34, showBackground = true)
 @Composable
 fun SettingsScreenPreview() {
     val mockDefaultSaveLocation = MutableStateFlow(null)
     val mockSkipFileDetails = MutableStateFlow(false)
+    val mockInterceptActionViewIntents = MutableStateFlow(false)
+    val mockShowFilePreview = MutableStateFlow(true)
 
     SettingsScreenContent(
         spDefaultSaveLocation = mockDefaultSaveLocation,
         spSkipFileDetails = mockSkipFileDetails,
+        spInterceptActionViewIntents = mockInterceptActionViewIntents,
+        spShowFilePreview = mockShowFilePreview,
     )
 }
 
@@ -76,10 +81,18 @@ fun SettingsScreen(navController: NavController, settingsViewModel: SettingsView
         navController = navController,
         spDefaultSaveLocation = settingsViewModel.defaultSaveLocation,
         spSkipFileDetails = settingsViewModel.skipFileDetails,
+        spInterceptActionViewIntents = settingsViewModel.interceptActionViewIntents,
+        spShowFilePreview = settingsViewModel.showFilePreview,
         launchFilePicker = { settingsViewModel.getSaveLocationDirIntent().launch(null) },
         clearSaveDirectory = { settingsViewModel.clearSaveDirectory() },
         updateSkipFileDetails = { value: Boolean ->
             settingsViewModel.updateSkipFileDetails(value)
+        },
+        updateInterceptActionViewIntents = { value: Boolean ->
+            settingsViewModel.updateInterceptActionViewIntents(value)
+        },
+        updateShowFilePreview = { value ->
+            settingsViewModel.updateShowFilePreview(value)
         },
     )
 }
@@ -90,9 +103,13 @@ fun SettingsScreenContent(
     navController: NavController? = null,
     spDefaultSaveLocation: StateFlow<Uri?>,
     spSkipFileDetails: StateFlow<Boolean>,
+    spInterceptActionViewIntents: StateFlow<Boolean>,
+    spShowFilePreview: StateFlow<Boolean>,
     launchFilePicker: () -> Unit = {},
     clearSaveDirectory: () -> Unit = {},
     updateSkipFileDetails: (Boolean) -> Unit = {},
+    updateInterceptActionViewIntents: (Boolean) -> Unit = {},
+    updateShowFilePreview: (Boolean) -> Unit = {},
 ) {
     val settingsPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
 
@@ -103,8 +120,7 @@ fun SettingsScreenContent(
                 navigationIcon = {
                     IconButton(onClick = { navController?.navigateUp() }) {
                         Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            stringResource(id = R.string.back_arrow)
+                            Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back_arrow)
                         )
                     }
                 })
@@ -117,12 +133,7 @@ fun SettingsScreenContent(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Column {
-                        SkipFileDetailsSetting(
-                            updateSkipFileDetails = updateSkipFileDetails,
-                            spSkipFileDetails = spSkipFileDetails,
-                            paddingValues = settingsPadding,
-                        )
-                        AppBasicDivider()
+                        AppListHeader(title = stringResource(R.string.settings_category_file_picker))
                         DefaultSaveLocationSetting(
                             launchFilePicker = launchFilePicker,
                             clearSaveDirectory = clearSaveDirectory,
@@ -130,9 +141,57 @@ fun SettingsScreenContent(
                             paddingValues = settingsPadding,
                         )
                         AppBasicDivider()
+                        AppListHeader(stringResource(R.string.settings_category_file_details))
+                        SkipFileDetailsSetting(
+                            updateSkipFileDetails = updateSkipFileDetails,
+                            spSkipFileDetails = spSkipFileDetails,
+                            paddingValues = settingsPadding,
+                        )
+                        ShowFilePreviewSetting(
+                            updateShowFilePreview = updateShowFilePreview,
+                            spShowFilePreview = spShowFilePreview,
+                            paddingValues = settingsPadding,
+                        )
+                        AppBasicDivider()
+                        AppListHeader(title = stringResource(R.string.settings_category_intents))
+                        InterceptActionViewIntentsSetting(
+                            updateInterceptActionViewIntents = updateInterceptActionViewIntents,
+                            spInterceptActionViewIntents = spInterceptActionViewIntents,
+                            paddingValues = settingsPadding,
+                        )
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun DefaultSaveLocationSetting(
+    launchFilePicker: () -> Unit,
+    clearSaveDirectory: () -> Unit,
+    spDefaultSaveLocation: StateFlow<Uri?>,
+    paddingValues: PaddingValues,
+) {
+    val defaultSaveLocation by spDefaultSaveLocation.collectAsState()
+
+    Row(modifier = Modifier
+        .clickable { launchFilePicker() }
+        .padding(paddingValues)
+        .heightIn(min = 48.dp), verticalAlignment = Alignment.CenterVertically) {
+        Column(modifier = Modifier.weight(1.0f)) {
+            Text(
+                stringResource(R.string.settings_default_save_location),
+                style = MaterialTheme.typography.titleLarge,
+            )
+            Text(
+                defaultSaveLocation?.path
+                    ?: stringResource(R.string.settings_default_save_location_last_used),
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
+        IconButton(onClick = { clearSaveDirectory() }) {
+            Icon(Icons.Rounded.Clear, stringResource(R.string.clear_button))
         }
     }
 }
@@ -152,7 +211,7 @@ fun SkipFileDetailsSetting(
         verticalAlignment = Alignment.CenterVertically) {
         Column(modifier = Modifier.weight(1.0f)) {
             Text(
-                stringResource(id = R.string.settings_skip_file_details_page),
+                stringResource(R.string.settings_skip_file_details_page),
                 style = MaterialTheme.typography.titleLarge,
             )
             Text(
@@ -167,32 +226,63 @@ fun SkipFileDetailsSetting(
     }
 }
 
+
 @Composable
-fun DefaultSaveLocationSetting(
-    launchFilePicker: () -> Unit,
-    clearSaveDirectory: () -> Unit,
-    spDefaultSaveLocation: StateFlow<Uri?>,
+fun ShowFilePreviewSetting(
+    updateShowFilePreview: (Boolean) -> Unit,
+    spShowFilePreview: StateFlow<Boolean>,
     paddingValues: PaddingValues,
 ) {
-    val defaultSaveLocation by spDefaultSaveLocation.collectAsState()
+    val showFilePreview by spShowFilePreview.collectAsState()
 
     Row(modifier = Modifier
-        .clickable { launchFilePicker() }
+        .clickable { updateShowFilePreview(!showFilePreview) }
         .padding(paddingValues)
-        .heightIn(min = 48.dp), verticalAlignment = Alignment.CenterVertically) {
+        .heightIn(min = 48.dp),
+        verticalAlignment = Alignment.CenterVertically) {
         Column(modifier = Modifier.weight(1.0f)) {
             Text(
-                stringResource(id = R.string.settings_default_save_location),
+                stringResource(R.string.settings_show_file_preview),
                 style = MaterialTheme.typography.titleLarge,
             )
             Text(
-                defaultSaveLocation?.path
-                    ?: stringResource(R.string.settings_default_save_location_last_used),
+                stringResource(R.string.settings_show_file_preview_info),
                 style = MaterialTheme.typography.bodyLarge
             )
         }
-        IconButton(onClick = { clearSaveDirectory() }) {
-            Icon(Icons.Rounded.Clear, stringResource(R.string.clear_button))
+        Spacer(modifier = Modifier.width(8.dp))
+        Switch(checked = showFilePreview, onCheckedChange = { value ->
+            updateShowFilePreview(value)
+        })
+    }
+}
+
+@Composable
+fun InterceptActionViewIntentsSetting(
+    updateInterceptActionViewIntents: (Boolean) -> Unit,
+    spInterceptActionViewIntents: StateFlow<Boolean>,
+    paddingValues: PaddingValues,
+) {
+    val interceptActionViewIntents by spInterceptActionViewIntents.collectAsState()
+
+    Row(modifier = Modifier
+        .clickable { updateInterceptActionViewIntents(!interceptActionViewIntents) }
+        .padding(paddingValues)
+        .heightIn(min = 48.dp),
+        verticalAlignment = Alignment.CenterVertically) {
+        Column(modifier = Modifier.weight(1.0f)) {
+            Text(
+                stringResource(R.string.settings_intercept_action_view_intents),
+                style = MaterialTheme.typography.titleLarge,
+            )
+            Text(
+                stringResource(R.string.settings_intercept_action_view_intents_info),
+                style = MaterialTheme.typography.bodyLarge,
+            )
         }
+        Spacer(modifier = Modifier.width(8.dp))
+        Switch(checked = interceptActionViewIntents, onCheckedChange = { value ->
+            updateInterceptActionViewIntents(value)
+        })
     }
 }
