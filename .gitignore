@@ -20,5 +20,6 @@ app/release
 key.properties
 **/*.keystore
 **/*.jks
+/fastlane/report.xml
 /fastlane/secrets/*
 !/fastlane/secrets/.gitkeep
