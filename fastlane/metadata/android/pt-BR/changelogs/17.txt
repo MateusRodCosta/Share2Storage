@@ -1,0 +1,6 @@
+• Dependências atualizadas
+• Adicionada checagem para tentar corrigir um crash na pré-visualização de imagens
+• Adicionada uma opção para desabilitar prévias de arquivos
+• Adicionada opção para também interceptar intents do tipo ACTION_VIEW
+• Reestruturação de várias telas
+• Várias mudanças por debaixo dos panos e melhorias em geral
