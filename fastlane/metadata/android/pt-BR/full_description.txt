@@ -1,4 +1,4 @@
-Me diga se sso já aconteceu com você: você tem um aplicativo (por exemplo, o app do banco) e esse aplicativo tem um arquivo que você precisa (por exemplo, um extrato bancário em PDF).
+Me diga se isso já aconteceu com você: você tem um aplicativo (por exemplo, o app do banco) e esse aplicativo tem um arquivo que você precisa (por exemplo, um extrato bancário em PDF).
 Você quer baixar esse arquivo mas o app não oferece uma forma fácil para isso, o máximo que ele oferece é a opção de compartilhar o arquivo, fazendo com que você tenha que enviar o arquivo por um aplicativo de mensagens ou para você mesmo por e-mail para poder acessá-lo.
 
 Isso acontece porque alguns apps decidem não disponibilizar uma opção de Salvar, geralmente isso se dá pelos desenvolvedores não quererem implementar a lógica de salvar o arquivo, no entanto eles geralmente disponibilizam a opção de Compartilhar, se aproveitando do sistema de compartilhamento embutido no sistema.
