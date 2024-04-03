@@ -1,0 +1,9 @@
+• Downgrade dependencies due to reproducible builds issue
+
+Changes from 1.2.0:
+• Upgraded dependencies
+• Add checks to attempt to fix a crash on image preview
+• Added option to disable file previews
+• Added option to also intercept ACTION_VIEW intents
+• Restructuring of several screens
+• Many under-the-hood changes and general improvements
