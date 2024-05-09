@@ -1,0 +1,3 @@
+• Updated dependencies
+• Support splash screen for pre-Android 12
+• Status bar icons should now be white
