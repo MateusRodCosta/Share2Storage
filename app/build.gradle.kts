@@ -22,8 +22,8 @@ android {
         applicationId = "com.mateusrodcosta.apps.share2storage"
         minSdk = 26
         targetSdk = 34
-        versionCode = 18
-        versionName = "1.2.1"
+        versionCode = 19
+        versionName = "1.2.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -83,6 +83,7 @@ android {
 
 dependencies {
     implementation(libs.bundles.androidx.ktx)
+    implementation(libs.androidx.core.splashscreen)
 
     val composeBom = platform(libs.compose.bom)
     implementation(composeBom)

@@ -1,0 +1,3 @@
+• Dependências atualizadas
+• Adicionado suporte a tela de abertura para versões do Android pre-12
+• Os ícones da barra de status agora são brancos

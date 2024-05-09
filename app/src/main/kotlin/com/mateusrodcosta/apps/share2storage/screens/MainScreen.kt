@@ -255,7 +255,7 @@ fun AboutRowWithURL(
 }
 
 @Composable
-fun GenericRow(onClick: () -> Unit = {}, content: @Composable() (RowScope.() -> Unit)) {
+fun GenericRow(onClick: () -> Unit = {}, content: @Composable (RowScope.() -> Unit)) {
     Box(modifier = Modifier
         .fillMaxWidth()
         .clickable { onClick() }) {

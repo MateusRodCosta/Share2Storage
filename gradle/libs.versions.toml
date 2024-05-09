@@ -1,11 +1,12 @@
 [versions]
-agp = "8.3.1"
-kotlin = "1.9.22"
-androidxComposeCompiler = "1.5.10"
-ktx = "1.12.0"
+agp = "8.4.0"
+kotlin = "1.9.23"
+androidxComposeCompiler = "1.5.13"
+ktx = "1.13.1"
 preference-ktx = "1.2.1"
-composeBom = "2024.03.00"
-activityCompose = "1.8.2"
+splashscreen = "1.0.1"
+composeBom = "2024.05.00"
+activityCompose = "1.9.0"
 navigationCompose = "2.7.7"
 junit = "4.13.2"
 androidxTestRunner = "1.5.2"
@@ -14,6 +15,7 @@ androidxTestRules = "1.5.0"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
 androidx-preference-ktx = { group = "androidx.preference", name = "preference-ktx", version.ref = "preference-ktx" }
+androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 compose-material3-window-size-classes = { group = "androidx.compose.material3", name = "material3-window-size-class" }
