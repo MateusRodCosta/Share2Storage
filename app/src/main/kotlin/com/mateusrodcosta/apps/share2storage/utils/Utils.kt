@@ -116,10 +116,10 @@ fun saveFile(
         }
         val output = context.contentResolver.openOutputStream(targeturi)
 
-        val originalsize: Int = input!!.available()
+        val BUFFER_SIZE = 1024
         bis = BufferedInputStream(input)
         bos = BufferedOutputStream(output)
-        val buf = ByteArray(originalsize)
+        val buf = ByteArray(BUFFER_SIZE)
         bis.read(buf)
         do {
             bos.write(buf)
