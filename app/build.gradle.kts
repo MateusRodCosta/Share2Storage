@@ -22,8 +22,8 @@ android {
         applicationId = "com.mateusrodcosta.apps.share2storage"
         minSdk = 26
         targetSdk = 34
-        versionCode = 19
-        versionName = "1.2.2"
+        versionCode = 20
+        versionName = "1.2.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -82,6 +82,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.kotlinx.coroutines)
     implementation(libs.bundles.androidx.ktx)
     implementation(libs.androidx.core.splashscreen)
 

@@ -21,6 +21,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -29,6 +31,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import com.mateusrodcosta.apps.share2storage.model.UriData
 import com.mateusrodcosta.apps.share2storage.screens.DetailsScreen
@@ -36,6 +39,12 @@ import com.mateusrodcosta.apps.share2storage.utils.CreateDocumentWithInitialUri
 import com.mateusrodcosta.apps.share2storage.utils.SharedPreferenceKeys
 import com.mateusrodcosta.apps.share2storage.utils.getUriData
 import com.mateusrodcosta.apps.share2storage.utils.saveFile
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 class DetailsActivity : ComponentActivity() {
     private lateinit var createFile: ActivityResultLauncher<String>
@@ -111,8 +120,19 @@ class DetailsActivity : ComponentActivity() {
             createFile = registerForActivityResult(
                 CreateDocumentWithInitialUri(uriData?.type ?: "*/*", defaultSaveLocation)
             ) { uri ->
-                if (uri == null || fileUri == null) return@registerForActivityResult
-                val isSuccess = saveFile(baseContext, uri, fileUri)
+                lifecycleScope.launch {
+                    handleFileSave(uri, fileUri)
+                }
+            }
+        }
+    }
+
+    private suspend fun handleFileSave(uri: Uri?, fileUri: Uri?) {
+        if (uri == null || fileUri == null) return
+        return withContext(Dispatchers.IO) {
+            val isSuccess = saveFile(baseContext, uri, fileUri)
+
+            Handler(Looper.getMainLooper()).post {
                 Toast.makeText(
                     baseContext, if (isSuccess) {
                         R.string.toast_saved_file_success
@@ -120,9 +140,13 @@ class DetailsActivity : ComponentActivity() {
                         R.string.toast_saved_file_failure
                     }, Toast.LENGTH_LONG
                 ).show()
-                if (skipFileDetails) finish()
             }
 
+            if (skipFileDetails) {
+                delay(1.toDuration(DurationUnit.SECONDS))
+                finish()
+            }
         }
+
     }
 }

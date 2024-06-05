@@ -1,9 +1,10 @@
 [versions]
-agp = "8.4.0"
-kotlin = "1.9.23"
-androidxComposeCompiler = "1.5.13"
+agp = "8.4.1"
+kotlin = "1.9.24"
+androidxComposeCompiler = "1.5.14"
 ktx = "1.13.1"
 preference-ktx = "1.2.1"
+lifecycle-runtime-ktx = "2.8.1"
 splashscreen = "1.0.1"
 composeBom = "2024.05.00"
 activityCompose = "1.9.0"
@@ -11,10 +12,13 @@ navigationCompose = "2.7.7"
 junit = "4.13.2"
 androidxTestRunner = "1.5.2"
 androidxTestRules = "1.5.0"
+coroutines = "1.7.3"
 
 [libraries]
+kotlinx-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
 androidx-preference-ktx = { group = "androidx.preference", name = "preference-ktx", version.ref = "preference-ktx" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 compose-material3 = { group = "androidx.compose.material3", name = "material3" }
@@ -31,7 +35,7 @@ androidx-test-runner = { group = "androidx.test", name="runner", version.ref = "
 androidx-test-rules = { group = "androidx.test", name="rules", version.ref = "androidxTestRules" }
 
 [bundles]
-androidx-ktx = ["androidx.core.ktx", "androidx.preference.ktx"]
+androidx-ktx = ["androidx.core.ktx", "androidx.preference.ktx", "androidx.lifecycle.runtime.ktx"]
 compose = ["compose.material3", "compose.material3.window.size.classes", "compose.ui.tooling.preview", "compose.ui.material.icons.extended"]
 compose-debug = ["compose.ui.tooling", "compose.ui.test.manifest"]
 androidx-compose-integration = ["androidx.activity.compose", "androidx.navigation.compose"]

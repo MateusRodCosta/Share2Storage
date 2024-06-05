@@ -1,0 +1,4 @@
+• Upgraded dependencies
+• Fixed an issue where the app would crash if trying to save bigger files
+  • This was caused because previously the entire file was loaded to memory and bigger files hit a memory usage system limit
+• The file saving logic is now handled asynchronously thanks to Kotlin coroutines

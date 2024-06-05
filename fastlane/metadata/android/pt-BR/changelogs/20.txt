@@ -1,0 +1,4 @@
+• As dependências foram atualizadas
+• Corrigido um problema em que o app trava ao tentar salvar arquivos muito grandes
+  • Isso ocorria porque anteriormente o arquivo inteiro era carregado na memória e arquivos maiores atingiam um limite de uso de memória do sistema
+• A lógica de salvamento de arquivos agora roda de forma assíncrona graças às "coroutines"  do Kotlin
