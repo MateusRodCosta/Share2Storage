@@ -82,6 +82,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.kotlinx.coroutines)
     implementation(libs.bundles.androidx.ktx)
     implementation(libs.androidx.core.splashscreen)
 
