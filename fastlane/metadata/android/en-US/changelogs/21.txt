@@ -1,0 +1,2 @@
+The restriction on which file types are supported has been lifted.
+Please report any issues that may arise at https://github.com/MateusRodCosta/Share2Storage/issues
