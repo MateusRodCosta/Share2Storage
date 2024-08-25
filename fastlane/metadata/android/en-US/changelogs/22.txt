@@ -1,0 +1,5 @@
+<strong>IMPORTANT</strong>:
+Version 1.2.3 changed the way the file copy works to use a 1 kb buffer and accidentally introduced a bug in doing so: the app would save files adding zeroes at the end to make the file size be a multiple of 1kb.
+If the files you are saving don't absolutely need to match 1-to-1 the original, you should be fine, otherwise the added zeroes mean the new file isn't a exact copy and could cause issues (for example, diverging checksums).
+
+Version 1.3.1 focus on fixing that bug. Sorry for any inconveniences!

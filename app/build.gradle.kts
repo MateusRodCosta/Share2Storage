@@ -1,4 +1,3 @@
-import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
@@ -8,7 +7,9 @@ plugins {
 
 val keystorePropertiesFile = rootProject.file("key.properties")
 val keystoreProperties = Properties()
-keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(keystorePropertiesFile.inputStream())
+}
 
 kotlin {
     jvmToolchain(17)
@@ -22,8 +23,8 @@ android {
         applicationId = "com.mateusrodcosta.apps.share2storage"
         minSdk = 26
         targetSdk = 34
-        versionCode = 21
-        versionName = "1.3.0"
+        versionCode = 22
+        versionName = "1.3.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

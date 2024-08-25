@@ -29,6 +29,10 @@ import android.util.Log
 import com.mateusrodcosta.apps.share2storage.model.UriData
 import java.io.*
 
+object Utils {
+    const val BUFFER_SIZE: Int = 1024
+}
+
 fun getUriData(contentResolver: ContentResolver, uri: Uri?, getPreview: Boolean): UriData? {
     if (uri == null) return null
     val type = contentResolver.getType(uri)
@@ -116,15 +120,15 @@ fun saveFile(
         }
         val output = context.contentResolver.openOutputStream(targeturi)
 
-        val bufferSize = 1024
         bis = BufferedInputStream(input)
         bos = BufferedOutputStream(output)
-        val buf = ByteArray(bufferSize)
-        bis.read(buf)
-        do {
-            bos.write(buf)
-        } while (bis.read(buf) != -1)
 
+        val buf = ByteArray(Utils.BUFFER_SIZE)
+        var numBytes = bis.read(buf)
+        while (numBytes != -1) {
+            bos.write(buf, 0, numBytes)
+            numBytes = bis.read(buf)
+        }
     } catch (e: Exception) {
         e.printStackTrace()
         hasError = true
