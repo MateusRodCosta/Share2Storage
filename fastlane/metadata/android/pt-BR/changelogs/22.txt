@@ -1,5 +1,5 @@
 <strong>IMPORTANTE</strong>:
-A version 1.2.3 mudou a forma como a cópia de arquivo fucniona para usar um buffer de 1 kb e acidentalmente introduziu um bug no processo: o app salvaria arquivos adicionando zeros no final de forma a fazer o tamanho do arquivo ser um múltiplo de 1kb.
-Se os arquivos que você salvou não precisam ser uma cópia idêntica ao original, não há com o que se preocupar, do contrário os zeros adicionados significam que o arquivo não é uma cópia exata e pode causar problemas (por exemplo, as hashes divergirem).
+Na versão 1.2.3 a cópia de arquivo passou a usar um buffer de 1 kb e acidentalmente introduziu um bug: zeros seriam adicionados no final do arquivo salvo para tornar o tamanho um múltiplo de 1 kb.
+Se os arquivos que você salvou não precisam ser uma cópia idêntica ao original, não há com o que se preocupar, do contrário esses zeros podem causar problemas (por exemplo, hashes divergirem).
 
-A versão 1.3.1 foca em resolver esse bug. Sinto muito por qualquer inconveniência!
+A versão 1.3.1 resolve esse bug. Sinto muito por qualquer inconveniência!
