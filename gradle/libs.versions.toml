@@ -1,25 +1,24 @@
 [versions]
-agp = "8.5.2"
-kotlin = "1.9.24"
-androidxComposeCompiler = "1.5.14"
+agp = "8.6.0"
+kotlin = "2.0.0"
 ktx = "1.13.1"
 preference-ktx = "1.2.1"
-lifecycle-runtime-ktx = "2.8.4"
+lifecycle-runtime-ktx = "2.8.5"
 splashscreen = "1.0.1"
-composeBom = "2024.08.00"
-activityCompose = "1.9.1"
-navigationCompose = "2.7.7"
+composeBom = "2024.09.01"
+activityCompose = "1.9.2"
+navigationCompose = "2.8.0"
 junit = "4.13.2"
 androidxTestRunner = "1.6.2"
 androidxTestRules = "1.6.1"
 coroutines = "1.7.3"
 
 [libraries]
-kotlinx-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
-androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
-androidx-preference-ktx = { group = "androidx.preference", name = "preference-ktx", version.ref = "preference-ktx" }
-androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
-androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
+coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
+preference-ktx = { group = "androidx.preference", name = "preference-ktx", version.ref = "preference-ktx" }
+lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
+splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 compose-material3-window-size-classes = { group = "androidx.compose.material3", name = "material3-window-size-class" }
@@ -28,20 +27,21 @@ compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
-androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
-androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
-androidx-test-runner = { group = "androidx.test", name="runner", version.ref = "androidxTestRunner" }
-androidx-test-rules = { group = "androidx.test", name="rules", version.ref = "androidxTestRules" }
+test-runner = { group = "androidx.test", name="runner", version.ref = "androidxTestRunner" }
+test-rules = { group = "androidx.test", name="rules", version.ref = "androidxTestRules" }
 
 [bundles]
-androidx-ktx = ["androidx.core.ktx", "androidx.preference.ktx", "androidx.lifecycle.runtime.ktx"]
+androidx-ktx = ["core.ktx", "preference.ktx", "lifecycle.runtime.ktx"]
 compose = ["compose.material3", "compose.material3.window.size.classes", "compose.ui.tooling.preview", "compose.ui.material.icons.extended"]
 compose-debug = ["compose.ui.tooling", "compose.ui.test.manifest"]
-androidx-compose-integration = ["androidx.activity.compose", "androidx.navigation.compose"]
+compose-integration = ["activity.compose", "navigation.compose"]
 testing = ["junit"]
-ui-testing = ["androidx.test.runner", "androidx.test.rules", "compose.ui.test.junit4"]
+ui-testing = ["test.runner", "test.rules", "compose.ui.test.junit4"]
 
 [plugins]
-androidApplication = { id = "com.android.application", version.ref = "agp" }
-kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
