@@ -1,8 +1,9 @@
 import java.util.Properties
 
 plugins {
-    alias(libs.plugins.androidApplication)
-    alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.compose.compiler)
 }
 
 val keystorePropertiesFile = rootProject.file("key.properties")
@@ -17,14 +18,15 @@ kotlin {
 
 android {
     namespace = "com.mateusrodcosta.apps.share2storage"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.mateusrodcosta.apps.share2storage"
         minSdk = 26
+        //noinspection OldTargetApi
         targetSdk = 34
-        versionCode = 22
-        versionName = "1.3.1"
+        versionCode = 23
+        versionName = "1.3.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -72,9 +74,6 @@ android {
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.androidxComposeCompiler.get()
-    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -83,9 +82,9 @@ android {
 }
 
 dependencies {
-    implementation(libs.kotlinx.coroutines)
+    implementation(libs.coroutines)
     implementation(libs.bundles.androidx.ktx)
-    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.splashscreen)
 
     val composeBom = platform(libs.compose.bom)
     implementation(composeBom)
@@ -93,7 +92,7 @@ dependencies {
 
     implementation(libs.bundles.compose)
     debugImplementation(libs.bundles.compose.debug)
-    implementation(libs.bundles.androidx.compose.integration)
+    implementation(libs.bundles.compose.integration)
 
     testImplementation(libs.bundles.testing)
     androidTestImplementation(libs.bundles.ui.testing)
