@@ -1,0 +1,5 @@
+<strong>IMPORTANT</strong>:
+Starting in v1.2.3, a 1 kb buffer is used for the file copy, but that introduced a bug: zeroes might be added at the end of the saved file.
+This was fixed in 1.3.1, please report any issue you may find!
+
+This is a minor maintenance release for adding Java 21 support.
