@@ -19,14 +19,16 @@ package com.mateusrodcosta.apps.share2storage.screens
 
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun AppNavigation(settingsViewModel: SettingsViewModel, windowSizeClass: WindowSizeClass) {
-    val navController = rememberNavController()
-
+fun AppNavigation(
+    navController: NavHostController,
+    settingsViewModel: SettingsViewModel,
+    windowSizeClass: WindowSizeClass
+) {
     NavHost(navController = navController, startDestination = "main") {
         composable("main") { MainScreen(navController, windowSizeClass) }
         composable("settings") { SettingsScreen(navController, settingsViewModel) }
