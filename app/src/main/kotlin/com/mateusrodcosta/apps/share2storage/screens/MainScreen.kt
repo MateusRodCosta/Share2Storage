@@ -22,15 +22,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -38,6 +32,8 @@ import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -203,31 +199,22 @@ fun HowToUseContent(isLandscape: Boolean = false) {
 
 @Composable
 fun HowToUseRow(num: Int?, string: String) {
-    GenericRow {
+    ListItem(modifier = Modifier.clickable { }, leadingContent = {
         Text(
             if (num == null) "   " else "$num.",
-            style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
+            style = LocalTextStyle.current.copy(fontWeight = FontWeight.Bold),
         )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            string,
-            style = MaterialTheme.typography.bodyLarge,
-            softWrap = true,
-        )
-    }
+    }, headlineContent = {
+        Text(string, softWrap = true)
+    })
 }
 
 @Composable
 fun AboutRow(string: String) {
-    GenericRow {
-        Text(
-            string,
-            style = MaterialTheme.typography.bodyLarge,
-            softWrap = true,
-        )
-    }
+    ListItem(modifier = Modifier.clickable { }, headlineContent = {
+        Text(string, softWrap = true)
+    })
 }
-
 
 @Composable
 fun AboutRowWithURL(
@@ -235,7 +222,8 @@ fun AboutRowWithURL(
 ) {
     val localUriHandler = LocalUriHandler.current
     val stringPieces = string.split(linkPlacement)
-    GenericRow(onClick = { localUriHandler.openUri(url) }) {
+
+    ListItem(modifier = Modifier.clickable { localUriHandler.openUri(url) }, headlineContent = {
         Text(
             buildAnnotatedString {
                 append(stringPieces[0])
@@ -248,23 +236,7 @@ fun AboutRowWithURL(
                 }
                 if (stringPieces.size >= 2) append(stringPieces[1])
             },
-            style = MaterialTheme.typography.bodyLarge,
             softWrap = true,
         )
-    }
-}
-
-@Composable
-fun GenericRow(onClick: () -> Unit = {}, content: @Composable (RowScope.() -> Unit)) {
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .clickable { onClick() }) {
-        Row(
-            modifier = Modifier
-                .padding(PaddingValues(horizontal = 16.dp, vertical = 8.dp))
-                .heightIn(min = 32.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            content = content,
-        )
-    }
+    })
 }
