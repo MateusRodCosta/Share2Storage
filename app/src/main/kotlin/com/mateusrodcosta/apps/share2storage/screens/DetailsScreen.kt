@@ -195,7 +195,6 @@ fun FileInfo(uriData: UriData) {
         )
         FileInfoLine(
             label = stringResource(R.string.file_size),
-            // TODO: Find code to calculate file size for previews
             content = if (uriData.size != null) Formatter.formatFileSize(
                 LocalContext.current, uriData.size
             ) else stringResource(R.string.unknown)
