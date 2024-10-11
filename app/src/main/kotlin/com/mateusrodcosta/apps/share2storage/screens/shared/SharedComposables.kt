@@ -64,7 +64,7 @@ fun ListItemWithURL(
                 append(stringPieces[0])
                 withStyle(
                     style = SpanStyle(
-                        color = Color.Blue, textDecoration = TextDecoration.Underline
+                        color = MaterialTheme.colorScheme.tertiary, textDecoration = TextDecoration.Underline
                     )
                 ) {
                     if (replaceWithUrl) append(url) else append(linkPlacement)
