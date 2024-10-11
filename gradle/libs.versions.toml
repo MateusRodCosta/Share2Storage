@@ -30,8 +30,8 @@ compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-mani
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
-test-runner = { group = "androidx.test", name="runner", version.ref = "androidxTestRunner" }
-test-rules = { group = "androidx.test", name="rules", version.ref = "androidxTestRules" }
+test-runner = { group = "androidx.test", name = "runner", version.ref = "androidxTestRunner" }
+test-rules = { group = "androidx.test", name = "rules", version.ref = "androidxTestRules" }
 
 [bundles]
 androidx-ktx = ["core.ktx", "preference.ktx", "lifecycle.runtime.ktx"]

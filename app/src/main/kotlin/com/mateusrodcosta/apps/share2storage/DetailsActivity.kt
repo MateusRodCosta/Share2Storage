@@ -71,13 +71,11 @@ class DetailsActivity : ComponentActivity() {
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
 
-            Box(Modifier.safeDrawingPadding()) {
-                DetailsScreen(
-                    uriData = uriData,
-                    windowSizeClass = windowSizeClass,
-                    launchFilePicker = launchFilePicker,
-                )
-            }
+            DetailsScreen(
+                uriData = uriData,
+                windowSizeClass = windowSizeClass,
+                launchFilePicker = launchFilePicker,
+            )
         }
 
         if (skipFileDetails) launchFilePicker()
