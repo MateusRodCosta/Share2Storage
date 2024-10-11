@@ -72,6 +72,7 @@ android {
         generateLocaleConfig = true
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
     packaging {

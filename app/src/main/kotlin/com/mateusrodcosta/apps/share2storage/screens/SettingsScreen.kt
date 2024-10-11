@@ -105,7 +105,7 @@ fun SettingsScreenContent(
 ) {
     AppTheme {
         Scaffold(topBar = {
-            TopAppBar(title = { Text(stringResource(R.string.settings)) }, navigationIcon = {
+            TopAppBar(title = { Text(stringResource(R.string.settings_title)) }, navigationIcon = {
                 IconButton(onClick = { navController?.navigateUp() }) {
                     Icon(
                         Icons.AutoMirrored.Filled.ArrowBack,

@@ -126,7 +126,7 @@ fun DetailsScreenContent(
                     else FileDetailsPortrait(uriData)
                 } else Text(
                     stringResource(R.string.no_file_found),
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.headlineMedium
                 )
             }
         }

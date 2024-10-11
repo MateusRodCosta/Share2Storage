@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -42,25 +43,22 @@ import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.screens.shared.AppBasicDivider
 import com.mateusrodcosta.apps.share2storage.screens.shared.AppListHeader
+import com.mateusrodcosta.apps.share2storage.screens.shared.ListItemWithURL
 import com.mateusrodcosta.apps.share2storage.screens.shared.shouldShowLandscape
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 
@@ -89,13 +87,24 @@ fun MainScreenContent(
     widthSizeClass: WindowWidthSizeClass,
     heightSizeClass: WindowHeightSizeClass,
 ) {
+    val openAboutDialog = remember { mutableStateOf(false) }
+
+    if (openAboutDialog.value) {
+        AboutDialog(onDismissRequest = {
+            openAboutDialog.value = false
+        })
+    }
+
     AppTheme {
         Scaffold(topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.app_name)) },
                 actions = {
+                    IconButton(onClick = { openAboutDialog.value = true }) {
+                        Icon(Icons.Rounded.Info, stringResource(R.string.about_title))
+                    }
                     IconButton(onClick = { navController?.navigate("settings") }) {
-                        Icon(Icons.Rounded.Settings, stringResource(R.string.settings))
+                        Icon(Icons.Rounded.Settings, stringResource(R.string.settings_title))
                     }
                 },
             )
@@ -146,11 +155,11 @@ fun HowToUseHeader() {
         Image(
             painterResource(R.drawable.ic_launcher_foreground),
             stringResource(R.string.app_name),
-            modifier = Modifier.scale(1.8f),
+            modifier = Modifier.scale(1.5f),
         )
         Text(
             stringResource(R.string.how_to_use),
-            style = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.secondary),
+            style = MaterialTheme.typography.headlineLarge.copy(color = MaterialTheme.colorScheme.secondary),
             textAlign = TextAlign.Center
         )
     }
@@ -172,25 +181,12 @@ fun HowToUseContent(isLandscape: Boolean = false) {
         HowToUseRow(3, stringResource(R.string.how_to_use_step_3))
         HowToUseRow(4, stringResource(R.string.how_to_use_step_4))
         AppBasicDivider()
-        AppListHeader(title = stringResource(R.string.how_to_use_about_title))
-        AboutRowWithURL(
-            stringResource(R.string.how_to_use_app_donation),
+        AppListHeader(title = stringResource(R.string.donation_title))
+        ListItemWithURL(
+            stringResource(R.string.donation_content),
+            linkPlacement = "%s",
             url = stringResource(R.string.donation_url),
-            "%s"
-        )
-        AboutRowWithURL(
-            stringResource(R.string.how_to_use_about),
-            url = stringResource(R.string.github_profile_url),
-            "Mateus Rodrigues Costa",
-            false
-        )
-        AboutRow(
-            stringResource(R.string.how_to_use_app_icon_credits)
-        )
-        AboutRowWithURL(
-            stringResource(R.string.how_to_use_github),
-            url = stringResource(R.string.source_code_url),
-            "%s"
+            replaceWithUrl = true
         )
     }
 }
@@ -204,37 +200,5 @@ fun HowToUseRow(num: Int?, string: String) {
         )
     }, headlineContent = {
         Text(string, softWrap = true)
-    })
-}
-
-@Composable
-fun AboutRow(string: String) {
-    ListItem(modifier = Modifier.clickable { }, headlineContent = {
-        Text(string, softWrap = true)
-    })
-}
-
-@Composable
-fun AboutRowWithURL(
-    string: String, url: String, linkPlacement: String, replaceWithUrl: Boolean = true
-) {
-    val localUriHandler = LocalUriHandler.current
-    val stringPieces = string.split(linkPlacement)
-
-    ListItem(modifier = Modifier.clickable { localUriHandler.openUri(url) }, headlineContent = {
-        Text(
-            buildAnnotatedString {
-                append(stringPieces[0])
-                withStyle(
-                    style = SpanStyle(
-                        color = Color.Blue, textDecoration = TextDecoration.Underline
-                    )
-                ) {
-                    if (replaceWithUrl) append(url) else append(linkPlacement)
-                }
-                if (stringPieces.size >= 2) append(stringPieces[1])
-            },
-            softWrap = true,
-        )
     })
 }
