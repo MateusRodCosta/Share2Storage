@@ -35,9 +35,15 @@ import com.mateusrodcosta.apps.share2storage.BuildConfig
 import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.screens.shared.ListItemWithURL
 
-@Preview
+@Preview(apiLevel = 34)
 @Composable
 fun AboutDialogContentPreview() {
+    AboutDialogContent()
+}
+
+@Preview(apiLevel = 34, locale = "pt-rBR")
+@Composable
+fun AboutDialogContentPreviewPtBr() {
     AboutDialogContent()
 }
 

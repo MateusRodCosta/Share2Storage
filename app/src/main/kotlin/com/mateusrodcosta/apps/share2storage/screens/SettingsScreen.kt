@@ -51,9 +51,26 @@ import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-@Preview(apiLevel = 34, showBackground = true)
+@Preview(apiLevel = 34, showSystemUi = true, showBackground = true)
 @Composable
 fun SettingsScreenPreview() {
+    val mockDefaultSaveLocation = MutableStateFlow(null)
+    val mockSkipFileDetails = MutableStateFlow(false)
+    val mockInterceptActionViewIntents = MutableStateFlow(false)
+    val mockShowFilePreview = MutableStateFlow(true)
+
+    SettingsScreenContent(
+        spDefaultSaveLocation = mockDefaultSaveLocation,
+        spSkipFileDetails = mockSkipFileDetails,
+        spInterceptActionViewIntents = mockInterceptActionViewIntents,
+        spShowFilePreview = mockShowFilePreview,
+    )
+}
+
+
+@Preview(apiLevel = 34, showSystemUi = true, showBackground = true, locale = "pt-rBR")
+@Composable
+fun SettingsScreenPreviewPtBr() {
     val mockDefaultSaveLocation = MutableStateFlow(null)
     val mockSkipFileDetails = MutableStateFlow(false)
     val mockInterceptActionViewIntents = MutableStateFlow(false)
