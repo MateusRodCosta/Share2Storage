@@ -34,6 +34,7 @@ import androidx.compose.ui.window.Dialog
 import com.mateusrodcosta.apps.share2storage.BuildConfig
 import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.screens.shared.ListItemWithURL
+import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 
 @Preview(apiLevel = 34)
 @Composable
@@ -56,25 +57,27 @@ fun AboutDialog(onDismissRequest: () -> Unit) {
 
 @Composable
 fun AboutDialogContent() {
-    Card {
-        Column {
-            AppInfo()
-            ListItemWithURL(
-                stringResource(R.string.about_developer),
-                linkPlacement = "Mateus Rodrigues Costa",
-                url = stringResource(R.string.github_profile_url),
-            )
-            ListItemWithURL(
-                stringResource(R.string.about_icon_credits),
-                linkPlacement = "@swyzera",
-                url = stringResource(R.string.swy_website_url)
-            )
-            ListItemWithURL(
-                stringResource(R.string.about_github),
-                linkPlacement = "%s",
-                url = stringResource(R.string.source_code_url),
-                replaceWithUrl = true
-            )
+    AppTheme {
+        Card {
+            Column {
+                AppInfo()
+                ListItemWithURL(
+                    stringResource(R.string.about_developer),
+                    linkPlacement = "Mateus Rodrigues Costa",
+                    url = stringResource(R.string.github_profile_url),
+                )
+                ListItemWithURL(
+                    stringResource(R.string.about_icon_credits),
+                    linkPlacement = "@swyzera",
+                    url = stringResource(R.string.swy_website_url)
+                )
+                ListItemWithURL(
+                    stringResource(R.string.about_github),
+                    linkPlacement = "%s",
+                    url = stringResource(R.string.source_code_url),
+                    replaceWithUrl = true
+                )
+            }
         }
     }
 }
