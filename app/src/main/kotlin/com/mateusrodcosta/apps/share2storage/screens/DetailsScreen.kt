@@ -59,7 +59,6 @@ import androidx.compose.ui.unit.dp
 import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.model.SampleUriDataProvider
 import com.mateusrodcosta.apps.share2storage.model.UriData
-import com.mateusrodcosta.apps.share2storage.screens.shared.appTopAppBarColors
 import com.mateusrodcosta.apps.share2storage.screens.shared.shouldShowLandscape
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 
@@ -99,7 +98,6 @@ fun DetailsScreenContent(
         Scaffold(topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.file_details)) },
-                colors = appTopAppBarColors(),
             )
         }, floatingActionButton = {
             if (uriData != null) {
@@ -111,8 +109,8 @@ fun DetailsScreenContent(
                             contentDescription = stringResource(R.string.save_button)
                         )
                     },
-                    containerColor = MaterialTheme.colorScheme.secondary,
-                    contentColor = MaterialTheme.colorScheme.onSecondary,
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
                 )
             }
         }) { paddingValues ->

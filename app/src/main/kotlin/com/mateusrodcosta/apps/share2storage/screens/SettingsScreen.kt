@@ -47,7 +47,6 @@ import androidx.navigation.NavController
 import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.screens.shared.AppBasicDivider
 import com.mateusrodcosta.apps.share2storage.screens.shared.AppListHeader
-import com.mateusrodcosta.apps.share2storage.screens.shared.appTopAppBarColors
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -106,16 +105,14 @@ fun SettingsScreenContent(
 ) {
     AppTheme {
         Scaffold(topBar = {
-            TopAppBar(title = { Text(stringResource(R.string.settings)) },
-                colors = appTopAppBarColors(),
-                navigationIcon = {
-                    IconButton(onClick = { navController?.navigateUp() }) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            stringResource(R.string.back_arrow),
-                        )
-                    }
-                })
+            TopAppBar(title = { Text(stringResource(R.string.settings)) }, navigationIcon = {
+                IconButton(onClick = { navController?.navigateUp() }) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.ArrowBack,
+                        stringResource(R.string.back_arrow),
+                    )
+                }
+            })
         }) { paddingValues ->
             Box(modifier = Modifier.padding(paddingValues)) {
                 Column(

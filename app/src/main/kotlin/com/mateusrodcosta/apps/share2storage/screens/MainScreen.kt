@@ -61,7 +61,6 @@ import androidx.navigation.NavController
 import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.screens.shared.AppBasicDivider
 import com.mateusrodcosta.apps.share2storage.screens.shared.AppListHeader
-import com.mateusrodcosta.apps.share2storage.screens.shared.appTopAppBarColors
 import com.mateusrodcosta.apps.share2storage.screens.shared.shouldShowLandscape
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 
@@ -99,7 +98,6 @@ fun MainScreenContent(
                         Icon(Icons.Rounded.Settings, stringResource(R.string.settings))
                     }
                 },
-                colors = appTopAppBarColors(),
             )
         }) { paddingValues ->
             Box(modifier = Modifier.padding(paddingValues)) {
@@ -152,7 +150,7 @@ fun HowToUseHeader() {
         )
         Text(
             stringResource(R.string.how_to_use),
-            style = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.tertiary),
+            style = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.secondary),
             textAlign = TextAlign.Center
         )
     }
