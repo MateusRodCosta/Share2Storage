@@ -76,6 +76,15 @@ android {
         compose = true
     }
     packaging {
+        dex {
+            // This is false starting with minSdk >= 28, but I want that behavior with minSdk 26
+            // Uncompressed DEX should increase final APK size, but it potentially brings storage savings
+            // and performance improvements on the installed device
+            //
+            // Currently this makes the APK ~1MB heavier
+            //
+            useLegacyPackaging = false
+        }
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
