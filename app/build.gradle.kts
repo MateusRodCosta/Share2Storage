@@ -77,9 +77,10 @@ android {
     }
     packaging {
         dex {
-            // This is false starting with minSdk >= 28, but I want that behavior with minSdk 26
-            // Uncompressed DEX should increase final APK size, but it potentially brings storage savings
-            // and performance improvements on the installed device
+            // This is set to false starting with minSdk >= 28, but I want uncompressed DEX files with minSdk 26
+            // According to https://developer.android.com/build/releases/past-releases/agp-4-2-0-release-notes#dex-files-uncompressed-in-apks-when-minsdk-=-28-or-higher:
+            //
+            // > This causes an increase in APK size, but it results in a smaller installation size on the device, and the download size is roughly the same.
             //
             // Currently this makes the APK ~1MB heavier
             //
