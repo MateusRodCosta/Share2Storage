@@ -30,6 +30,6 @@ platform :android do
   desc "Deploy Google Play internal"
   lane :deployInternal do
     gradle(task: "clean bundleRelease")
-    upload_to_play_store track:"internal" sync_image_upload:"true"
+    upload_to_play_store track:"internal",sync_image_upload:"true"
   end
 end
