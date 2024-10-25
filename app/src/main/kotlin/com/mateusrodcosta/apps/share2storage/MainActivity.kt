@@ -17,15 +17,18 @@
 
 package com.mateusrodcosta.apps.share2storage
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+import androidx.compose.runtime.LaunchedEffect
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.WindowCompat
+import androidx.navigation.compose.rememberNavController
 import com.mateusrodcosta.apps.share2storage.screens.AppNavigation
 import com.mateusrodcosta.apps.share2storage.screens.SettingsViewModel
 
@@ -45,11 +48,11 @@ class MainActivity : ComponentActivity() {
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
+        val isAppPreference = intent.action == Intent.ACTION_APPLICATION_PREFERENCES
+
         installSplashScreen()
         super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
-        windowInsetsController.isAppearanceLightNavigationBars = true
+        enableEdgeToEdge()
 
         settingsViewModel.initializeWithContext(applicationContext)
         settingsViewModel.assignSaveLocationDirIntent(getSaveLocationDirIntent)
@@ -57,8 +60,13 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
-            AppNavigation(settingsViewModel, windowSizeClass)
+            val navController = rememberNavController()
+
+            LaunchedEffect(key1 = Unit) {
+                if (isAppPreference) navController.navigate("settings")
+            }
+
+            AppNavigation(navController, settingsViewModel, windowSizeClass)
         }
     }
 }
-

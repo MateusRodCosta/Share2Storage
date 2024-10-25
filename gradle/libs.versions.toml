@@ -1,13 +1,13 @@
 [versions]
-agp = "8.7.0"
-kotlin = "2.0.0"
+agp = "8.7.1"
+kotlin = "2.0.21"
 ktx = "1.13.1"
 preference-ktx = "1.2.1"
 lifecycle-runtime-ktx = "2.8.6"
 splashscreen = "1.0.1"
-composeBom = "2024.09.03"
-activityCompose = "1.9.2"
-navigationCompose = "2.8.2"
+composeBom = "2024.10.00"
+activityCompose = "1.9.3"
+navigationCompose = "2.8.3"
 junit = "4.13.2"
 androidxTestRunner = "1.6.2"
 androidxTestRules = "1.6.1"
@@ -30,8 +30,8 @@ compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-mani
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
-test-runner = { group = "androidx.test", name="runner", version.ref = "androidxTestRunner" }
-test-rules = { group = "androidx.test", name="rules", version.ref = "androidxTestRules" }
+test-runner = { group = "androidx.test", name = "runner", version.ref = "androidxTestRunner" }
+test-rules = { group = "androidx.test", name = "rules", version.ref = "androidxTestRules" }
 
 [bundles]
 androidx-ktx = ["core.ktx", "preference.ktx", "lifecycle.runtime.ktx"]

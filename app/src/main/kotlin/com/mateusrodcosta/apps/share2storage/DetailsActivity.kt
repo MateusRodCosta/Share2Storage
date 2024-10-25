@@ -27,10 +27,10 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
-import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import com.mateusrodcosta.apps.share2storage.model.UriData
@@ -57,9 +57,7 @@ class DetailsActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
-        windowInsetsController.isAppearanceLightNavigationBars = true
+        enableEdgeToEdge()
 
         getPreferences()
         handleIntent(intent)
@@ -69,6 +67,7 @@ class DetailsActivity : ComponentActivity() {
 
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
+
             DetailsScreen(
                 uriData = uriData,
                 windowSizeClass = windowSizeClass,

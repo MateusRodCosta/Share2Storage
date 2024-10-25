@@ -23,15 +23,15 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -43,6 +43,7 @@ import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -63,13 +64,22 @@ import androidx.compose.ui.unit.dp
 import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.model.SampleUriDataProvider
 import com.mateusrodcosta.apps.share2storage.model.UriData
-import com.mateusrodcosta.apps.share2storage.screens.shared.appTopAppBarColors
 import com.mateusrodcosta.apps.share2storage.screens.shared.shouldShowLandscape
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 
-@Preview(apiLevel = 34, showBackground = true)
+@Preview(apiLevel = 34, showSystemUi = true, showBackground = true)
 @Composable
 fun DetailsScreenPreview(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData?) {
+    DetailsScreenContent(
+        uriData = uriData,
+        widthSizeClass = WindowWidthSizeClass.Compact,
+        heightSizeClass = WindowHeightSizeClass.Medium,
+    )
+}
+
+@Preview(apiLevel = 34, showSystemUi = true, showBackground = true, locale = "pt-rBR")
+@Composable
+fun DetailsScreenPreviewPtBr(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData?) {
     DetailsScreenContent(
         uriData = uriData,
         widthSizeClass = WindowWidthSizeClass.Compact,
@@ -103,11 +113,15 @@ fun DetailsScreenContent(
         Scaffold(topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.file_details)) },
-                colors = appTopAppBarColors(),
             )
         }, floatingActionButton = {
             if (uriData != null) {
                 FloatingActionButton(
+                    modifier = Modifier.windowInsetsPadding(
+                        WindowInsets.systemBars.only(
+                            WindowInsetsSides.Horizontal
+                        )
+                    ),
                     onClick = { launchFilePicker() },
                     content = {
                         Icon(
@@ -115,8 +129,8 @@ fun DetailsScreenContent(
                             contentDescription = stringResource(R.string.save_button)
                         )
                     },
-                    containerColor = MaterialTheme.colorScheme.secondary,
-                    contentColor = MaterialTheme.colorScheme.onSecondary,
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
                 )
             }
         }) { paddingValues ->
@@ -132,7 +146,7 @@ fun DetailsScreenContent(
                     else FileDetailsPortrait(uriData)
                 } else Text(
                     stringResource(R.string.no_file_found),
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.headlineMedium
                 )
             }
         }
@@ -146,9 +160,11 @@ fun FileDetailsPortrait(uriData: UriData) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .weight(1.0f)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(1.0f)
+        ) {
             FilePreview(uriData)
         }
         Box {
@@ -189,7 +205,6 @@ fun FileInfo(uriData: UriData) {
         )
         FileInfoLine(
             label = stringResource(R.string.file_size),
-            // TODO: Find code to calculate file size for previews
             content = if (uriData.size != null) Formatter.formatFileSize(
                 LocalContext.current, uriData.size
             ) else stringResource(R.string.unknown)
@@ -199,22 +214,11 @@ fun FileInfo(uriData: UriData) {
 
 @Composable
 fun FileInfoLine(label: String, content: String) {
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .clickable { }) {
-        Column(
-            modifier = Modifier
-                .padding(PaddingValues(horizontal = 16.dp, vertical = 8.dp))
-                .heightIn(min = 48.dp), horizontalAlignment = Alignment.Start
-        ) {
-            Text(
-                label,
-                style = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.tertiary)
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(content, softWrap = true, style = MaterialTheme.typography.bodyLarge)
-        }
-    }
+    ListItem(modifier = Modifier.clickable { }, headlineContent = {
+        Text(label)
+    }, supportingContent = {
+        Text(content, softWrap = true)
+    })
 }
 
 @Composable

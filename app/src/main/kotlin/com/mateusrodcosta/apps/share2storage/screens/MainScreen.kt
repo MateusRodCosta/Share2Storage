@@ -22,22 +22,21 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -46,32 +45,36 @@ import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.mateusrodcosta.apps.share2storage.R
-import com.mateusrodcosta.apps.share2storage.screens.shared.AppBasicDivider
 import com.mateusrodcosta.apps.share2storage.screens.shared.AppListHeader
-import com.mateusrodcosta.apps.share2storage.screens.shared.appTopAppBarColors
+import com.mateusrodcosta.apps.share2storage.screens.shared.ListItemWithURL
 import com.mateusrodcosta.apps.share2storage.screens.shared.shouldShowLandscape
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 
-@Preview(apiLevel = 34, showBackground = true)
+@Preview(apiLevel = 34, showSystemUi = true, showBackground = true)
 @Composable
 fun MainScreenPreview() {
+    MainScreenContent(
+        widthSizeClass = WindowWidthSizeClass.Compact,
+        heightSizeClass = WindowHeightSizeClass.Medium,
+    )
+}
+
+@Preview(apiLevel = 34, showSystemUi = true, showBackground = true, locale = "pt-rBR")
+@Composable
+fun MainScreenPreviewPtBr() {
     MainScreenContent(
         widthSizeClass = WindowWidthSizeClass.Compact,
         heightSizeClass = WindowHeightSizeClass.Medium,
@@ -94,16 +97,26 @@ fun MainScreenContent(
     widthSizeClass: WindowWidthSizeClass,
     heightSizeClass: WindowHeightSizeClass,
 ) {
+    val openAboutDialog = remember { mutableStateOf(false) }
+
+    if (openAboutDialog.value) {
+        AboutDialog(onDismissRequest = {
+            openAboutDialog.value = false
+        })
+    }
+
     AppTheme {
         Scaffold(topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.app_name)) },
                 actions = {
+                    IconButton(onClick = { openAboutDialog.value = true }) {
+                        Icon(Icons.Rounded.Info, stringResource(R.string.about_title))
+                    }
                     IconButton(onClick = { navController?.navigate("settings") }) {
-                        Icon(Icons.Rounded.Settings, stringResource(R.string.settings))
+                        Icon(Icons.Rounded.Settings, stringResource(R.string.settings_title))
                     }
                 },
-                colors = appTopAppBarColors(),
             )
         }) { paddingValues ->
             Box(modifier = Modifier.padding(paddingValues)) {
@@ -133,7 +146,7 @@ fun HowToUsePortrait() {
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
     ) {
         HowToUseHeader()
         HowToUseContent()
@@ -152,11 +165,11 @@ fun HowToUseHeader() {
         Image(
             painterResource(R.drawable.ic_launcher_foreground),
             stringResource(R.string.app_name),
-            modifier = Modifier.scale(1.8f),
+            modifier = Modifier.scale(1.5f),
         )
         Text(
             stringResource(R.string.how_to_use),
-            style = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.tertiary),
+            style = MaterialTheme.typography.headlineLarge.copy(color = MaterialTheme.colorScheme.secondary),
             textAlign = TextAlign.Center
         )
     }
@@ -177,94 +190,25 @@ fun HowToUseContent(isLandscape: Boolean = false) {
         )
         HowToUseRow(3, stringResource(R.string.how_to_use_step_3))
         HowToUseRow(4, stringResource(R.string.how_to_use_step_4))
-        AppBasicDivider()
-        AppListHeader(title = stringResource(R.string.how_to_use_about_title))
-        AboutRowWithURL(
-            stringResource(R.string.how_to_use_app_donation),
+        Spacer(modifier = Modifier.height(16.dp))
+        AppListHeader(title = stringResource(R.string.donation_title))
+        ListItemWithURL(
+            stringResource(R.string.donation_content),
+            linkPlacement = "%s",
             url = stringResource(R.string.donation_url),
-            "%s"
-        )
-        AboutRowWithURL(
-            stringResource(R.string.how_to_use_about),
-            url = stringResource(R.string.github_profile_url),
-            "Mateus Rodrigues Costa",
-            false
-        )
-        AboutRow(
-            stringResource(R.string.how_to_use_app_icon_credits)
-        )
-        AboutRowWithURL(
-            stringResource(R.string.how_to_use_github),
-            url = stringResource(R.string.source_code_url),
-            "%s"
+            replaceWithUrl = true
         )
     }
 }
 
 @Composable
 fun HowToUseRow(num: Int?, string: String) {
-    GenericRow {
+    ListItem(modifier = Modifier.clickable { }, leadingContent = {
         Text(
             if (num == null) "   " else "$num.",
-            style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
+            style = LocalTextStyle.current.copy(fontWeight = FontWeight.Bold),
         )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            string,
-            style = MaterialTheme.typography.bodyLarge,
-            softWrap = true,
-        )
-    }
-}
-
-@Composable
-fun AboutRow(string: String) {
-    GenericRow {
-        Text(
-            string,
-            style = MaterialTheme.typography.bodyLarge,
-            softWrap = true,
-        )
-    }
-}
-
-
-@Composable
-fun AboutRowWithURL(
-    string: String, url: String, linkPlacement: String, replaceWithUrl: Boolean = true
-) {
-    val localUriHandler = LocalUriHandler.current
-    val stringPieces = string.split(linkPlacement)
-    GenericRow(onClick = { localUriHandler.openUri(url) }) {
-        Text(
-            buildAnnotatedString {
-                append(stringPieces[0])
-                withStyle(
-                    style = SpanStyle(
-                        color = Color.Blue, textDecoration = TextDecoration.Underline
-                    )
-                ) {
-                    if (replaceWithUrl) append(url) else append(linkPlacement)
-                }
-                if (stringPieces.size >= 2) append(stringPieces[1])
-            },
-            style = MaterialTheme.typography.bodyLarge,
-            softWrap = true,
-        )
-    }
-}
-
-@Composable
-fun GenericRow(onClick: () -> Unit = {}, content: @Composable (RowScope.() -> Unit)) {
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .clickable { onClick() }) {
-        Row(
-            modifier = Modifier
-                .padding(PaddingValues(horizontal = 16.dp, vertical = 8.dp))
-                .heightIn(min = 32.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            content = content,
-        )
-    }
+    }, headlineContent = {
+        Text(string, softWrap = true)
+    })
 }

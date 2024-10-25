@@ -1,0 +1,9 @@
+IMPORTANTE: Uma versão futura poderá deixar de suportar o Android O, veja https://github.com/MateusRodCosta/Share2Storage/issues/38 para mais informações.
+
+• Dependências atualizadas
+• Atalho adicionado na paǵina de Detalhes do App para as preferências do app
+• Várias melhorias de UI
+• Melhorias de tema (inclui suporte ao Material You)
+• Melhorias de suporte ao edge-to-edge
+• Seção "Sobre" movida para um dialogo
+• Dex descomprimido (causará APKs um pouco maiores mas tamanho instalado menor)

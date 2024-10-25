@@ -17,16 +17,21 @@
 
 package com.mateusrodcosta.apps.share2storage.screens.shared
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarColors
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -40,19 +45,33 @@ fun AppListHeader(title: String) {
     Text(
         text = title,
         modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(horizontal = 16.dp, vertical = 4.dp)
             .fillMaxWidth(),
-        style = MaterialTheme.typography.headlineSmall.copy(color = MaterialTheme.colorScheme.tertiary),
+        style = MaterialTheme.typography.headlineMedium.copy(color = MaterialTheme.colorScheme.secondary),
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun appTopAppBarColors(): TopAppBarColors {
-    return TopAppBarDefaults.topAppBarColors(
-        containerColor = MaterialTheme.colorScheme.primary,
-        titleContentColor = MaterialTheme.colorScheme.onPrimary,
-        navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
-        actionIconContentColor = MaterialTheme.colorScheme.onPrimary,
-    )
+fun ListItemWithURL(
+    string: String, linkPlacement: String, url: String, replaceWithUrl: Boolean = false
+) {
+    val localUriHandler = LocalUriHandler.current
+    val stringPieces = string.split(linkPlacement)
+
+    ListItem(modifier = Modifier.clickable { localUriHandler.openUri(url) }, headlineContent = {
+        Text(
+            buildAnnotatedString {
+                append(stringPieces[0])
+                withStyle(
+                    style = SpanStyle(
+                        color = MaterialTheme.colorScheme.tertiary, textDecoration = TextDecoration.Underline
+                    )
+                ) {
+                    if (replaceWithUrl) append(url) else append(linkPlacement)
+                }
+                if (stringPieces.size >= 2) append(stringPieces[1])
+            },
+            softWrap = true,
+        )
+    })
 }

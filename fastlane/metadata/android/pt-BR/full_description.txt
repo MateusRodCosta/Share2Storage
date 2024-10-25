@@ -1,9 +1,8 @@
-Me diga se isso já aconteceu com você: você tem um aplicativo (por exemplo, o app do banco) e esse aplicativo tem um arquivo que você precisa (por exemplo, um extrato bancário em PDF).
-Você quer baixar esse arquivo mas o app não oferece uma forma fácil para isso, o máximo que ele oferece é a opção de compartilhar o arquivo, fazendo com que você tenha que enviar o arquivo por um aplicativo de mensagens ou para você mesmo por e-mail para poder acessá-lo.
+Já lidou com essa situação: você está usando um aplicativo (como um app de banco) e você precisa exportar um arquivo urgentemente (por exemplo, um extrato bancário em PDF). Você quer baixar esse arquivo mas o app não oferece uma forma fácil para isso, o máximo que ele oferece é a opção de compartilhar o arquivo, fazendo com que você tenha que enviar o arquivo pra si mesmo (ou para outra pessoa) por e-mail ou por um mensageiro instantâneo para só então ter a opção de salvá-lo.
 
-Isso acontece porque alguns apps decidem não disponibilizar uma opção de Salvar, geralmente isso se dá pelos desenvolvedores não quererem implementar a lógica de salvar o arquivo, no entanto eles geralmente disponibilizam a opção de Compartilhar, se aproveitando do sistema de compartilhamento embutido no sistema.
+Isso acontece porque muitos apps decidem usar a funcionalidade de compartilhamento do sistema ao invés de implementar a lógica necessária para o salvamento de arquivos. Então, o que pode ser feito?
 
-Nesses casos, o Salvar Localmente pode vir a calhar, permitindo salvar o arquivo em qualquer local por se registrar como uma opção para compartilhamento, mostrar os detalhes do arquivo e então permitir abrir um seletor de arquivos para salvamento.
-Uma opção para interceptar intents ACTION_VIEW também está disponível, permitindo salvar um arquivo mesmo que o aplicativo fonte tente forçar a visualização do arquivo.
+Nesses casos o Salvar Localmente (anteriormente Share2Storage) pode vir a calhar, apenas escolha-o nas opções de compartilhamento e isso permitirá que você salve o arquivo em qualquer lugar localmente no seu dispositivo, também serão exibidos detales dom arquivo antes (apesar de que isso pode ser pulado).
+Uma opção para interceptar intents de "Abrir com" também está disponível, te permitindo salvar um arquivo mesmo que o aplicativo anterior tente forçar a visualização do arquivo com um visualizador padrão para aquele tpo de arquivo.
 
-Salvar Localmente é software livre desenvolvido com Jetpack Compose. O código-fonte está disponível em <a href="https://github.com/MateusRodCosta/Share2Storage">https://github.com/MateusRodCosta/Share2Storage</a> licenciado sob AGPLv3+.
+Salvar Localmente é software livre desenvolvido com Jetpack Compose. O código-fonte está disponível em <a href="https://github.com/MateusRodCosta/Share2Storage">https://github.com/MateusRodCosta/Share2Storage</a> e licenciado sob AGPLv3+.

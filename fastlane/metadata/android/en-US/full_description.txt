@@ -1,9 +1,8 @@
-Tell me if you ever ran into this scenario: you have an app (say, a bank app) and that app has a file that you need (for example, a bank statement in PDF).
-You want to download that file, but the app doesn't offer any easy way to do so, the max it offers is the option to share the file, meaning you end up having to send the file to a messaging app or to yourself via e-mail to even be able to access it.
+Have you ever ran into this scenario: you are using an app (such as a bank app) and you need to export a file urgently (for example, a bank statement in PDF). You want to download that file locally in your device, but the app doesn't offer any easy way to do so, the max it offers is the option to share the file, meaning you end up having to send it to yourself (or somebody else) via email or a instant messaging app, to only then having the option to save that file.
 
-This happens because some apps decide to not provide a Save option, this is usually due to the devs not wanting to implement the logic for saving a file themselves, however they usually provide a Share functionality to instead take advantage of the built-in system share system.
+This happens because many apps choose to use the system's share functionality instead of doing the work to implement the required file saving logic. So, what can be done?
 
-In those cases Save Locally might come in handy, allowing you to save the file to any place in your device by registering as a share option on the share sheet, showing the file details and then allowing opening a file picker for saving.
-An option to intercept ACTION_VIEW is also available, letting you save the file if the source app were force viewing the file.
+In those cases Save Locally (previously Share2Storage) might come in handy, you just choose it on the share sheet that comes up and it allows you to save the file anywhere locally in your device, it also shows the file details beforehand (though that can be skipped).
+An option to intercept "Open with" intents is also available, allowing you to save files even if the source app were to try force viewing with a default viewer for that file type.
 
 Save Locally is FLOSS software (Free and Libre Open Source Software) developed with Jetpack Compose. Source code is available at <a href="https://github.com/MateusRodCosta/Share2Storage">https://github.com/MateusRodCosta/Share2Storage</a> licensed under AGPLv3+.
