@@ -26,7 +26,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -64,7 +63,8 @@ fun ListItemWithURL(
                 append(stringPieces[0])
                 withStyle(
                     style = SpanStyle(
-                        color = MaterialTheme.colorScheme.tertiary, textDecoration = TextDecoration.Underline
+                        color = MaterialTheme.colorScheme.tertiary,
+                        textDecoration = TextDecoration.Underline
                     )
                 ) {
                     if (replaceWithUrl) append(url) else append(linkPlacement)
