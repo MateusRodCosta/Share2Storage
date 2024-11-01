@@ -105,40 +105,32 @@ class DetailsActivity : ComponentActivity() {
     }
 
     private fun handleIntent(intent: Intent?) {
-        var fileUri: Uri? = null
-        if (intent?.action == Intent.ACTION_SEND) {
-            fileUri =
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) intent.getParcelableExtra(
-                    Intent.EXTRA_STREAM, Uri::class.java
-                )
-                else @Suppress("DEPRECATION") intent.getParcelableExtra(Intent.EXTRA_STREAM)
-            Log.d("fileUri ACTION_SEND", fileUri.toString())
-        }
-        // ACTION_VIEW intents interceptor
-        if (intent?.action == Intent.ACTION_VIEW) {
-            fileUri = intent.data
-            Log.d("fileUri ACTION_VIEW", fileUri.toString())
-        }
+        val fileUri: Uri? = if (intent?.action == Intent.ACTION_SEND) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) intent.getParcelableExtra(
+                Intent.EXTRA_STREAM, Uri::class.java
+            )
+            else @Suppress("DEPRECATION") intent.getParcelableExtra(Intent.EXTRA_STREAM)
+        } else if (intent?.action == Intent.ACTION_VIEW) intent.data
+        else null
+        Log.d("fileUri", "Action: ${intent?.action}, uri: $fileUri")
 
-        if (fileUri != null) uriData =
-            getUriData(contentResolver, fileUri, getPreview = showFilePreview)
-        if (uriData != null) {
-            createFile = registerForActivityResult(
-                CreateDocumentWithInitialUri(uriData?.type ?: "*/*", defaultSaveLocation)
-            ) { uri ->
-                if (uri == null) {
-                    if (skipFileDetails) finish()
-                } else {
-                    lifecycleScope.launch {
-                        handleFileSave(uri, fileUri)
-                    }
+        if (fileUri == null) return
+        uriData = getUriData(contentResolver, fileUri, getPreview = showFilePreview)
+        if(uriData == null) return
+        createFile = registerForActivityResult(
+            CreateDocumentWithInitialUri(uriData?.type ?: "*/*", defaultSaveLocation)
+        ) { uri ->
+            if (uri == null) {
+                if (skipFileDetails) finish()
+            } else {
+                lifecycleScope.launch {
+                    handleFileSave(uri, fileUri)
                 }
             }
         }
     }
 
-    private suspend fun handleFileSave(uri: Uri?, fileUri: Uri?) {
-        if (uri == null || fileUri == null) return
+    private suspend fun handleFileSave(uri: Uri, fileUri: Uri) {
         return withContext(Dispatchers.IO) {
             val isSuccess = saveFile(baseContext, uri, fileUri)
 

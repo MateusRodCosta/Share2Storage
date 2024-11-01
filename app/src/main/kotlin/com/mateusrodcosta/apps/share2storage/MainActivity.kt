@@ -65,7 +65,6 @@ class MainActivity : ComponentActivity() {
             LaunchedEffect(key1 = Unit) {
                 if (isAppPreference) navController.navigate("settings")
             }
-
             AppNavigation(navController, settingsViewModel, windowSizeClass)
         }
     }

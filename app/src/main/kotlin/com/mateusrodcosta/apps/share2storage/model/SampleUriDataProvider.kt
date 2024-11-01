@@ -25,7 +25,6 @@ class SampleUriDataProvider : PreviewParameterProvider<UriData?> {
             "21. Setting Sail, Coming Home (End Theme).flac", "audio/flac", 35280673, null
         ),
         UriData("03. Lonely Rolling Star (Missing You).flac", "audio/flac", 41123343, null),
-        UriData(null, null, null, null),
         null,
     )
 }
