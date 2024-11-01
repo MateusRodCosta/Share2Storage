@@ -34,6 +34,7 @@
     <string name="settings_intercept_action_view_intents_info">Allow registering as an option when apps try to automatically open a file viewer</string>
 
     <string name="no_file_found">No file found</string>
+    <string name="saving_file">Saving file...</string>
 
     <string name="file_details">File Details</string>
     <string name="file_name">File name</string>

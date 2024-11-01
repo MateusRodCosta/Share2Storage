@@ -31,10 +31,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import com.mateusrodcosta.apps.share2storage.model.UriData
 import com.mateusrodcosta.apps.share2storage.screens.DetailsScreen
+import com.mateusrodcosta.apps.share2storage.screens.DetailsScreenSkipped
 import com.mateusrodcosta.apps.share2storage.utils.CreateDocumentWithInitialUri
 import com.mateusrodcosta.apps.share2storage.utils.SharedPreferenceKeys
 import com.mateusrodcosta.apps.share2storage.utils.getUriData
@@ -68,14 +70,19 @@ class DetailsActivity : ComponentActivity() {
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
 
-            DetailsScreen(
-                uriData = uriData,
-                windowSizeClass = windowSizeClass,
-                launchFilePicker = launchFilePicker,
-            )
+            if (skipFileDetails) {
+                LaunchedEffect(key1 = Unit) {
+                    launchFilePicker()
+                }
+                DetailsScreenSkipped()
+            } else {
+                DetailsScreen(
+                    uriData = uriData,
+                    windowSizeClass = windowSizeClass,
+                    launchFilePicker = launchFilePicker,
+                )
+            }
         }
-
-        if (skipFileDetails) launchFilePicker()
     }
 
     private fun getPreferences() {
@@ -119,8 +126,12 @@ class DetailsActivity : ComponentActivity() {
             createFile = registerForActivityResult(
                 CreateDocumentWithInitialUri(uriData?.type ?: "*/*", defaultSaveLocation)
             ) { uri ->
-                lifecycleScope.launch {
-                    handleFileSave(uri, fileUri)
+                if (uri == null) {
+                    if (skipFileDetails) finish()
+                } else {
+                    lifecycleScope.launch {
+                        handleFileSave(uri, fileUri)
+                    }
                 }
             }
         }
@@ -146,6 +157,5 @@ class DetailsActivity : ComponentActivity() {
                 finish()
             }
         }
-
     }
 }

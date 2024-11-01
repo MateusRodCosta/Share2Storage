@@ -31,6 +31,14 @@ Runs all the tests
 
 Deploy a new version to the Google Play
 
+### android deployInternal
+
+```sh
+[bundle exec] fastlane android deployInternal
+```
+
+Deploy Google Play internal
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.

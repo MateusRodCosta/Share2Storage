@@ -250,3 +250,44 @@ fun FilePreview(uriData: UriData) {
         )
     }
 }
+
+@Preview(apiLevel = 34, showSystemUi = true, showBackground = true)
+@Composable
+fun DetailsScreenSkippedPreview() {
+    DetailsScreenSkippedContent()
+}
+
+@Preview(apiLevel = 34, showSystemUi = true, showBackground = true, locale = "pt-rBR")
+@Composable
+fun DetailsScreenSkippedPreviewPtBr() {
+    DetailsScreenSkippedContent()
+}
+
+@Composable
+fun DetailsScreenSkipped() {
+    DetailsScreenSkippedContent()
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DetailsScreenSkippedContent() {
+    AppTheme {
+        Scaffold(topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.file_details)) },
+            )
+        }) { paddingValues ->
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                Text(
+                    stringResource(R.string.saving_file),
+                    style = MaterialTheme.typography.headlineMedium
+                )
+            }
+        }
+    }
+}

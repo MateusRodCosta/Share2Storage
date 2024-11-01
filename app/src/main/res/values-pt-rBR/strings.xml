@@ -34,6 +34,7 @@
     <string name="settings_intercept_action_view_intents_info">Permite registrar como uma opção quando aplicativos tentam automaticamente abrir um visualizador de arquivos</string>
 
     <string name="no_file_found">Nenhum arquivo</string>
+    <string name="saving_file">Salvando arquivo...</string>
 
     <string name="file_details">Detalhes do arquivo</string>
     <string name="file_name">Nome do arquivo</string>
