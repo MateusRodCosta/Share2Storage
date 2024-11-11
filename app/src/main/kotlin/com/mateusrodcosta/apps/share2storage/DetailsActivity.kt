@@ -145,7 +145,6 @@ class DetailsActivity : ComponentActivity() {
             }
 
             if (skipFileDetails) {
-                delay(1.toDuration(DurationUnit.SECONDS))
                 finish()
             }
         }
