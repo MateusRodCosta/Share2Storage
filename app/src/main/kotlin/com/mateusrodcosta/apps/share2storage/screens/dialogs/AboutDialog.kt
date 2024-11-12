@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.mateusrodcosta.apps.share2storage.screens
+package com.mateusrodcosta.apps.share2storage.screens.dialogs
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column

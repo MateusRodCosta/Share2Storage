@@ -160,7 +160,7 @@ class SettingsViewModel : ViewModel() {
         _defaultSaveLocation.value = value
     }
 
-    fun clearSaveDirectory() {
+    fun clearDefaultSaveLocation() {
         updateDefaultSaveLocation(null)
     }
 

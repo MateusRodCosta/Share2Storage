@@ -27,7 +27,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -39,6 +38,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -46,6 +47,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.mateusrodcosta.apps.share2storage.R
+import com.mateusrodcosta.apps.share2storage.screens.dialogs.DefaultFolderDialog
 import com.mateusrodcosta.apps.share2storage.screens.shared.AppBasicDivider
 import com.mateusrodcosta.apps.share2storage.screens.shared.AppListHeader
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
@@ -100,7 +102,7 @@ fun SettingsScreen(navController: NavController, settingsViewModel: SettingsView
         spInterceptActionViewIntents = settingsViewModel.interceptActionViewIntents,
         spShowFilePreview = settingsViewModel.showFilePreview,
         launchFilePicker = { settingsViewModel.getSaveLocationDirIntent().launch(null) },
-        clearSaveDirectory = { settingsViewModel.clearSaveDirectory() },
+        clearDefaultSaveLocation = { settingsViewModel.clearDefaultSaveLocation() },
         updateSkipFilePicker = { value: Boolean ->
             settingsViewModel.updateSkipFilePicker(value)
         },
@@ -126,7 +128,7 @@ fun SettingsScreenContent(
     spInterceptActionViewIntents: StateFlow<Boolean>,
     spShowFilePreview: StateFlow<Boolean>,
     launchFilePicker: () -> Unit = {},
-    clearSaveDirectory: () -> Unit = {},
+    clearDefaultSaveLocation: () -> Unit = {},
     updateSkipFilePicker: (Boolean) -> Unit = {},
     updateSkipFileDetails: (Boolean) -> Unit = {},
     updateInterceptActionViewIntents: (Boolean) -> Unit = {},
@@ -154,7 +156,7 @@ fun SettingsScreenContent(
                         AppListHeader(title = stringResource(R.string.settings_category_file_picker))
                         DefaultSaveLocationSetting(
                             launchFilePicker = launchFilePicker,
-                            clearSaveDirectory = clearSaveDirectory,
+                            clearDefaultSaveLocation = clearDefaultSaveLocation,
                             spDefaultSaveLocation = spDefaultSaveLocation,
                         )
                         SkipFilePickerSetting(
@@ -188,23 +190,34 @@ fun SettingsScreenContent(
 @Composable
 fun DefaultSaveLocationSetting(
     launchFilePicker: () -> Unit,
-    clearSaveDirectory: () -> Unit,
+    clearDefaultSaveLocation: () -> Unit,
     spDefaultSaveLocation: StateFlow<Uri?>,
 ) {
     val defaultSaveLocation by spDefaultSaveLocation.collectAsState()
+    val openDefaultFolderDialog = remember { mutableStateOf(false) }
 
-    ListItem(modifier = Modifier.clickable { launchFilePicker() }, headlineContent = {
-        Text(stringResource(R.string.settings_default_save_location))
-    }, supportingContent = {
-        Text(
-            defaultSaveLocation?.path
-                ?: stringResource(R.string.settings_default_save_location_last_used)
+    if (openDefaultFolderDialog.value) {
+        DefaultFolderDialog(
+            onDismissRequest = {
+                openDefaultFolderDialog.value = false
+            },
+            clearDefaultSaveLocation = clearDefaultSaveLocation,
+            launchFilePicker = launchFilePicker,
         )
-    }, trailingContent = {
-        IconButton(onClick = { clearSaveDirectory() }) {
-            Icon(Icons.Rounded.Clear, stringResource(R.string.clear_button))
-        }
-    })
+    }
+
+    ListItem(
+        modifier = Modifier.clickable { openDefaultFolderDialog.value = true },
+        headlineContent = {
+            Text(stringResource(R.string.settings_default_save_location))
+        },
+        supportingContent = {
+            Text(
+                defaultSaveLocation?.path
+                    ?: stringResource(R.string.settings_default_save_location_last_used)
+            )
+        },
+    )
 }
 
 @Composable
@@ -255,7 +268,6 @@ fun SkipFileDetailsSetting(
             })
         })
 }
-
 
 @Composable
 fun ShowFilePreviewSetting(
