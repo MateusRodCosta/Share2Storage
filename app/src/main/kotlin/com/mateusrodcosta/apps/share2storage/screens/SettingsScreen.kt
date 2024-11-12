@@ -173,6 +173,7 @@ fun SettingsScreenContent(
                         ShowFilePreviewSetting(
                             updateShowFilePreview = updateShowFilePreview,
                             spShowFilePreview = spShowFilePreview,
+                            spSkipFileDetails = spSkipFileDetails,
                         )
                         AppBasicDivider()
                         AppListHeader(title = stringResource(R.string.settings_category_intents))
@@ -271,23 +272,26 @@ fun SkipFileDetailsSetting(
 
 @Composable
 fun ShowFilePreviewSetting(
+    spSkipFileDetails: StateFlow<Boolean>,
     updateShowFilePreview: (Boolean) -> Unit,
     spShowFilePreview: StateFlow<Boolean>,
 ) {
+    val skipFileDetails by spSkipFileDetails.collectAsState()
     val showFilePreview by spShowFilePreview.collectAsState()
 
-    ListItem(modifier = Modifier.clickable { updateShowFilePreview(!showFilePreview) },
-        headlineContent = {
-            Text(stringResource(R.string.settings_show_file_preview))
-        },
-        supportingContent = {
-            Text(stringResource(R.string.settings_show_file_preview_info))
-        },
-        trailingContent = {
-            Switch(checked = showFilePreview, onCheckedChange = { value ->
-                updateShowFilePreview(value)
-            })
+    ListItem(modifier = if (skipFileDetails) Modifier.alpha(Utils.CONTENT_ALPHA_DISABLED) else Modifier.clickable {
+        updateShowFilePreview(
+            !showFilePreview
+        )
+    }, headlineContent = {
+        Text(stringResource(R.string.settings_show_file_preview))
+    }, supportingContent = {
+        Text(stringResource(R.string.settings_show_file_preview_info))
+    }, trailingContent = {
+        Switch(enabled = !skipFileDetails, checked = showFilePreview, onCheckedChange = { value ->
+            updateShowFilePreview(value)
         })
+    })
 }
 
 @Composable

@@ -53,7 +53,7 @@ class DetailsActivity : ComponentActivity() {
 
     private var skipFileDetails: Boolean = false
     private var defaultSaveLocation: Uri? = null
-    private var showFilePreview: Boolean = true
+    private var shouldShowFilePreview: Boolean = true
     private var shouldSkipFilePicker: Boolean = false
 
 
@@ -116,7 +116,7 @@ class DetailsActivity : ComponentActivity() {
         val showFilePreview =
             sharedPreferences.getBoolean(SharedPreferenceKeys.SHOW_FILE_PREVIEW_KEY, true)
         Log.d("details] showFilePreview", showFilePreview.toString())
-        this.showFilePreview = showFilePreview
+        this.shouldShowFilePreview = !skipFileDetails && showFilePreview
 
         val skipFilePicker =
             sharedPreferences.getBoolean(SharedPreferenceKeys.SKIP_FILE_PICKER, false)
@@ -137,7 +137,7 @@ class DetailsActivity : ComponentActivity() {
 
         if (fileUri == null) return
         this.fileUri = fileUri
-        val uriData = getUriData(contentResolver, fileUri, getPreview = showFilePreview)
+        val uriData = getUriData(contentResolver, fileUri, getPreview = shouldShowFilePreview)
         if (uriData == null) return
         this.uriData = uriData
 
