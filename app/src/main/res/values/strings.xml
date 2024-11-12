@@ -22,6 +22,8 @@
     <string name="settings_category_file_picker">File Picker</string>
     <string name="settings_default_save_location">Default save location</string>
     <string name="settings_default_save_location_last_used">Last used folder</string>
+    <string name="settings_skip_file_picker">Skip File Picker</string>
+    <string name="settings_skip_file_picker_info">Skip File Picker and immediately save files (only available when a default folder is set)</string>
 
     <string name="settings_category_file_details">File Details</string>
     <string name="settings_skip_file_details_page">Skip File Details page</string>
@@ -34,7 +36,7 @@
     <string name="settings_intercept_action_view_intents_info">Allow registering as an option when apps try to automatically open a file viewer</string>
 
     <string name="no_file_found">No file found</string>
-    <string name="saving_file">Saving file...</string>
+    <string name="saving_file">Saving file…</string>
 
     <string name="file_details">File Details</string>
     <string name="file_name">File name</string>

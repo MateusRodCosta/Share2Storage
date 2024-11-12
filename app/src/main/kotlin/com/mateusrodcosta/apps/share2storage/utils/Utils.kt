@@ -31,6 +31,7 @@ import java.io.*
 
 object Utils {
     const val BUFFER_SIZE: Int = 1024
+    const val CONTENT_ALPHA_DISABLED = 0.38f
 }
 
 fun getUriData(contentResolver: ContentResolver, uri: Uri, getPreview: Boolean): UriData? {

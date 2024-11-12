@@ -41,6 +41,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
@@ -48,6 +49,7 @@ import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.screens.shared.AppBasicDivider
 import com.mateusrodcosta.apps.share2storage.screens.shared.AppListHeader
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
+import com.mateusrodcosta.apps.share2storage.utils.Utils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -55,12 +57,14 @@ import kotlinx.coroutines.flow.StateFlow
 @Composable
 fun SettingsScreenPreview() {
     val mockDefaultSaveLocation = MutableStateFlow(null)
+    val mockSkipFilePicker = MutableStateFlow(false)
     val mockSkipFileDetails = MutableStateFlow(false)
     val mockInterceptActionViewIntents = MutableStateFlow(false)
     val mockShowFilePreview = MutableStateFlow(true)
 
     SettingsScreenContent(
         spDefaultSaveLocation = mockDefaultSaveLocation,
+        spSkipFilePicker = mockSkipFilePicker,
         spSkipFileDetails = mockSkipFileDetails,
         spInterceptActionViewIntents = mockInterceptActionViewIntents,
         spShowFilePreview = mockShowFilePreview,
@@ -72,12 +76,14 @@ fun SettingsScreenPreview() {
 @Composable
 fun SettingsScreenPreviewPtBr() {
     val mockDefaultSaveLocation = MutableStateFlow(null)
+    val mockSkipFilePicker = MutableStateFlow(false)
     val mockSkipFileDetails = MutableStateFlow(false)
     val mockInterceptActionViewIntents = MutableStateFlow(false)
     val mockShowFilePreview = MutableStateFlow(true)
 
     SettingsScreenContent(
         spDefaultSaveLocation = mockDefaultSaveLocation,
+        spSkipFilePicker = mockSkipFilePicker,
         spSkipFileDetails = mockSkipFileDetails,
         spInterceptActionViewIntents = mockInterceptActionViewIntents,
         spShowFilePreview = mockShowFilePreview,
@@ -89,11 +95,15 @@ fun SettingsScreen(navController: NavController, settingsViewModel: SettingsView
     SettingsScreenContent(
         navController = navController,
         spDefaultSaveLocation = settingsViewModel.defaultSaveLocation,
+        spSkipFilePicker = settingsViewModel.skipFilePicker,
         spSkipFileDetails = settingsViewModel.skipFileDetails,
         spInterceptActionViewIntents = settingsViewModel.interceptActionViewIntents,
         spShowFilePreview = settingsViewModel.showFilePreview,
         launchFilePicker = { settingsViewModel.getSaveLocationDirIntent().launch(null) },
         clearSaveDirectory = { settingsViewModel.clearSaveDirectory() },
+        updateSkipFilePicker = { value: Boolean ->
+            settingsViewModel.updateSkipFilePicker(value)
+        },
         updateSkipFileDetails = { value: Boolean ->
             settingsViewModel.updateSkipFileDetails(value)
         },
@@ -111,11 +121,13 @@ fun SettingsScreen(navController: NavController, settingsViewModel: SettingsView
 fun SettingsScreenContent(
     navController: NavController? = null,
     spDefaultSaveLocation: StateFlow<Uri?>,
+    spSkipFilePicker: StateFlow<Boolean>,
     spSkipFileDetails: StateFlow<Boolean>,
     spInterceptActionViewIntents: StateFlow<Boolean>,
     spShowFilePreview: StateFlow<Boolean>,
     launchFilePicker: () -> Unit = {},
     clearSaveDirectory: () -> Unit = {},
+    updateSkipFilePicker: (Boolean) -> Unit = {},
     updateSkipFileDetails: (Boolean) -> Unit = {},
     updateInterceptActionViewIntents: (Boolean) -> Unit = {},
     updateShowFilePreview: (Boolean) -> Unit = {},
@@ -144,6 +156,11 @@ fun SettingsScreenContent(
                             launchFilePicker = launchFilePicker,
                             clearSaveDirectory = clearSaveDirectory,
                             spDefaultSaveLocation = spDefaultSaveLocation,
+                        )
+                        SkipFilePickerSetting(
+                            spDefaultSaveLocation = spDefaultSaveLocation,
+                            updateSkipFilePicker = updateSkipFilePicker,
+                            spSkipFilePicker = spSkipFilePicker,
                         )
                         AppBasicDivider()
                         AppListHeader(stringResource(R.string.settings_category_file_details))
@@ -187,6 +204,34 @@ fun DefaultSaveLocationSetting(
         IconButton(onClick = { clearSaveDirectory() }) {
             Icon(Icons.Rounded.Clear, stringResource(R.string.clear_button))
         }
+    })
+}
+
+@Composable
+fun SkipFilePickerSetting(
+    spDefaultSaveLocation: StateFlow<Uri?>,
+    updateSkipFilePicker: (Boolean) -> Unit,
+    spSkipFilePicker: StateFlow<Boolean>,
+) {
+    val skipFilePicker by spSkipFilePicker.collectAsState()
+    val defaultSaveLocation by spDefaultSaveLocation.collectAsState()
+
+    ListItem(modifier = if (defaultSaveLocation != null) Modifier.clickable {
+        updateSkipFilePicker(
+            !skipFilePicker
+        )
+    } else Modifier.alpha(Utils.CONTENT_ALPHA_DISABLED), headlineContent = {
+        Text(stringResource(R.string.settings_skip_file_picker))
+    }, supportingContent = {
+        Text(stringResource(R.string.settings_skip_file_picker_info))
+    }, trailingContent = {
+        Switch(
+            enabled = defaultSaveLocation != null,
+            checked = skipFilePicker,
+            onCheckedChange = { value ->
+                updateSkipFilePicker(value)
+            },
+        )
     })
 }
 

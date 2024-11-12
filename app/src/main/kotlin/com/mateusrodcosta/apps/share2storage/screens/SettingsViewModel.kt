@@ -56,6 +56,9 @@ class SettingsViewModel : ViewModel() {
     private val _interceptActionViewIntents = MutableStateFlow(false)
     val interceptActionViewIntents: StateFlow<Boolean> = _interceptActionViewIntents
 
+    private val _skipFilePicker = MutableStateFlow(false)
+    val skipFilePicker: StateFlow<Boolean> = _skipFilePicker
+
     fun assignSaveLocationDirIntent(intent: ActivityResultLauncher<Uri?>) {
         getSaveLocationDirIntent = intent
     }
@@ -105,10 +108,15 @@ class SettingsViewModel : ViewModel() {
             "settings] initSharedPreferences] showFilePreview", spShowFilePreview.toString()
         )
 
+        val spSkipFilePicker =
+            sharedPreferences.getBoolean(SharedPreferenceKeys.SKIP_FILE_PICKER, false)
+        Log.d("settings] initSharedPreferences] skipFilePicker", spSkipFilePicker.toString())
+
         _defaultSaveLocation.value = spDefaultSaveLocation
         _skipFileDetails.value = spSkipFileDetails
         _interceptActionViewIntents.value = spInterceptActionViewIntents
         _showFilePreview.value = spShowFilePreview
+        _skipFilePicker.value = spSkipFilePicker
     }
 
     fun updateDefaultSaveLocation(value: Uri?) {
@@ -192,6 +200,14 @@ class SettingsViewModel : ViewModel() {
             putBoolean(SharedPreferenceKeys.SHOW_FILE_PREVIEW_KEY, value)
             Log.e("settings] updateShowFilePreview", value.toString())
             _showFilePreview.value = value
+        }
+    }
+
+    fun updateSkipFilePicker(value: Boolean) {
+        sharedPreferences.edit(commit = true) {
+            putBoolean(SharedPreferenceKeys.SKIP_FILE_PICKER, value)
+            Log.e("settings] updateSkipFilePicker", value.toString())
+            _skipFilePicker.value = value
         }
     }
 }
