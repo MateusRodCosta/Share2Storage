@@ -51,6 +51,7 @@ import com.mateusrodcosta.apps.share2storage.screens.dialogs.DefaultFolderDialog
 import com.mateusrodcosta.apps.share2storage.screens.shared.AppBasicDivider
 import com.mateusrodcosta.apps.share2storage.screens.shared.AppListHeader
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
+import com.mateusrodcosta.apps.share2storage.utils.SharedPreferencesDefaultValues
 import com.mateusrodcosta.apps.share2storage.utils.Utils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -59,17 +60,21 @@ import kotlinx.coroutines.flow.StateFlow
 @Composable
 fun SettingsScreenPreview() {
     val mockDefaultSaveLocation = MutableStateFlow(null)
-    val mockSkipFilePicker = MutableStateFlow(false)
-    val mockSkipFileDetails = MutableStateFlow(false)
-    val mockInterceptActionViewIntents = MutableStateFlow(false)
-    val mockShowFilePreview = MutableStateFlow(true)
+    val mockSkipFilePicker =
+        MutableStateFlow(SharedPreferencesDefaultValues.SKIP_FILE_PICKER_DEFAULT)
+    val mockSkipFileDetails =
+        MutableStateFlow(SharedPreferencesDefaultValues.SKIP_FILE_DETAILS_DEFAULT)
+    val mockShowFilePreview =
+        MutableStateFlow(SharedPreferencesDefaultValues.SHOW_FILE_PREVIEW_DEFAULT)
+    val mockInterceptActionViewIntents =
+        MutableStateFlow(SharedPreferencesDefaultValues.INTERCEPT_ACTION_VIEW_INTENTS_DEFAULT)
 
     SettingsScreenContent(
         spDefaultSaveLocation = mockDefaultSaveLocation,
         spSkipFilePicker = mockSkipFilePicker,
         spSkipFileDetails = mockSkipFileDetails,
-        spInterceptActionViewIntents = mockInterceptActionViewIntents,
         spShowFilePreview = mockShowFilePreview,
+        spInterceptActionViewIntents = mockInterceptActionViewIntents,
     )
 }
 
@@ -78,17 +83,21 @@ fun SettingsScreenPreview() {
 @Composable
 fun SettingsScreenPreviewPtBr() {
     val mockDefaultSaveLocation = MutableStateFlow(null)
-    val mockSkipFilePicker = MutableStateFlow(false)
-    val mockSkipFileDetails = MutableStateFlow(false)
-    val mockInterceptActionViewIntents = MutableStateFlow(false)
-    val mockShowFilePreview = MutableStateFlow(true)
+    val mockSkipFilePicker =
+        MutableStateFlow(SharedPreferencesDefaultValues.SKIP_FILE_PICKER_DEFAULT)
+    val mockSkipFileDetails =
+        MutableStateFlow(SharedPreferencesDefaultValues.SKIP_FILE_DETAILS_DEFAULT)
+    val mockShowFilePreview =
+        MutableStateFlow(SharedPreferencesDefaultValues.SHOW_FILE_PREVIEW_DEFAULT)
+    val mockInterceptActionViewIntents =
+        MutableStateFlow(SharedPreferencesDefaultValues.INTERCEPT_ACTION_VIEW_INTENTS_DEFAULT)
 
     SettingsScreenContent(
         spDefaultSaveLocation = mockDefaultSaveLocation,
         spSkipFilePicker = mockSkipFilePicker,
         spSkipFileDetails = mockSkipFileDetails,
-        spInterceptActionViewIntents = mockInterceptActionViewIntents,
         spShowFilePreview = mockShowFilePreview,
+        spInterceptActionViewIntents = mockInterceptActionViewIntents,
     )
 }
 
@@ -99,8 +108,8 @@ fun SettingsScreen(navController: NavController, settingsViewModel: SettingsView
         spDefaultSaveLocation = settingsViewModel.defaultSaveLocation,
         spSkipFilePicker = settingsViewModel.skipFilePicker,
         spSkipFileDetails = settingsViewModel.skipFileDetails,
-        spInterceptActionViewIntents = settingsViewModel.interceptActionViewIntents,
         spShowFilePreview = settingsViewModel.showFilePreview,
+        spInterceptActionViewIntents = settingsViewModel.interceptActionViewIntents,
         launchFilePicker = { settingsViewModel.getSaveLocationDirIntent().launch(null) },
         clearDefaultSaveLocation = { settingsViewModel.clearDefaultSaveLocation() },
         updateSkipFilePicker = { value: Boolean ->
@@ -125,8 +134,8 @@ fun SettingsScreenContent(
     spDefaultSaveLocation: StateFlow<Uri?>,
     spSkipFilePicker: StateFlow<Boolean>,
     spSkipFileDetails: StateFlow<Boolean>,
-    spInterceptActionViewIntents: StateFlow<Boolean>,
     spShowFilePreview: StateFlow<Boolean>,
+    spInterceptActionViewIntents: StateFlow<Boolean>,
     launchFilePicker: () -> Unit = {},
     clearDefaultSaveLocation: () -> Unit = {},
     updateSkipFilePicker: (Boolean) -> Unit = {},

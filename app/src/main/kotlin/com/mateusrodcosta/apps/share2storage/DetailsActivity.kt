@@ -40,6 +40,7 @@ import com.mateusrodcosta.apps.share2storage.screens.DetailsScreen
 import com.mateusrodcosta.apps.share2storage.screens.DetailsScreenSkipped
 import com.mateusrodcosta.apps.share2storage.utils.CreateDocumentWithInitialUri
 import com.mateusrodcosta.apps.share2storage.utils.SharedPreferenceKeys
+import com.mateusrodcosta.apps.share2storage.utils.SharedPreferencesDefaultValues
 import com.mateusrodcosta.apps.share2storage.utils.getUriData
 import com.mateusrodcosta.apps.share2storage.utils.saveFile
 import kotlinx.coroutines.Dispatchers
@@ -51,11 +52,10 @@ class DetailsActivity : ComponentActivity() {
     private lateinit var fileUri: Uri
     private lateinit var uriData: UriData
 
-    private var skipFileDetails: Boolean = false
     private var defaultSaveLocation: Uri? = null
-    private var shouldShowFilePreview: Boolean = true
     private var shouldSkipFilePicker: Boolean = false
-
+    private var skipFileDetails: Boolean = false
+    private var shouldShowFilePreview: Boolean = true
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,11 +99,6 @@ class DetailsActivity : ComponentActivity() {
     private fun getPreferences() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
 
-        val skipFileDetails =
-            sharedPreferences.getBoolean(SharedPreferenceKeys.SKIP_FILE_DETAILS_KEY, false)
-        Log.d("details] skipFileDetails", skipFileDetails.toString())
-        this.skipFileDetails = skipFileDetails
-
         val defaultSaveLocationRaw =
             sharedPreferences.getString(SharedPreferenceKeys.DEFAULT_SAVE_LOCATION_KEY, null)
         Log.d("details] defaultSaveLocationRaw", defaultSaveLocationRaw.toString())
@@ -113,16 +108,28 @@ class DetailsActivity : ComponentActivity() {
         Log.d("details] defaultSaveLocation", defaultSaveLocation.toString())
         this.defaultSaveLocation = defaultSaveLocation
 
-        val showFilePreview =
-            sharedPreferences.getBoolean(SharedPreferenceKeys.SHOW_FILE_PREVIEW_KEY, true)
-        Log.d("details] showFilePreview", showFilePreview.toString())
-        this.shouldShowFilePreview = !skipFileDetails && showFilePreview
-
-        val skipFilePicker =
-            sharedPreferences.getBoolean(SharedPreferenceKeys.SKIP_FILE_PICKER, false)
+        val skipFilePicker = sharedPreferences.getBoolean(
+            SharedPreferenceKeys.SKIP_FILE_PICKER_KEY,
+            SharedPreferencesDefaultValues.SKIP_FILE_PICKER_DEFAULT
+        )
         Log.d("details] skipFilePicker", skipFilePicker.toString())
         // Only skip file picker if both a default folder is set and "Skip File Picker is selected"
         this.shouldSkipFilePicker = defaultSaveLocation != null && skipFilePicker
+
+
+        val skipFileDetails = sharedPreferences.getBoolean(
+            SharedPreferenceKeys.SKIP_FILE_DETAILS_KEY,
+            SharedPreferencesDefaultValues.SKIP_FILE_DETAILS_DEFAULT
+        )
+        Log.d("details] skipFileDetails", skipFileDetails.toString())
+        this.skipFileDetails = skipFileDetails
+
+        val showFilePreview = sharedPreferences.getBoolean(
+            SharedPreferenceKeys.SHOW_FILE_PREVIEW_KEY,
+            SharedPreferencesDefaultValues.SHOW_FILE_PREVIEW_DEFAULT
+        )
+        Log.d("details] showFilePreview", showFilePreview.toString())
+        this.shouldShowFilePreview = !skipFileDetails && showFilePreview
     }
 
     private fun handleIntent(intent: Intent?) {
