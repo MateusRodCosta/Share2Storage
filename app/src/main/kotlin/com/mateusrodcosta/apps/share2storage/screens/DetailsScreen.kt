@@ -197,17 +197,15 @@ fun FileInfo(uriData: UriData) {
     ) {
         FileInfoLine(
             label = stringResource(R.string.file_name),
-            content = uriData.displayName ?: stringResource(R.string.unknown)
+            content = uriData.displayName
         )
         FileInfoLine(
             label = stringResource(R.string.file_type),
-            content = uriData.type ?: stringResource(R.string.unknown)
+            content = uriData.type
         )
         FileInfoLine(
             label = stringResource(R.string.file_size),
-            content = if (uriData.size != null) Formatter.formatFileSize(
-                LocalContext.current, uriData.size
-            ) else stringResource(R.string.unknown)
+            content = Formatter.formatFileSize(LocalContext.current, uriData.size)
         )
     }
 }
@@ -223,7 +221,7 @@ fun FileInfoLine(label: String, content: String) {
 
 @Composable
 fun FilePreview(uriData: UriData) {
-    val mimeType = uriData.type ?: "*/*"
+    val mimeType = uriData.type
     val fallbackFileIcon = if (mimeType.startsWith("image/")) Icons.Outlined.Image
     else if (mimeType.startsWith("audio/")) Icons.Outlined.AudioFile
     else if (mimeType.startsWith("video/")) Icons.Outlined.VideoFile
@@ -248,5 +246,46 @@ fun FilePreview(uriData: UriData) {
             contentDescription = stringResource(R.string.app_name),
             tint = MaterialTheme.colorScheme.tertiary
         )
+    }
+}
+
+@Preview(apiLevel = 34, showSystemUi = true, showBackground = true)
+@Composable
+fun DetailsScreenSkippedPreview() {
+    DetailsScreenSkippedContent()
+}
+
+@Preview(apiLevel = 34, showSystemUi = true, showBackground = true, locale = "pt-rBR")
+@Composable
+fun DetailsScreenSkippedPreviewPtBr() {
+    DetailsScreenSkippedContent()
+}
+
+@Composable
+fun DetailsScreenSkipped() {
+    DetailsScreenSkippedContent()
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DetailsScreenSkippedContent() {
+    AppTheme {
+        Scaffold(topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.file_details)) },
+            )
+        }) { paddingValues ->
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                Text(
+                    stringResource(R.string.saving_file),
+                    style = MaterialTheme.typography.headlineMedium
+                )
+            }
+        }
     }
 }

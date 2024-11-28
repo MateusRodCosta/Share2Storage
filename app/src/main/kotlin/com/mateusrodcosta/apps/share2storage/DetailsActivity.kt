@@ -31,28 +31,31 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+import androidx.compose.runtime.LaunchedEffect
+import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import com.mateusrodcosta.apps.share2storage.model.UriData
 import com.mateusrodcosta.apps.share2storage.screens.DetailsScreen
+import com.mateusrodcosta.apps.share2storage.screens.DetailsScreenSkipped
 import com.mateusrodcosta.apps.share2storage.utils.CreateDocumentWithInitialUri
 import com.mateusrodcosta.apps.share2storage.utils.SharedPreferenceKeys
+import com.mateusrodcosta.apps.share2storage.utils.SharedPreferencesDefaultValues
 import com.mateusrodcosta.apps.share2storage.utils.getUriData
 import com.mateusrodcosta.apps.share2storage.utils.saveFile
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.time.DurationUnit
-import kotlin.time.toDuration
 
 class DetailsActivity : ComponentActivity() {
     private lateinit var createFile: ActivityResultLauncher<String>
-    private var uriData: UriData? = null
+    private lateinit var fileUri: Uri
+    private lateinit var uriData: UriData
 
-    private var skipFileDetails: Boolean = false
     private var defaultSaveLocation: Uri? = null
-    private var showFilePreview: Boolean = true
+    private var shouldSkipFilePicker: Boolean = false
+    private var skipFileDetails: Boolean = false
+    private var shouldShowFilePreview: Boolean = true
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,63 +65,95 @@ class DetailsActivity : ComponentActivity() {
         getPreferences()
         handleIntent(intent)
         val launchFilePicker = {
-            createFile.launch(uriData?.displayName ?: "")
+            if (shouldSkipFilePicker) {
+                lifecycleScope.launch {
+                    val dir = DocumentFile.fromTreeUri(applicationContext, defaultSaveLocation!!)
+                    val file = dir!!.createFile(uriData.type, uriData.displayName)
+
+                    if (file?.uri != null) handleFileSave(file.uri, fileUri)
+                }
+            } else {
+                createFile.launch(uriData.displayName)
+            }
+            Unit
         }
 
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
 
-            DetailsScreen(
-                uriData = uriData,
-                windowSizeClass = windowSizeClass,
-                launchFilePicker = launchFilePicker,
-            )
+            if (skipFileDetails) {
+                LaunchedEffect(key1 = Unit) {
+                    launchFilePicker()
+                }
+                DetailsScreenSkipped()
+            } else {
+                DetailsScreen(
+                    uriData = uriData,
+                    windowSizeClass = windowSizeClass,
+                    launchFilePicker = launchFilePicker,
+                )
+            }
         }
-
-        if (skipFileDetails) launchFilePicker()
     }
 
     private fun getPreferences() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
 
-        skipFileDetails =
-            sharedPreferences.getBoolean(SharedPreferenceKeys.SKIP_FILE_DETAILS_KEY, false)
-        Log.d("details] skipFileDetails", skipFileDetails.toString())
-
         val defaultSaveLocationRaw =
             sharedPreferences.getString(SharedPreferenceKeys.DEFAULT_SAVE_LOCATION_KEY, null)
         Log.d("details] defaultSaveLocationRaw", defaultSaveLocationRaw.toString())
-        defaultSaveLocation = if (defaultSaveLocationRaw != null) Uri.parse(defaultSaveLocationRaw)
-        else null
+        val defaultSaveLocation =
+            if (defaultSaveLocationRaw != null) Uri.parse(defaultSaveLocationRaw)
+            else null
         Log.d("details] defaultSaveLocation", defaultSaveLocation.toString())
+        this.defaultSaveLocation = defaultSaveLocation
 
-        showFilePreview =
-            sharedPreferences.getBoolean(SharedPreferenceKeys.SHOW_FILE_PREVIEW_KEY, true)
+        val skipFilePicker = sharedPreferences.getBoolean(
+            SharedPreferenceKeys.SKIP_FILE_PICKER_KEY,
+            SharedPreferencesDefaultValues.SKIP_FILE_PICKER_DEFAULT
+        )
+        Log.d("details] skipFilePicker", skipFilePicker.toString())
+        // Only skip file picker if both a default folder is set and "Skip File Picker is selected"
+        this.shouldSkipFilePicker = defaultSaveLocation != null && skipFilePicker
+
+
+        val skipFileDetails = sharedPreferences.getBoolean(
+            SharedPreferenceKeys.SKIP_FILE_DETAILS_KEY,
+            SharedPreferencesDefaultValues.SKIP_FILE_DETAILS_DEFAULT
+        )
+        Log.d("details] skipFileDetails", skipFileDetails.toString())
+        this.skipFileDetails = skipFileDetails
+
+        val showFilePreview = sharedPreferences.getBoolean(
+            SharedPreferenceKeys.SHOW_FILE_PREVIEW_KEY,
+            SharedPreferencesDefaultValues.SHOW_FILE_PREVIEW_DEFAULT
+        )
         Log.d("details] showFilePreview", showFilePreview.toString())
+        this.shouldShowFilePreview = !skipFileDetails && showFilePreview
     }
 
     private fun handleIntent(intent: Intent?) {
-        var fileUri: Uri? = null
-        if (intent?.action == Intent.ACTION_SEND) {
-            fileUri =
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) intent.getParcelableExtra(
-                    Intent.EXTRA_STREAM, Uri::class.java
-                )
-                else @Suppress("DEPRECATION") intent.getParcelableExtra(Intent.EXTRA_STREAM)
-            Log.d("fileUri ACTION_SEND", fileUri.toString())
-        }
-        // ACTION_VIEW intents interceptor
-        if (intent?.action == Intent.ACTION_VIEW) {
-            fileUri = intent.data
-            Log.d("fileUri ACTION_VIEW", fileUri.toString())
-        }
+        val fileUri: Uri? = if (intent?.action == Intent.ACTION_SEND) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) intent.getParcelableExtra(
+                Intent.EXTRA_STREAM, Uri::class.java
+            )
+            else @Suppress("DEPRECATION") intent.getParcelableExtra(Intent.EXTRA_STREAM)
+        } else if (intent?.action == Intent.ACTION_VIEW) intent.data
+        else null
+        Log.d("fileUri", "Action: ${intent?.action}, uri: $fileUri")
 
-        if (fileUri != null) uriData =
-            getUriData(contentResolver, fileUri, getPreview = showFilePreview)
-        if (uriData != null) {
-            createFile = registerForActivityResult(
-                CreateDocumentWithInitialUri(uriData?.type ?: "*/*", defaultSaveLocation)
-            ) { uri ->
+        if (fileUri == null) return
+        this.fileUri = fileUri
+        val uriData = getUriData(contentResolver, fileUri, getPreview = shouldShowFilePreview)
+        if (uriData == null) return
+        this.uriData = uriData
+
+        createFile = registerForActivityResult(
+            CreateDocumentWithInitialUri(uriData.type, defaultSaveLocation)
+        ) { uri ->
+            if (uri == null) {
+                if (skipFileDetails) finish()
+            } else {
                 lifecycleScope.launch {
                     handleFileSave(uri, fileUri)
                 }
@@ -126,8 +161,7 @@ class DetailsActivity : ComponentActivity() {
         }
     }
 
-    private suspend fun handleFileSave(uri: Uri?, fileUri: Uri?) {
-        if (uri == null || fileUri == null) return
+    private suspend fun handleFileSave(uri: Uri, fileUri: Uri) {
         return withContext(Dispatchers.IO) {
             val isSuccess = saveFile(baseContext, uri, fileUri)
 
@@ -141,11 +175,9 @@ class DetailsActivity : ComponentActivity() {
                 ).show()
             }
 
-            if (skipFileDetails) {
-                delay(1.toDuration(DurationUnit.SECONDS))
+            if (skipFileDetails || shouldSkipFilePicker) {
                 finish()
             }
         }
-
     }
 }

@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2022 - 2023 Mateus Rodrigues Costa
+ *     Copyright (C) 2022 - 2024 Mateus Rodrigues Costa
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as
@@ -25,7 +25,6 @@ class SampleUriDataProvider : PreviewParameterProvider<UriData?> {
             "21. Setting Sail, Coming Home (End Theme).flac", "audio/flac", 35280673, null
         ),
         UriData("03. Lonely Rolling Star (Missing You).flac", "audio/flac", 41123343, null),
-        UriData(null, null, null, null),
         null,
     )
 }

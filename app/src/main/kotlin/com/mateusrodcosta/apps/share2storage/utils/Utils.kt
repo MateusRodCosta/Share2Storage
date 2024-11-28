@@ -31,27 +31,29 @@ import java.io.*
 
 object Utils {
     const val BUFFER_SIZE: Int = 1024
+    const val CONTENT_ALPHA_DISABLED = 0.38f
 }
 
-fun getUriData(contentResolver: ContentResolver, uri: Uri?, getPreview: Boolean): UriData? {
-    if (uri == null) return null
-    val type = contentResolver.getType(uri)
-    var displayName: String? = null
-    var size: Long? = null
-    val cursor = contentResolver.query(uri, null, null, null, null)
-    if (cursor != null) {/*
-         * Get the column indexes of the data in the Cursor,
-         * move to the first row in the Cursor, get the data,
-         * and display it.
-         */
-        val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-        val sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
-        cursor.moveToFirst()
-        displayName = cursor.getString(nameIndex)
-        size = cursor.getLong(sizeIndex)
+fun getUriData(contentResolver: ContentResolver, uri: Uri, getPreview: Boolean): UriData? {
+    val type = contentResolver.getType(uri) ?: "*/*"
+    val displayName: String?
+    val size: Long?
 
-        cursor.close()
-    }
+    val cursor = contentResolver.query(uri, null, null, null, null)
+    if (cursor == null) return null
+
+    /*
+     * Get the column indexes of the data in the Cursor,
+     * move to the first row in the Cursor, get the data,
+     * and display it.
+     */
+    val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+    val sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
+    cursor.moveToFirst()
+    displayName = cursor.getString(nameIndex)
+    size = cursor.getLong(sizeIndex)
+
+    cursor.close()
 
     var bitmap: Bitmap? = null
     if (getPreview) {
@@ -138,7 +140,7 @@ fun saveFile(
                 bos.flush()
                 bos.close()
             }
-        } catch (ignored: Exception) {
+        } catch (_: Exception) {
         }
     }
     return !hasError
