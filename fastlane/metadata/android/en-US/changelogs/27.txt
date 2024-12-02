@@ -1,0 +1,5 @@
+IMPORTANT: A future version might drop Android O support, see https://github.com/MateusRodCosta/Share2Storage/issues/38 for more info.
+
+• Updated dependencies
+• New "Skip File Picker" option when a Default folder is set
+• Improved UX and default setting values for decreasing friction (requested by some users)

@@ -25,8 +25,8 @@ android {
         minSdk = 26
         //noinspection OldTargetApi
         targetSdk = 34
-        versionCode = 26
-        versionName = "1.4.1"
+        versionCode = 27
+        versionName = "1.4.1a"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -87,6 +87,11 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+    dependenciesInfo {
+        // Requested by F-Droid (https://github.com/MateusRodCosta/Share2Storage/issues/44)
+        // Disables dependency metadata when building APKs.
+        includeInApk = false
     }
 }
 
